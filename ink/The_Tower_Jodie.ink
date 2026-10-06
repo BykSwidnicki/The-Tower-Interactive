@@ -15,6 +15,7 @@ VAR water_instability = 0
 VAR honey_platform_available = true
 VAR elapsed_time = 0
 VAR injury = 0
+VAR recklessness = 0
 
 // Compact end-of-run testing log.
 VAR route_log = "Filtration"
@@ -154,11 +155,16 @@ A suspended water sail shifts into place above the dark.
     -> rigging_crossing
 
 * [Touch the unfamiliar control line to clear her path.]
+    ~ recklessness += 1
     ~ curiosity += 1
     ~ elapsed_time += 1
     ~ water_instability += 2
     ~ choice_log = choice_log + "GRAB WRONG LINE / "
     ~ temp line_roll = RANDOM(1, 100)
+
+    {recklessness >= 2:
+        ~ line_roll -= 10
+    }
 
     {line_roll <= 10:
         ~ injury += 2
@@ -368,6 +374,7 @@ The passage between them opens for seconds at a time.
 }
 
 * [Wait and count the cycle.]
+    ~ recklessness = MAX(0, recklessness - 1)
     ~ choice_log = choice_log + "WAIT / "
     ~ curiosity += 1
     ~ elapsed_time += 3
@@ -395,12 +402,21 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * [Go now before she can think herself out of it.]
+    ~ recklessness += 1
     ~ choice_log = choice_log + "GO NOW / "
     ~ defiance += 1
     ~ temp rush_roll = RANDOM(1, 100)
 
     {water_instability >= 2:
         ~ rush_roll -= 25
+    }
+
+    {recklessness >= 2:
+        ~ rush_roll -= 10
+    }
+
+    {recklessness >= 4:
+        ~ rush_roll -= 10
     }
 
     {rush_roll <= 10:
@@ -791,6 +807,7 @@ She steps inside.
 The gate rattles shut.
 
 * [Inspect the emergency brake before descending.]
+    ~ recklessness = MAX(0, recklessness - 1)
     ~ curiosity += 1
     Jodie checks the lever, cable, and catch.
     None of it inspires confidence.
@@ -802,6 +819,7 @@ The gate rattles shut.
     -> shaft_descent
 
 * [Hit the control and get it over with.]
+    ~ recklessness += 1
     ~ defiance += 1
     Jodie slaps the switch.
     "Come on."
@@ -912,6 +930,7 @@ Time: {elapsed_time}
 Story insight: {curiosity}
 Tyler trust: {tyler_trust}
 Water instability: {water_instability}
+Recklessness: {recklessness}
 Honey platform available: {honey_platform_available}
 Ending reached: {injury >= 2: INJURED ARRIVAL|SAFE ARRIVAL}
 --- END DEBUG ---
