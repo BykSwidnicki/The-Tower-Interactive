@@ -17,6 +17,10 @@ VAR elapsed_time = 0
 VAR injury = 0
 VAR recklessness = 0
 VAR mitigation_used = 0
+VAR recklessness_log = ""
+VAR mitigation_log = ""
+VAR random_event_log = ""
+VAR route_block_log = ""
 
 // Compact end-of-run testing log.
 VAR route_log = "Filtration"
@@ -157,6 +161,7 @@ A suspended water sail shifts into place above the dark.
 
 * [Touch the unfamiliar control line to clear her path.]
     ~ recklessness += 1
+    ~ recklessness_log = recklessness_log + "GRAB WRONG LINE / "
     ~ curiosity += 1
     ~ elapsed_time += 1
     ~ water_instability += 2
@@ -170,10 +175,12 @@ A suspended water sail shifts into place above the dark.
     {line_roll <= 10:
         ~ injury += 2
         ~ random_events += 1
+        ~ random_event_log = random_event_log + "SERIOUS RIGGING INJURY / "
     - else:
         {line_roll <= 35:
             ~ injury += 1
             ~ random_events += 1
+            ~ random_event_log = random_event_log + "LIGHT RIGGING INJURY / "
         }
     }
 
@@ -352,6 +359,7 @@ Water Storage.
 {pressure_roll <= 5:
     ~ honey_platform_available = false
     ~ random_events += 1
+    ~ random_event_log = random_event_log + "PRESSURE FAILURE / "
 }
 
 A warning light blinks above the next hatch.
@@ -376,6 +384,7 @@ The passage between them opens for seconds at a time.
 
 * [Wait and count the cycle.]
     ~ recklessness = MAX(0, recklessness - 1)
+    ~ recklessness_log = recklessness_log + "WAIT(-1) / "
     ~ choice_log = choice_log + "WAIT / "
     ~ curiosity += 1
     ~ elapsed_time += 3
@@ -404,6 +413,7 @@ The passage between them opens for seconds at a time.
 
 * [Go now before she can think herself out of it.]
     ~ recklessness += 1
+    ~ recklessness_log = recklessness_log + "GO NOW / "
     ~ choice_log = choice_log + "GO NOW / "
     ~ defiance += 1
     ~ temp rush_roll = RANDOM(1, 100)
@@ -424,26 +434,31 @@ The passage between them opens for seconds at a time.
     {learned_ropes_of_life:
         ~ rush_roll += 10
         ~ mitigation_used += 1
+        ~ mitigation_log = mitigation_log + "ROPES KNOWLEDGE(+10) / "
     }
 
     {told_truth_to_houdini:
         ~ rush_roll += 10
         ~ mitigation_used += 1
+        ~ mitigation_log = mitigation_log + "HOUDINI WARNING(+10) / "
     }
 
     {curiosity >= 5:
         ~ rush_roll += 5
         ~ mitigation_used += 1
+        ~ mitigation_log = mitigation_log + "HIGH CURIOSITY(+5) / "
     }
 
     {rush_roll <= 10:
         ~ injury += 2
         ~ random_events += 1
+        ~ random_event_log = random_event_log + "SERIOUS WATER INJURY / "
         ~ elapsed_time += 2
     - else:
         {rush_roll <= 25:
             ~ injury += 1
             ~ random_events += 1
+            ~ random_event_log = random_event_log + "LIGHT WATER INJURY / "
         }
     }
 
@@ -496,6 +511,7 @@ Then she is through.
 
 {elapsed_time >= 7:
     ~ honey_platform_available = false
+    ~ route_block_log = route_block_log + "HONEY:CLOSED_BY_TIME / "
 }
 
 {injury >= 2:
@@ -593,6 +609,18 @@ Tyler studies the grime on her clothes.
 
 
 === agro_exit ===
+
+{injury >= 2:
+    ~ route_block_log = route_block_log + "HONEY:BLOCKED_BY_INJURY / "
+}
+
+{tyler_trust < 2:
+    ~ route_block_log = route_block_log + "TYLER_ROUTE:TRUST_TOO_LOW / "
+}
+
+{honey_platform_available == false:
+    ~ route_block_log = route_block_log + "HONEY:UNAVAILABLE / "
+}
 
 {tyler_trust >= 2:
     Tyler points toward a service transfer.
@@ -829,6 +857,7 @@ The gate rattles shut.
 
 * [Inspect the emergency brake before descending.]
     ~ recklessness = MAX(0, recklessness - 1)
+    ~ recklessness_log = recklessness_log + "INSPECT BRAKE(-1) / "
     ~ curiosity += 1
     Jodie checks the lever, cable, and catch.
     None of it inspires confidence.
@@ -841,6 +870,7 @@ The gate rattles shut.
 
 * [Hit the control and get it over with.]
     ~ recklessness += 1
+    ~ recklessness_log = recklessness_log + "HIT ELEVATOR CONTROL / "
     ~ defiance += 1
     Jodie slaps the switch.
     "Come on."
@@ -952,7 +982,12 @@ Story insight: {curiosity}
 Tyler trust: {tyler_trust}
 Water instability: {water_instability}
 Recklessness: {recklessness}
+Recklessness sources: {recklessness_log}
 Mitigation used: {mitigation_used}
+Mitigation sources: {mitigation_log}
+Random event log: {random_event_log}
+Route blocks: {route_block_log}
+Gate snapshot: TYLER={tyler_trust >= 2:OPEN|CLOSED} / HONEY={honey_platform_available:OPEN|CLOSED} / OPEN_FLOOR={injury < 2:OPEN|CLOSED}
 Honey platform available: {honey_platform_available}
 Ending reached: {injury >= 2: INJURED ARRIVAL|SAFE ARRIVAL}
 --- END DEBUG ---
