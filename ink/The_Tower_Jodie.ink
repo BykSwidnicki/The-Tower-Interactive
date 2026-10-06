@@ -274,72 +274,311 @@ A warning light blinks above the next hatch.
 
 Behind it, Tank 4 is draining and Tank 5 is beginning to fill.
 
-Jodie waits for the gap.
+The passage between them opens for seconds at a time.
+
+{told_truth_to_houdini:
+    Houdini's warning returns to her: watch the timing.
+}
+
+{learned_ropes_of_life:
+    She can hear the system working now: water caught above, held, released, pulled downward by gravity.
+}
+
+* [Wait and count the cycle.]
+    ~ curiosity += 1
+    Jodie watches the warning light.
+    One. Two. Three.
+    The pressure falls.
+    She moves on twelve.
+    -> water_crossing
+
+* [Trust Houdini's warning and move with the next cycle.]
+    ~ solidarity += 1
+    Jodie listens for the change in the pipes.
+    When the sound drops, she goes.
+    -> water_crossing
+
+* [Go now before she can think herself out of it.]
+    ~ defiance += 1
+    Jodie grips the rail and runs.
+    -> water_crossing
+
+
+=== water_crossing ===
+
+Tank 4 empties.
+
+Tank 5 answers.
+
+The corridor shudders.
 
 There is no time to scream.
 
-She crosses.
+Jodie throws herself through the narrowing gap.
+
+For half a second, the tower is nothing but water, steel, and noise.
+
+Then she is through.
 
 -> agro
 
 
 === agro ===
 
-She comes through hard and loses her footing.
+Jodie comes out too fast.
+
+Her boot skids on damp metal.
 
 For one terrible second there is nothing beneath her.
 
-Then impact.
+Then—
 
 "Wheeeee—"
 
 CRASH.
 
-Someone nearby shouts.
+She lands hard among trays, pipes, and startled workers.
 
-Jodie looks up.
+Someone nearby shouts.
 
 A young man is already talking over the noise.
 
-"Pipe slip," he says.
+"Pipe slip," he says, loudly enough for everyone to hear.
+
+He looks at Jodie.
+
+"Right?"
 
 His name is Tyler.
+
+* [Back up his lie.]
+    ~ tyler_trust += 1
+    ~ solidarity += 1
+    "Pipe slip."
+    Tyler nods like they rehearsed it.
+    -> agro_talk
+
+* [Ask why he is covering for her.]
+    ~ curiosity += 1
+    "Why are you helping me?"
+    Tyler shrugs.
+    "Because nobody else has asked what happened yet."
+    -> agro_talk
+
+* [Tell him she can handle herself.]
+    ~ defiance += 1
+    "I don't need covering."
+    "Great," Tyler says. "Then I was talking to myself."
+    -> agro_talk
+
+
+=== agro_talk ===
+
+Tyler studies the grime on her clothes.
+
+"You're a long way from Filtration."
+
+* [Tell Tyler about the O-ring.]
+    ~ told_tyler_mission = true
+    ~ tyler_trust += 1
+    "Brooks sent me for a part."
+    "That explains the suicidal sightseeing."
+    -> agro_exit
+
+* [Keep Brooks's assignment to herself.]
+    ~ curiosity += 1
+    "I'm passing through."
+    Tyler looks unconvinced.
+    "Sure you are."
+    -> agro_exit
+
+* [Tease him for being so interested.]
+    ~ flirted_with_tyler = true
+    ~ tyler_trust += 1
+    "You ask a lot of questions for somebody who just lied for me."
+    Tyler smiles.
+    "Occupational hazard."
+    -> agro_exit
+
+
+=== agro_exit ===
+
+{tyler_trust >= 2:
+    Tyler points toward a service transfer.
+    "Distribution is faster this way. Try not to fall through anything else."
+- else:
+    Tyler jerks his chin toward the far passage.
+    "Distribution's that way."
+}
+
+Jodie moves on.
 
 -> distribution
 
 
 === distribution ===
 
-Jodie reaches Distribution sticky with honey and tower grime.
+By the time Jodie reaches Distribution, she is sticky with honey and tower grime.
 
-A worker points her toward a rinse station.
+A worker takes one look at her and points toward a rinse station.
 
-Beyond it: uniforms, carts, quota boards, and a way farther down.
+"No."
+
+Jodie looks down at herself.
+
+"No what?"
+
+"No entering my floor looking like that."
+
+Beyond the rinse station hang spare Distribution jumpsuits.
+
+A quota board clicks overhead.
+
+* [Take the offered jumpsuit.]
+    ~ distribution_jumpsuit = true
+    ~ solidarity += 1
+    Jodie changes fast.
+    The uniform smells faintly of soap and old sugar.
+    -> distribution_exit
+
+* [Rinse off and keep her Filtration clothes.]
+    ~ curiosity += 1
+    Jodie scrubs the honey from her sleeves and keeps moving.
+    -> distribution_exit
+
+* [Ignore the complaint and head for the exit.]
+    ~ defiance += 1
+    "I'm not staying."
+    "That was obvious," the worker says.
+    -> distribution_exit
+
+
+=== distribution_exit ===
+
+{distribution_jumpsuit:
+    In Distribution gray, fewer people look twice at her.
+}
+
+{told_tyler_mission:
+    Tyler's directions line up with the service markings ahead.
+}
+
+At the far edge of the floor, Jodie finds the last visible way down.
+
+An elevator shaft.
 
 -> elevator_shaft
 
 
 === elevator_shaft ===
 
-The shaft is the last visible exit.
+The shaft drops farther than Jodie can see.
 
-Jodie climbs into the service route and drops past levels she never sees long enough to name.
+The regular car is dead.
+
+The service cage is not.
+
+Barely.
+
+She steps inside.
+
+The gate rattles shut.
+
+* [Inspect the emergency brake before descending.]
+    ~ curiosity += 1
+    Jodie checks the lever, cable, and catch.
+    None of it inspires confidence.
+    -> shaft_descent
+
+* [Brace herself and trust the machinery.]
+    ~ solidarity += 1
+    Jodie wraps one hand around the rail and thinks about every worker keeping systems like this alive.
+    -> shaft_descent
+
+* [Hit the control and get it over with.]
+    ~ defiance += 1
+    Jodie slaps the switch.
+    "Come on."
+    -> shaft_descent
+
+
+=== shaft_descent ===
+
+The cage drops.
+
+Levels smear past.
+
+Some lit.
+Some dark.
+Most gone before Jodie can make sense of them.
 
 Metal screams somewhere below.
 
+The cage lurches.
+
 Emergency brakes catch.
 
-The car shudders to a stop.
+Jodie is thrown against the rail.
+
+Then silence.
+
+A final mechanical groan.
+
+The doors twitch open.
 
 -> medical_intake
 
 
 === medical_intake ===
 
-The doors open onto Guardian Medical.
+Guardian Medical.
+
+Bright enough to hurt.
+
+Clean enough to feel suspicious.
 
 For the first time since leaving Filtration, Jodie stops moving.
 
-She has made it.
+{curiosity >= 5:
+    She immediately starts cataloguing exits, equipment, people.
+}
+
+{defiance >= 4:
+    Nobody here is going to tell her she took the wrong route.
+}
+
+{solidarity >= 4:
+    The first thing she notices is how many people are waiting to be helped.
+}
+
+{tyler_trust >= 2:
+    Tyler's directions got her here faster than she wants to admit.
+}
+
+{distribution_jumpsuit:
+    A medical worker glances at the Distribution uniform and waves her farther inside without question.
+}
+
+* [Ask where to find the part.]
+    "I need an O-ring for Filtration."
+    -> medical_end
+
+* [Catch her breath before speaking.]
+    Jodie puts one hand against the wall.
+    One breath.
+    Then another.
+    -> medical_end
+
+* [Look around before revealing why she is here.]
+    ~ curiosity += 1
+    Jodie studies the room first.
+    -> medical_end
+
+
+=== medical_end ===
+
+She made it to Medical.
+
+But the route changed what she knows, who trusts her, and how she moves through the tower.
 
 -> END
