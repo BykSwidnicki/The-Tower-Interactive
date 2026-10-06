@@ -272,6 +272,74 @@ Water Storage.
 
 A warning light blinks above the next hatch.
 
-The next section begins here.
+Behind it, Tank 4 is draining and Tank 5 is beginning to fill.
+
+Jodie waits for the gap.
+
+There is no time to scream.
+
+She crosses.
+
+-> agro
+
+
+=== agro ===
+
+She comes through hard and loses her footing.
+
+For one terrible second there is nothing beneath her.
+
+Then impact.
+
+"Wheeeee—"
+
+CRASH.
+
+Someone nearby shouts.
+
+Jodie looks up.
+
+A young man is already talking over the noise.
+
+"Pipe slip," he says.
+
+His name is Tyler.
+
+-> distribution
+
+
+=== distribution ===
+
+Jodie reaches Distribution sticky with honey and tower grime.
+
+A worker points her toward a rinse station.
+
+Beyond it: uniforms, carts, quota boards, and a way farther down.
+
+-> elevator_shaft
+
+
+=== elevator_shaft ===
+
+The shaft is the last visible exit.
+
+Jodie climbs into the service route and drops past levels she never sees long enough to name.
+
+Metal screams somewhere below.
+
+Emergency brakes catch.
+
+The car shudders to a stop.
+
+-> medical_intake
+
+
+=== medical_intake ===
+
+The doors open onto Guardian Medical.
+
+For the first time since leaving Filtration, Jodie stops moving.
+
+She has made it.
 
 -> END
