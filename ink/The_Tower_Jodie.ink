@@ -11,6 +11,8 @@ VAR told_tyler_mission = false
 VAR flirted_with_tyler = false
 VAR distribution_jumpsuit = false
 VAR used_distribution_service_route = false
+VAR secret_fungi_stage = 0
+VAR saw_nocturnal_fungi = false
 
 -> filtration_123
 
@@ -33,12 +35,14 @@ He looks toward the others, then back at her.
 
 * [Ask where it is.]
     ~ curiosity += 1
+    ~ secret_fungi_stage = 1
     "Where?"
     Brooks gives her the route.
     -> filtration_decision
 
 * [Ask why nobody else can go.]
     ~ defiance += 1
+    ~ secret_fungi_stage = -1
     "Why me?"
     Brooks looks at her.
     "Because you're already thinking about it."
@@ -46,6 +50,7 @@ He looks toward the others, then back at her.
 
 * [Ask what happens if the leak gets worse.]
     ~ solidarity += 1
+    ~ secret_fungi_stage = -1
     "What happens if this fails?"
     Brooks glances at the gauge.
     "Everybody notices."
@@ -117,6 +122,7 @@ A suspended water sail shifts into place above the dark.
 
 * [Ask what "rope of life" means.]
     ~ curiosity += 1
+    ~ secret_fungi_stage = -1
     ~ learned_ropes_of_life = true
     "Rope of life?"
     One of the sailors looks at her as if the answer should be obvious.
@@ -128,6 +134,11 @@ A suspended water sail shifts into place above the dark.
 * [Help them pull before moving on.]
     ~ solidarity += 1
     ~ learned_ropes_of_life = true
+    {secret_fungi_stage == 1:
+        ~ secret_fungi_stage = 2
+    - else:
+        ~ secret_fungi_stage = -1
+    }
     Jodie grabs the nearest line.
     It jerks hard enough to burn against her palm.
     "Now you know," the sailor says.
@@ -136,6 +147,7 @@ A suspended water sail shifts into place above the dark.
 
 * [Keep moving. She has a job to do.]
     ~ defiance += 1
+    ~ secret_fungi_stage = -1
     Jodie ducks beneath the swinging line and keeps going.
     Someone behind her laughs.
     "Filtration."
@@ -219,6 +231,11 @@ Houdini steps into the corridor and looks at her work clothes.
 * [Tell him the truth. Brooks sent her for an O-ring.]
     ~ told_truth_to_houdini = true
     ~ solidarity += 1
+    {secret_fungi_stage == 2:
+        ~ secret_fungi_stage = 3
+    - else:
+        ~ secret_fungi_stage = -1
+    }
     "Brooks sent me. Filtration needs an O-ring."
     Houdini studies her for a beat.
     "Then you're not wandering."
@@ -228,6 +245,7 @@ Houdini steps into the corridor and looks at her work clothes.
 
 * [Keep the mission vague.]
     ~ curiosity += 1
+    ~ secret_fungi_stage = -1
     "Maintenance."
     Houdini raises an eyebrow.
     "That's a large word for a small answer."
@@ -236,6 +254,7 @@ Houdini steps into the corridor and looks at her work clothes.
 
 * [Tell him it is none of his business.]
     ~ defiance += 1
+    ~ secret_fungi_stage = -1
     "It isn't your business."
     Houdini smiles without warmth.
     "Then I suppose I don't need to know."
@@ -287,6 +306,7 @@ The passage between them opens for seconds at a time.
 
 * [Wait and count the cycle.]
     ~ curiosity += 1
+    ~ secret_fungi_stage = -1
     Jodie watches the warning light.
     One. Two. Three.
     The pressure falls.
@@ -295,12 +315,18 @@ The passage between them opens for seconds at a time.
 
 * {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
     ~ solidarity += 1
+    ~ secret_fungi_stage = -1
     Jodie listens for the change in the pipes.
     When the sound drops, she goes.
     -> water_crossing
 
 * {learned_ropes_of_life} [Read the water cycle by sound.]
     ~ curiosity += 1
+    {secret_fungi_stage == 3:
+        ~ secret_fungi_stage = 4
+    - else:
+        ~ secret_fungi_stage = -1
+    }
     Jodie closes her eyes.
     The pipes tell her when Tank 4 lets go and Tank 5 takes the load.
     She moves in the quiet between them.
@@ -308,6 +334,7 @@ The passage between them opens for seconds at a time.
 
 * [Go now before she can think herself out of it.]
     ~ defiance += 1
+    ~ secret_fungi_stage = -1
     Jodie grips the rail and runs.
     -> water_crossing
 
@@ -362,12 +389,18 @@ His name is Tyler.
 * [Back up his lie.]
     ~ tyler_trust += 1
     ~ solidarity += 1
+    {secret_fungi_stage == 4:
+        ~ secret_fungi_stage = 5
+    - else:
+        ~ secret_fungi_stage = -1
+    }
     "Pipe slip."
     Tyler nods like they rehearsed it.
     -> agro_talk
 
 * [Ask why he is covering for her.]
     ~ curiosity += 1
+    ~ secret_fungi_stage = -1
     "Why are you helping me?"
     Tyler shrugs.
     "Because nobody else has asked what happened yet."
@@ -375,6 +408,7 @@ His name is Tyler.
 
 * [Tell him she can handle herself.]
     ~ defiance += 1
+    ~ secret_fungi_stage = -1
     "I don't need covering."
     "Great," Tyler says. "Then I was talking to myself."
     -> agro_talk
@@ -389,12 +423,18 @@ Tyler studies the grime on her clothes.
 * [Tell Tyler about the O-ring.]
     ~ told_tyler_mission = true
     ~ tyler_trust += 1
+    {secret_fungi_stage == 5:
+        ~ secret_fungi_stage = 6
+    - else:
+        ~ secret_fungi_stage = -1
+    }
     "Brooks sent me for a part."
     "That explains the suicidal sightseeing."
     -> agro_exit
 
 * [Keep Brooks's assignment to herself.]
     ~ curiosity += 1
+    ~ secret_fungi_stage = -1
     "I'm passing through."
     Tyler looks unconvinced.
     "Sure you are."
@@ -403,6 +443,7 @@ Tyler studies the grime on her clothes.
 * [Tease him for being so interested.]
     ~ flirted_with_tyler = true
     ~ tyler_trust += 1
+    ~ secret_fungi_stage = -1
     "You ask a lot of questions for somebody who just lied for me."
     Tyler smiles.
     "Occupational hazard."
@@ -419,7 +460,72 @@ Tyler studies the grime on her clothes.
     "Distribution's that way."
 }
 
-Jodie moves on.
+* {secret_fungi_stage == 6} [Follow Clyde through the night grow.]
+    -> nocturnal_fungi
+
+* [Head for Distribution.]
+    -> distribution
+
+
+=== nocturnal_fungi ===
+
+Tyler catches somebody passing behind the irrigation racks.
+
+"Clyde."
+
+The man stops.
+
+Tyler points at Jodie.
+
+"She's headed down."
+
+Clyde looks at her, then at the route Tyler indicated.
+
+"Not that way."
+
+He opens a narrow service door Jodie would have walked past without seeing.
+
+Warm, wet air rolls out.
+
+Inside, Agro changes completely.
+
+The room is almost dark.
+
+Then her eyes adjust.
+
+Mushrooms rise from stacked beds in impossible colors: electric blue, bruised violet, lacquered orange, poisonous-looking pink, green so bright it seems lit from inside.
+
+Some are thin as wire.
+Some spread like fans.
+Some hang in pale curtains from the undersides of trays.
+
+Tiny maintenance lamps make the whole chamber glow.
+
+Jodie stops.
+
+Clyde notices.
+
+"Night grow," he says.
+
+"All this is food?"
+
+"Some."
+
+He keeps walking.
+
+"Some medicine. Some filtration. Some we still argue about."
+
+A cluster of violet caps shines beside the path like spilled paint.
+
+For once, Jodie forgets the O-ring for three whole seconds.
+
+~ saw_nocturnal_fungi = true
+
+Clyde opens another service door.
+
+Distribution noise pours through.
+
+"Back to your emergency."
 
 -> distribution
 
@@ -611,6 +717,18 @@ For the first time since leaving Filtration, Jodie stops moving.
 {used_distribution_service_route:
     She arrived through a staff corridor most visitors never see.
 }
+
+{saw_nocturnal_fungi:
+    A tray of violet fungal gel sits beside a treatment station.
+    Jodie recognizes the color immediately.
+    Agro was feeding more than people.
+}
+
+* {saw_nocturnal_fungi} [Ask whether the violet culture came from Agro.]
+    "That fungal gel. Agro night grow?"
+    The medical worker looks at her differently.
+    "You've been wandering."
+    -> medical_end
 
 * [Ask where to find the part.]
     "I need an O-ring for Filtration."
