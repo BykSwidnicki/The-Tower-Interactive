@@ -14,7 +14,7 @@ VAR used_distribution_service_route = false
 VAR water_instability = 0
 VAR honey_platform_available = true
 VAR elapsed_time = 0
-VAR water_crossing_injury = false
+VAR injury = 0
 
 -> filtration_123
 
@@ -362,8 +362,10 @@ The passage between them opens for seconds at a time.
     }
 
     {rush_roll <= 10:
-        ~ water_crossing_injury = true
+        ~ injury += 2
         ~ elapsed_time += 2
+    - rush_roll <= 25:
+        ~ injury += 1
     }
 
     Jodie grips the rail and runs.
@@ -382,12 +384,18 @@ There is no time to scream.
 
 Jodie throws herself through the narrowing gap.
 
-{water_crossing_injury:
+{injury >= 2:
     The edge catches her hard across the hip.
 
     Pain flashes white.
 
+    Her leg almost folds under her.
+
     She keeps moving because stopping here would be worse.
+- injury == 1:
+    The edge clips her hip hard enough to leave a bruise.
+
+    She keeps moving.
 - else:
     For half a second, the tower is nothing but water, steel, and noise.
 }
@@ -403,8 +411,10 @@ Then she is through.
     ~ honey_platform_available = false
 }
 
-{water_crossing_injury:
+{injury >= 2:
     Jodie is favoring one side before she even hits Agro.
+- injury == 1:
+    Her hip aches, but she can still move normally.
 }
 
 Jodie comes out too fast.
@@ -503,12 +513,40 @@ Tyler studies the grime on her clothes.
     "Distribution's that way."
 }
 
-* {tyler_trust >= 2 && honey_platform_available} [Take the honey platform with Tyler.]
+* {tyler_trust >= 2 && honey_platform_available && injury < 2} [Take the honey platform with Tyler.]
     ~ elapsed_time += 1
     -> tyler_honey_platform
 
+* {tyler_trust >= 2 && injury >= 2} [Let Tyler help her through the lower service transfer.]
+    ~ elapsed_time += 2
+    ~ tyler_trust += 1
+    -> tyler_injury_route
+
 * [Head for Distribution.]
     -> distribution
+
+
+=== tyler_injury_route ===
+
+Tyler watches Jodie take one step and wince.
+
+"No honey platform."
+
+"I can manage."
+
+"Great. Manage the handrail."
+
+He takes her through a lower service transfer instead.
+
+It is slower, narrower, and much less dramatic.
+
+At one steep section, Tyler offers his arm without commenting on it.
+
+Jodie takes it.
+
+They reach Distribution late, but upright.
+
+-> distribution
 
 
 === tyler_honey_platform ===
@@ -603,8 +641,12 @@ At the far edge of the floor, Jodie finds two ways toward the last visible route
     ~ used_distribution_service_route = true
     -> distribution_service_route
 
-* [Cross the open Distribution floor.]
+* {injury < 2} [Cross the open Distribution floor.]
     -> distribution_open_route
+
+* {injury >= 2} [Take the slower maintenance ramp.]
+    ~ elapsed_time += 2
+    -> distribution_injury_route
 
 
 === distribution_service_route ===
@@ -620,6 +662,21 @@ Jodie joins the flow of workers moving behind the quota boards and through a nar
 Nobody stops her.
 
 The corridor empties beside the elevator shaft.
+
+-> elevator_shaft
+
+
+=== distribution_injury_route ===
+
+The open floor is faster.
+
+It is also full of carts, ladders, and people moving at shift speed.
+
+Jodie looks at her hip and chooses the maintenance ramp instead.
+
+It doubles back twice and costs her time, but nothing here asks her to jump.
+
+She reaches the elevator shaft from the lower side.
 
 -> elevator_shaft
 
@@ -738,6 +795,13 @@ For the first time since leaving Filtration, Jodie stops moving.
     She arrived through a staff corridor most visitors never see.
 }
 
+{injury >= 2:
+    A medical worker notices how carefully Jodie is standing before Jodie says a word.
+    "Water Storage?"
+    Jodie does not answer.
+- injury == 1:
+    A bruise is beginning to darken along her hip.
+}
 
 * [Ask where to find the part.]
     "I need an O-ring for Filtration."
