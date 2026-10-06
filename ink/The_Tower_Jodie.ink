@@ -165,7 +165,112 @@ Jodie looks once more at the suspended sails, then heads for the passage.
 
 === living_quarters ===
 
-The passage tightens around her.
+The passage tightens, then opens into a corridor crowded with doors that do not quite match.
+
+Some are metal.
+Some are plywood.
+One is a curtain stitched from old uniforms.
+
+A boy with a deck of bent cards is sitting on an overturned bucket.
+
+He makes one card disappear.
+
+"You're late," he says.
+
+Jodie stops.
+
+"For what?"
+
+The boy grins.
+
+"For whatever you're sneaking through here to do."
+
+A second figure leans out from a doorway farther down the corridor.
+
+Older. Watchful.
+
+"Houdini," someone calls.
+
+The boy looks over his shoulder.
+
+"Not me. Him."
+
+The older man sighs.
+
+"Copperfield."
+
+"Also not me."
+
+Jodie looks from one to the other.
+
+{curiosity >= 3:
+    She cannot tell whether the names are jokes, titles, or camouflage.
+}
+
+{defiance >= 2:
+    She is already tired of being examined by strangers.
+}
+
+Houdini steps into the corridor and looks at her work clothes.
+
+"Filtration doesn't wander."
+
+* [Tell him the truth. Brooks sent her for an O-ring.]
+    ~ told_truth_to_houdini = true
+    ~ solidarity += 1
+    "Brooks sent me. Filtration needs an O-ring."
+    Houdini studies her for a beat.
+    "Then you're not wandering."
+    He points down the corridor.
+    "You're in a hurry."
+    -> living_exit
+
+* [Keep the mission vague.]
+    ~ curiosity += 1
+    "Maintenance."
+    Houdini raises an eyebrow.
+    "That's a large word for a small answer."
+    Copperfield snorts into his cards.
+    -> living_exit
+
+* [Tell him it is none of his business.]
+    ~ defiance += 1
+    "It isn't your business."
+    Houdini smiles without warmth.
+    "Then I suppose I don't need to know."
+    He steps aside anyway.
+    -> living_exit
+
+
+=== living_exit ===
+
+{told_truth_to_houdini:
+    Houdini lowers his voice before she passes.
+    "Water storage is cycling. Watch the timing."
+}
+
+{learned_ropes_of_life:
+    Jodie hears water moving somewhere inside the walls.
+    After Rigging, the sound means more than it did an hour ago.
+}
+
+{told_truth_to_houdini == false:
+    Copperfield flips a card across his knuckles.
+    "If anyone asks, you were never here."
+}
+
+The corridor narrows again.
+
+Ahead, the air turns colder.
+
+Water Storage.
+
+-> water_storage
+
+
+=== water_storage ===
+
+A warning light blinks above the next hatch.
 
 The next section begins here.
 
