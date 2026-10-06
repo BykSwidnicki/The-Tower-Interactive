@@ -14,6 +14,7 @@ VAR used_distribution_service_route = false
 VAR water_instability = 0
 VAR honey_platform_available = true
 VAR elapsed_time = 0
+VAR water_crossing_injury = false
 
 -> filtration_123
 
@@ -354,6 +355,17 @@ The passage between them opens for seconds at a time.
 
 * [Go now before she can think herself out of it.]
     ~ defiance += 1
+    ~ temp rush_roll = RANDOM(1, 100)
+
+    {water_instability >= 2:
+        ~ rush_roll -= 15
+    }
+
+    {rush_roll <= 10:
+        ~ water_crossing_injury = true
+        ~ elapsed_time += 2
+    }
+
     Jodie grips the rail and runs.
     -> water_crossing
 
@@ -370,7 +382,15 @@ There is no time to scream.
 
 Jodie throws herself through the narrowing gap.
 
-For half a second, the tower is nothing but water, steel, and noise.
+{water_crossing_injury:
+    The edge catches her hard across the hip.
+
+    Pain flashes white.
+
+    She keeps moving because stopping here would be worse.
+- else:
+    For half a second, the tower is nothing but water, steel, and noise.
+}
 
 Then she is through.
 
@@ -381,6 +401,10 @@ Then she is through.
 
 {elapsed_time >= 7:
     ~ honey_platform_available = false
+}
+
+{water_crossing_injury:
+    Jodie is favoring one side before she even hits Agro.
 }
 
 Jodie comes out too fast.
