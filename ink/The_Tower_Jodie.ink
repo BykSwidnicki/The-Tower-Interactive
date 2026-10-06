@@ -364,8 +364,10 @@ The passage between them opens for seconds at a time.
     {rush_roll <= 10:
         ~ injury += 2
         ~ elapsed_time += 2
-    - rush_roll <= 25:
-        ~ injury += 1
+    - else:
+        {rush_roll <= 25:
+            ~ injury += 1
+        }
     }
 
     Jodie grips the rail and runs.
@@ -392,12 +394,14 @@ Jodie throws herself through the narrowing gap.
     Her leg almost folds under her.
 
     She keeps moving because stopping here would be worse.
-- injury == 1:
-    The edge clips her hip hard enough to leave a bruise.
-
-    She keeps moving.
 - else:
-    For half a second, the tower is nothing but water, steel, and noise.
+    {injury == 1:
+        The edge clips her hip hard enough to leave a bruise.
+
+        She keeps moving.
+    - else:
+        For half a second, the tower is nothing but water, steel, and noise.
+    }
 }
 
 Then she is through.
@@ -413,8 +417,10 @@ Then she is through.
 
 {injury >= 2:
     Jodie is favoring one side before she even hits Agro.
-- injury == 1:
-    Her hip aches, but she can still move normally.
+- else:
+    {injury == 1:
+        Her hip aches, but she can still move normally.
+    }
 }
 
 Jodie comes out too fast.
@@ -799,8 +805,10 @@ For the first time since leaving Filtration, Jodie stops moving.
     A medical worker notices how carefully Jodie is standing before Jodie says a word.
     "Water Storage?"
     Jodie does not answer.
-- injury == 1:
-    A bruise is beginning to darken along her hip.
+- else:
+    {injury == 1:
+        A bruise is beginning to darken along her hip.
+    }
 }
 
 * [Ask where to find the part.]
