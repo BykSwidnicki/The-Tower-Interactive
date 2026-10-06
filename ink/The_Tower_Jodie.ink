@@ -16,6 +16,7 @@ VAR honey_platform_available = true
 VAR elapsed_time = 0
 VAR injury = 0
 VAR recklessness = 0
+VAR mitigation_used = 0
 
 // Compact end-of-run testing log.
 VAR route_log = "Filtration"
@@ -419,6 +420,22 @@ The passage between them opens for seconds at a time.
         ~ rush_roll -= 10
     }
 
+    // Knowledge and personal development can mitigate a reckless choice.
+    {learned_ropes_of_life:
+        ~ rush_roll += 10
+        ~ mitigation_used += 1
+    }
+
+    {told_truth_to_houdini:
+        ~ rush_roll += 10
+        ~ mitigation_used += 1
+    }
+
+    {curiosity >= 5:
+        ~ rush_roll += 5
+        ~ mitigation_used += 1
+    }
+
     {rush_roll <= 10:
         ~ injury += 2
         ~ random_events += 1
@@ -428,6 +445,10 @@ The passage between them opens for seconds at a time.
             ~ injury += 1
             ~ random_events += 1
         }
+    }
+
+    {mitigation_used > 0:
+        She is still taking a chance, but not blindly.
     }
 
     Jodie grips the rail and runs.
@@ -931,6 +952,7 @@ Story insight: {curiosity}
 Tyler trust: {tyler_trust}
 Water instability: {water_instability}
 Recklessness: {recklessness}
+Mitigation used: {mitigation_used}
 Honey platform available: {honey_platform_available}
 Ending reached: {injury >= 2: INJURED ARRIVAL|SAFE ARRIVAL}
 --- END DEBUG ---
