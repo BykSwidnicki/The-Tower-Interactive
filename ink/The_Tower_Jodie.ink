@@ -11,6 +11,8 @@ VAR told_tyler_mission = false
 VAR flirted_with_tyler = false
 VAR distribution_jumpsuit = false
 VAR used_distribution_service_route = false
+VAR water_instability = 0
+VAR honey_platform_available = true
 
 -> filtration_123
 
@@ -136,6 +138,22 @@ A suspended water sail shifts into place above the dark.
     It jerks hard enough to burn against her palm.
     "Now you know," the sailor says.
     "Rope of life."
+    -> rigging_crossing
+
+* [Touch the unfamiliar control line to clear her path.]
+    ~ curiosity += 1
+    ~ water_instability += 2
+    Jodie gives the line a quick pull.
+
+    Somewhere above, a pulley answers with a hard metallic knock.
+
+    One of the sailors looks over.
+
+    "Don't do that."
+
+    Jodie lets go.
+
+    Nothing obvious happens.
     -> rigging_crossing
 
 * [Keep moving. She has a job to do.]
@@ -279,11 +297,27 @@ Water Storage.
 
 === water_storage ===
 
+~ temp pressure_roll = RANDOM(1, 100)
+
+{water_instability >= 2:
+    ~ pressure_roll -= 10
+}
+
+{pressure_roll <= 5:
+    ~ honey_platform_available = false
+}
+
 A warning light blinks above the next hatch.
 
 Behind it, Tank 4 is draining and Tank 5 is beginning to fill.
 
 The passage between them opens for seconds at a time.
+
+{honey_platform_available == false:
+    The cycle stutters.
+
+    Somewhere deeper in the system, pressure drops out of sequence.
+}
 
 {told_truth_to_houdini:
     Houdini's warning returns to her: watch the timing.
@@ -400,6 +434,16 @@ His name is Tyler.
 
 Tyler studies the grime on her clothes.
 
+{honey_platform_available:
+    Somewhere beyond the racks, a transfer motor hums steadily.
+- else:
+    Somewhere beyond the racks, a transfer motor tries to start and dies.
+
+    Tyler glances toward the sound.
+
+    "Honey platform's down."
+}
+
 "You're a long way from Filtration."
 
 * [Tell Tyler about the O-ring.]
@@ -446,7 +490,13 @@ Jodie moves on.
 
 === distribution ===
 
-By the time Jodie reaches Distribution, she is sticky with honey and tower grime.
+{honey_platform_available:
+    By the time Jodie reaches Distribution, she is sticky with honey and tower grime.
+- else:
+    With the honey platform down, Jodie reaches Distribution by the dry service transfer instead.
+
+    She is dusty, sweaty, and considerably less sticky.
+}
 
 A worker takes one look at her and points toward a rinse station.
 
