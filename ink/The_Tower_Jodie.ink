@@ -16,6 +16,14 @@ VAR honey_platform_available = true
 VAR elapsed_time = 0
 VAR injury = 0
 
+// Compact end-of-run testing log.
+VAR route_log = "Filtration"
+VAR choice_log = ""
+VAR random_events = 0
+VAR used_honey_route = false
+VAR used_injury_route = false
+VAR used_maintenance_ramp = false
+
 -> filtration_123
 
 
@@ -95,6 +103,8 @@ Jodie looks toward the duct.
 
 
 === sail_rigging ===
+
+~ route_log = route_log + " → Rigging"
 
 Jodie drops through the duct and lands on a narrow maintenance platform.
 
@@ -191,6 +201,8 @@ Jodie looks once more at the suspended sails, then heads for the passage.
 
 
 === living_quarters ===
+
+~ route_log = route_log + " → Living"
 
 The passage tightens, then opens into a corridor crowded with doors that do not quite match.
 
@@ -299,6 +311,8 @@ Water Storage.
 
 === water_storage ===
 
+~ route_log = route_log + " → Water Storage"
+
 ~ temp pressure_roll = RANDOM(1, 100)
 
 {water_instability >= 2:
@@ -307,6 +321,7 @@ Water Storage.
 
 {pressure_roll <= 5:
     ~ honey_platform_available = false
+    ~ random_events += 1
 }
 
 A warning light blinks above the next hatch.
@@ -330,6 +345,7 @@ The passage between them opens for seconds at a time.
 }
 
 * [Wait and count the cycle.]
+    ~ choice_log = choice_log + "WAIT / "
     ~ curiosity += 1
     ~ elapsed_time += 3
     Jodie watches the warning light.
@@ -339,6 +355,7 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
+    ~ choice_log = choice_log + "TRUST WARNING / "
     ~ solidarity += 1
     ~ elapsed_time += 1
     Jodie listens for the change in the pipes.
@@ -346,6 +363,7 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * {learned_ropes_of_life} [Read the water cycle by sound.]
+    ~ choice_log = choice_log + "READ WATER / "
     ~ curiosity += 1
     ~ elapsed_time += 1
     Jodie closes her eyes.
@@ -354,6 +372,7 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * [Go now before she can think herself out of it.]
+    ~ choice_log = choice_log + "GO NOW / "
     ~ defiance += 1
     ~ temp rush_roll = RANDOM(1, 100)
 
@@ -363,10 +382,12 @@ The passage between them opens for seconds at a time.
 
     {rush_roll <= 10:
         ~ injury += 2
+        ~ random_events += 1
         ~ elapsed_time += 2
     - else:
         {rush_roll <= 25:
             ~ injury += 1
+            ~ random_events += 1
         }
     }
 
@@ -410,6 +431,8 @@ Then she is through.
 
 
 === agro ===
+
+~ route_log = route_log + " → Agro"
 
 {elapsed_time >= 7:
     ~ honey_platform_available = false
@@ -520,10 +543,14 @@ Tyler studies the grime on her clothes.
 }
 
 * {tyler_trust >= 2 && honey_platform_available && injury < 2} [Take the honey platform with Tyler.]
+    ~ choice_log = choice_log + "HONEY ROUTE / "
+    ~ used_honey_route = true
     ~ elapsed_time += 1
     -> tyler_honey_platform
 
 * {tyler_trust >= 2 && injury >= 2} [Let Tyler help her through the lower service transfer.]
+    ~ choice_log = choice_log + "TYLER DETOUR / "
+    ~ used_injury_route = true
     ~ elapsed_time += 2
     ~ tyler_trust += 1
     -> tyler_injury_route
@@ -533,6 +560,8 @@ Tyler studies the grime on her clothes.
 
 
 === tyler_injury_route ===
+
+~ route_log = route_log + " → Tyler Injury Detour"
 
 Tyler watches Jodie take one step and wince.
 
@@ -556,6 +585,8 @@ They reach Distribution late, but upright.
 
 
 === tyler_honey_platform ===
+
+~ route_log = route_log + " → Honey Platform"
 
 Tyler leads Jodie onto a narrow transfer platform above the honey handling line.
 
@@ -585,6 +616,8 @@ They reach Distribution together.
 
 
 === distribution ===
+
+~ route_log = route_log + " → Distribution"
 
 {elapsed_time >= 7:
     The shift has moved on without her.
@@ -644,18 +677,24 @@ A quota board clicks overhead.
 At the far edge of the floor, Jodie finds two ways toward the last visible route down.
 
 * {distribution_jumpsuit} [Use the staff service corridor.]
+    ~ choice_log = choice_log + "SERVICE CORRIDOR / "
     ~ used_distribution_service_route = true
     -> distribution_service_route
 
 * {injury < 2} [Cross the open Distribution floor.]
+    ~ choice_log = choice_log + "OPEN FLOOR / "
     -> distribution_open_route
 
 * {injury >= 2} [Take the slower maintenance ramp.]
+    ~ choice_log = choice_log + "MAINTENANCE RAMP / "
+    ~ used_maintenance_ramp = true
     ~ elapsed_time += 2
     -> distribution_injury_route
 
 
 === distribution_service_route ===
+
+~ route_log = route_log + " → Service Corridor"
 
 The gray jumpsuit does its work.
 
@@ -674,6 +713,8 @@ The corridor empties beside the elevator shaft.
 
 === distribution_injury_route ===
 
+~ route_log = route_log + " → Maintenance Ramp"
+
 The open floor is faster.
 
 It is also full of carts, ladders, and people moving at shift speed.
@@ -688,6 +729,8 @@ She reaches the elevator shaft from the lower side.
 
 
 === distribution_open_route ===
+
+~ route_log = route_log + " → Open Floor"
 
 Jodie crosses the working floor in full view.
 
@@ -709,6 +752,8 @@ She reaches the elevator shaft from the exposed side.
 
 
 === elevator_shaft ===
+
+~ route_log = route_log + " → Elevator Shaft"
 
 The shaft drops farther than Jodie can see.
 
@@ -768,6 +813,8 @@ The doors twitch open.
 
 
 === medical_intake ===
+
+~ route_log = route_log + " → Medical"
 
 Guardian Medical.
 
@@ -832,5 +879,18 @@ For the first time since leaving Filtration, Jodie stops moving.
 She made it to Medical.
 
 But the route changed what she knows, who trusts her, and how she moves through the tower.
+
+--- DEBUG RUN SUMMARY ---
+Route: {route_log}
+Choices: {choice_log}
+Random events: {random_events}
+Injury: {injury}
+Time: {elapsed_time}
+Story insight: {curiosity}
+Tyler trust: {tyler_trust}
+Water instability: {water_instability}
+Honey platform available: {honey_platform_available}
+Ending reached: {injury >= 2: INJURED ARRIVAL|SAFE ARRIVAL}
+--- END DEBUG ---
 
 -> END
