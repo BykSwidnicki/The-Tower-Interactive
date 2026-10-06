@@ -157,9 +157,32 @@ A suspended water sail shifts into place above the dark.
     ~ curiosity += 1
     ~ elapsed_time += 1
     ~ water_instability += 2
+    ~ choice_log = choice_log + "GRAB WRONG LINE / "
+    ~ temp line_roll = RANDOM(1, 100)
+
+    {line_roll <= 10:
+        ~ injury += 2
+        ~ random_events += 1
+    - else:
+        {line_roll <= 35:
+            ~ injury += 1
+            ~ random_events += 1
+        }
+    }
+
     Jodie gives the line a quick pull.
 
     Somewhere above, a pulley answers with a hard metallic knock.
+
+    {injury >= 2:
+        The line snaps tight and yanks her shoulder hard enough to spin her sideways.
+    - else:
+        {injury == 1:
+            The line bites across her palm before she can let go.
+        - else:
+            The line bucks in her hand, but she gets away with it.
+        }
+    }
 
     One of the sailors looks over.
 
@@ -377,7 +400,7 @@ The passage between them opens for seconds at a time.
     ~ temp rush_roll = RANDOM(1, 100)
 
     {water_instability >= 2:
-        ~ rush_roll -= 15
+        ~ rush_roll -= 25
     }
 
     {rush_roll <= 10:
