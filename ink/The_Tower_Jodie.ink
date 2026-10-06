@@ -13,6 +13,7 @@ VAR distribution_jumpsuit = false
 VAR used_distribution_service_route = false
 VAR water_instability = 0
 VAR honey_platform_available = true
+VAR elapsed_time = 0
 
 -> filtration_123
 
@@ -35,12 +36,14 @@ He looks toward the others, then back at her.
 
 * [Ask where it is.]
     ~ curiosity += 1
+    ~ elapsed_time += 1
     "Where?"
     Brooks gives her the route.
     -> filtration_decision
 
 * [Ask why nobody else can go.]
     ~ defiance += 1
+    ~ elapsed_time += 1
     "Why me?"
     Brooks looks at her.
     "Because you're already thinking about it."
@@ -48,6 +51,7 @@ He looks toward the others, then back at her.
 
 * [Ask what happens if the leak gets worse.]
     ~ solidarity += 1
+    ~ elapsed_time += 2
     "What happens if this fails?"
     Brooks glances at the gauge.
     "Everybody notices."
@@ -119,6 +123,7 @@ A suspended water sail shifts into place above the dark.
 
 * [Ask what "rope of life" means.]
     ~ curiosity += 1
+    ~ elapsed_time += 2
     ~ learned_ropes_of_life = true
     "Rope of life?"
     One of the sailors looks at her as if the answer should be obvious.
@@ -129,11 +134,8 @@ A suspended water sail shifts into place above the dark.
 
 * [Help them pull before moving on.]
     ~ solidarity += 1
+    ~ elapsed_time += 3
     ~ learned_ropes_of_life = true
-    {secret_fungi_stage == 1:
-        ~ secret_fungi_stage = 2
-    - else:
-    }
     Jodie grabs the nearest line.
     It jerks hard enough to burn against her palm.
     "Now you know," the sailor says.
@@ -142,6 +144,7 @@ A suspended water sail shifts into place above the dark.
 
 * [Touch the unfamiliar control line to clear her path.]
     ~ curiosity += 1
+    ~ elapsed_time += 1
     ~ water_instability += 2
     Jodie gives the line a quick pull.
 
@@ -239,12 +242,9 @@ Houdini steps into the corridor and looks at her work clothes.
 "Filtration doesn't wander."
 
 * [Tell him the truth. Brooks sent her for an O-ring.]
+    ~ elapsed_time += 1
     ~ told_truth_to_houdini = true
     ~ solidarity += 1
-    {secret_fungi_stage == 2:
-        ~ secret_fungi_stage = 3
-    - else:
-    }
     "Brooks sent me. Filtration needs an O-ring."
     Houdini studies her for a beat.
     "Then you're not wandering."
@@ -254,6 +254,7 @@ Houdini steps into the corridor and looks at her work clothes.
 
 * [Keep the mission vague.]
     ~ curiosity += 1
+    ~ elapsed_time += 2
     "Maintenance."
     Houdini raises an eyebrow.
     "That's a large word for a small answer."
@@ -329,6 +330,7 @@ The passage between them opens for seconds at a time.
 
 * [Wait and count the cycle.]
     ~ curiosity += 1
+    ~ elapsed_time += 3
     Jodie watches the warning light.
     One. Two. Three.
     The pressure falls.
@@ -337,16 +339,14 @@ The passage between them opens for seconds at a time.
 
 * {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
     ~ solidarity += 1
+    ~ elapsed_time += 1
     Jodie listens for the change in the pipes.
     When the sound drops, she goes.
     -> water_crossing
 
 * {learned_ropes_of_life} [Read the water cycle by sound.]
     ~ curiosity += 1
-    {secret_fungi_stage == 3:
-        ~ secret_fungi_stage = 4
-    - else:
-    }
+    ~ elapsed_time += 1
     Jodie closes her eyes.
     The pipes tell her when Tank 4 lets go and Tank 5 takes the load.
     She moves in the quiet between them.
@@ -379,6 +379,10 @@ Then she is through.
 
 === agro ===
 
+{elapsed_time >= 7:
+    ~ honey_platform_available = false
+}
+
 Jodie comes out too fast.
 
 Her boot skids on damp metal.
@@ -408,10 +412,6 @@ His name is Tyler.
 * [Back up his lie.]
     ~ tyler_trust += 1
     ~ solidarity += 1
-    {secret_fungi_stage == 4:
-        ~ secret_fungi_stage = 5
-    - else:
-    }
     "Pipe slip."
     Tyler nods like they rehearsed it.
     -> agro_talk
@@ -449,10 +449,6 @@ Tyler studies the grime on her clothes.
 * [Tell Tyler about the O-ring.]
     ~ told_tyler_mission = true
     ~ tyler_trust += 1
-    {secret_fungi_stage == 5:
-        ~ secret_fungi_stage = 6
-    - else:
-    }
     "Brooks sent me for a part."
     "That explains the suicidal sightseeing."
     -> agro_exit
@@ -483,12 +479,48 @@ Tyler studies the grime on her clothes.
     "Distribution's that way."
 }
 
-Jodie moves on.
+* {tyler_trust >= 2 && honey_platform_available} [Take the honey platform with Tyler.]
+    ~ elapsed_time += 1
+    -> tyler_honey_platform
+
+* [Head for Distribution.]
+    -> distribution
+
+
+=== tyler_honey_platform ===
+
+Tyler leads Jodie onto a narrow transfer platform above the honey handling line.
+
+"Faster," he says.
+
+The platform jerks forward.
+
+A valve coughs.
+
+Honey spatters both of them from shoulder to boot.
+
+Tyler wipes his face.
+
+"Still faster."
+
+Jodie stares at him.
+
+"This better have been worth unlocking."
+
+"What?"
+
+"Nothing."
+
+They reach Distribution together.
 
 -> distribution
 
 
 === distribution ===
+
+{elapsed_time >= 7:
+    The shift has moved on without her.
+}
 
 {honey_platform_available:
     By the time Jodie reaches Distribution, she is sticky with honey and tower grime.
