@@ -505,6 +505,12 @@ Jodie stops.
 
 Clyde notices.
 
+"Most players will never see this room."
+
+Jodie looks at him.
+
+Clyde keeps walking as if he said nothing strange.
+
 "Night grow," he says.
 
 "All this is food?"
@@ -722,6 +728,9 @@ For the first time since leaving Filtration, Jodie stops moving.
     A tray of violet fungal gel sits beside a treatment station.
     Jodie recognizes the color immediately.
     Agro was feeding more than people.
+
+    For one impossible second, a thought arrives that does not feel like hers:
+    You found something you were not supposed to find.
 }
 
 * {saw_nocturnal_fungi} [Ask whether the violet culture came from Agro.]
