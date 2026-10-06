@@ -88,9 +88,84 @@ Jodie looks toward the duct.
 
 === sail_rigging ===
 
-Jodie drops through the duct.
+Jodie drops through the duct and lands on a narrow maintenance platform.
 
-Below her, something enormous shifts in the dark.
+Wind moves through the tower here.
+
+Not outside wind. Tower wind.
+
+Air pulled through broken passages, old vents, open shafts.
+
+Across the chamber, workers in blue-and-white stripes move along hanging lines and patched catwalks.
+
+One of them catches a rope with both hands and leans his whole weight into it.
+
+"Hold the rope of life!"
+
+Three others pull.
+
+A suspended water sail shifts into place above the dark.
+
+{curiosity >= 3:
+    Jodie slows down. Nothing here is decorative. Every knot, pulley, and line is doing a job.
+}
+
+{solidarity >= 2:
+    Nobody is working alone. Every movement depends on somebody else holding.
+}
+
+* [Ask what "rope of life" means.]
+    ~ curiosity += 1
+    ~ learned_ropes_of_life = true
+    "Rope of life?"
+    One of the sailors looks at her as if the answer should be obvious.
+    "The line between water and no water."
+    He points upward.
+    "Sails catch it. Tanks hold it. Gravity does the rest."
+    -> rigging_crossing
+
+* [Help them pull before moving on.]
+    ~ solidarity += 1
+    ~ learned_ropes_of_life = true
+    Jodie grabs the nearest line.
+    It jerks hard enough to burn against her palm.
+    "Now you know," the sailor says.
+    "Rope of life."
+    -> rigging_crossing
+
+* [Keep moving. She has a job to do.]
+    ~ defiance += 1
+    Jodie ducks beneath the swinging line and keeps going.
+    Someone behind her laughs.
+    "Filtration."
+    It is not a question.
+    -> rigging_crossing
+
+
+=== rigging_crossing ===
+
+{learned_ropes_of_life:
+    The phrase stays with her now: rope of life.
+    Not poetry. Infrastructure.
+}
+
+{brooks_trust >= 2:
+    Brooks sent her this way for a reason.
+    Jodie is beginning to suspect the route itself is part of the lesson.
+}
+
+A sailor points toward a narrow passage cut through the west side of the level.
+
+"Living quarters are through there."
+
+Jodie looks once more at the suspended sails, then heads for the passage.
+
+-> living_quarters
+
+
+=== living_quarters ===
+
+The passage tightens around her.
 
 The next section begins here.
 
