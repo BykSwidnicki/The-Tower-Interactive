@@ -10,6 +10,7 @@ VAR told_truth_to_houdini = false
 VAR told_tyler_mission = false
 VAR flirted_with_tyler = false
 VAR distribution_jumpsuit = false
+VAR used_distribution_service_route = false
 
 -> filtration_123
 
@@ -292,10 +293,17 @@ The passage between them opens for seconds at a time.
     She moves on twelve.
     -> water_crossing
 
-* [Trust Houdini's warning and move with the next cycle.]
+* {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
     ~ solidarity += 1
     Jodie listens for the change in the pipes.
     When the sound drops, she goes.
+    -> water_crossing
+
+* {learned_ropes_of_life} [Read the water cycle by sound.]
+    ~ curiosity += 1
+    Jodie closes her eyes.
+    The pipes tell her when Tank 4 lets go and Tank 5 takes the load.
+    She moves in the quiet between them.
     -> water_crossing
 
 * [Go now before she can think herself out of it.]
@@ -463,9 +471,50 @@ A quota board clicks overhead.
     Tyler's directions line up with the service markings ahead.
 }
 
-At the far edge of the floor, Jodie finds the last visible way down.
+At the far edge of the floor, Jodie finds two ways toward the last visible route down.
 
-An elevator shaft.
+* {distribution_jumpsuit} [Use the staff service corridor.]
+    ~ used_distribution_service_route = true
+    -> distribution_service_route
+
+* [Cross the open Distribution floor.]
+    -> distribution_open_route
+
+
+=== distribution_service_route ===
+
+The gray jumpsuit does its work.
+
+Jodie joins the flow of workers moving behind the quota boards and through a narrow service corridor.
+
+{told_tyler_mission:
+    Tyler's directions make sense here. Left at the split. Down past the locked cage.
+}
+
+Nobody stops her.
+
+The corridor empties beside the elevator shaft.
+
+-> elevator_shaft
+
+
+=== distribution_open_route ===
+
+Jodie crosses the working floor in full view.
+
+Carts cut across her path.
+Names are shouted.
+Numbers change on the quota board overhead.
+
+{defiance >= 4:
+    She keeps moving like she belongs wherever she decides to stand.
+}
+
+{solidarity >= 4:
+    When a worker nearly loses a crate, Jodie catches one corner without breaking stride.
+}
+
+She reaches the elevator shaft from the exposed side.
 
 -> elevator_shaft
 
@@ -559,6 +608,10 @@ For the first time since leaving Filtration, Jodie stops moving.
     A medical worker glances at the Distribution uniform and waves her farther inside without question.
 }
 
+{used_distribution_service_route:
+    She arrived through a staff corridor most visitors never see.
+}
+
 * [Ask where to find the part.]
     "I need an O-ring for Filtration."
     -> medical_end
@@ -569,7 +622,7 @@ For the first time since leaving Filtration, Jodie stops moving.
     Then another.
     -> medical_end
 
-* [Look around before revealing why she is here.]
+* {curiosity >= 5} [Look around before revealing why she is here.]
     ~ curiosity += 1
     Jodie studies the room first.
     -> medical_end
