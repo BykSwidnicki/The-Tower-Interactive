@@ -28,6 +28,10 @@ VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
 VAR learned_water_from_houdini = false
 VAR pending_water_lesson = 0
+VAR used_water_maintenance_bypass = false
+VAR water_dispatch_insight = false
+VAR water_feed_stabilized = false
+VAR agro_arrival_controlled = false
 VAR tyler_water_recognized = false
 VAR rigging_direct_water_access = false
 VAR used_rigging_water_descent = false
@@ -913,7 +917,7 @@ Water Storage.
 === water_storage ===
 
 {logged_water_storage == false:
-    ~ route_log = route_log + " → Water Storage"
+    ~ route_log = route_log + " → Water 118-113"
     ~ logged_water_storage = true
 }
 
@@ -955,13 +959,29 @@ Water Storage.
     }
 }
 
-A warning light blinks above the next hatch.
+The Water complex is not one room.
+
+It descends through the East side in stacked galleries: tank shells above, valve decks below, ladders and pipe risers threading the levels together.
+
+Condensation turns every handrail cold.
 
 {water_maintainer_outfit:
     The borrowed Water Maintenance gear gets her past the first glances. It does nothing about the machinery.
 - else:
     In Filtration clothes, Jodie feels conspicuous before she even reaches the tanks.
 }
+
+{spine_crossed_with_clinic_run:
+    A white stripe painted beside one service door matches the infirmary mark on the bundle she carried.
+
+    For the first time, Jodie can see how the little clinic plugs into the same water network as everyone else.
+}
+
+{used_living_service_cut || used_rigging_water_descent:
+    The maintenance logic is beginning to repeat itself: ladders beside risers, access panels where the formal corridor pretends there is only wall.
+}
+
+A warning light blinks above the Tank 4 gallery.
 
 Behind it, Tank 4 is draining and Tank 5 is beginning to fill.
 
@@ -987,6 +1007,7 @@ The passage between them opens for seconds at a time.
         ~ water_knowledge += 1
         ~ story_insight += 1
         ~ elapsed_time += 1
+
         Jodie stays still for one complete exchange between Tank 4 and Tank 5.
 
         The handoff is not simultaneous.
@@ -996,17 +1017,22 @@ The passage between them opens for seconds at a time.
         -> water_storage
 }
 
-* [Wait and count the cycle.]
+* [Wait and count the twelve-second cycle.]
     ~ pending_water_lesson += 1
     ~ recklessness = MAX(0, recklessness - 1)
     ~ recklessness_log = recklessness_log + "WAIT(-1) / "
     ~ choice_log = choice_log + "WAIT / "
     ~ curiosity += 1
     ~ elapsed_time += 3
+
     Jodie watches the warning light.
+
     One. Two. Three.
+
     The pressure falls.
+
     She moves on twelve.
+
     -> water_crossing
 
 * {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
@@ -1014,8 +1040,11 @@ The passage between them opens for seconds at a time.
     ~ choice_log = choice_log + "TRUST WARNING / "
     ~ solidarity += 1
     ~ elapsed_time += 1
+
     Jodie listens for the change in the pipes.
+
     When the sound drops, she goes.
+
     -> water_crossing
 
 * {learned_ropes_of_life} [Read the water cycle by sound.]
@@ -1023,18 +1052,48 @@ The passage between them opens for seconds at a time.
     ~ choice_log = choice_log + "READ WATER / "
     ~ curiosity += 1
     ~ elapsed_time += 1
+
     Jodie closes her eyes.
+
     The pipes tell her when Tank 4 lets go and Tank 5 takes the load.
+
     She moves in the quiet between them.
+
     -> water_crossing
 
 * {water_knowledge >= 2} [Use what she knows to cross on the pressure handoff.]
     ~ choice_log = choice_log + "PRESSURE HANDOFF / "
     ~ story_insight += 1
     ~ elapsed_time += 1
+
     Jodie waits for the instant Tank 4 gives up the load but before Tank 5 fully takes it.
+
     She moves through the system's weakest moment.
+
     -> water_crossing
+
+* {water_knowledge >= 1 || used_living_service_cut || used_rigging_water_descent} [Take the inspection ladder around the purge throat.]
+    ~ used_water_maintenance_bypass = true
+    ~ choice_log = choice_log + "WATER MAINTENANCE BYPASS / "
+    ~ route_log = route_log + " → Water Inspection Ladder"
+    ~ elapsed_time += 2
+    ~ curiosity += 1
+
+    The ladder is not a shortcut.
+
+    It is what workers use when the main throat cannot be trusted.
+
+    Jodie climbs down beside Tank 4, crosses a grated valve deck one level below the purge gate, then climbs again beside Tank 5.
+
+    She never enters the twelve-second gap.
+
+    She does learn why the gap exists.
+
+    {water_knowledge < 2:
+        ~ water_knowledge += 1
+    }
+
+    -> water_dispatch_113
 
 * [Go now before she can think herself out of it.]
     ~ recklessness += 1
@@ -1093,6 +1152,7 @@ The passage between them opens for seconds at a time.
             {dumb_roll == 1:
                 ~ dumb_luck_saves += 1
                 ~ dumb_luck_log = dumb_luck_log + "WATER GAP OPENED AT THE EXACT SECOND / "
+
                 The pressure drops at exactly the impossible second Jodie needs.
             - else:
                 ~ injury += 2
@@ -1114,7 +1174,9 @@ The passage between them opens for seconds at a time.
     }
 
     Jodie grips the rail and runs.
+
     -> water_crossing
+
 
 === water_crossing ===
 
@@ -1151,13 +1213,87 @@ Jodie throws herself through the narrowing gap.
 
         She keeps moving.
     - else:
-        For half a second, the tower is nothing but water, steel, and noise.
+        For half a second, the Tower is nothing but water, steel, and noise.
     }
 }
 
 Then she is through.
 
--> agro
+-> water_dispatch_113
+
+
+=== water_dispatch_113 ===
+
+The tank galleries narrow into the bottom of the node.
+
+Level 113 is less dramatic than the rooms above it.
+
+That makes it more important.
+
+Feed pipes leave in bundles. Old belt housings disappear through concrete. Hand-painted arrows point toward AGRO, RESERVE, and WEST BALANCE.
+
+Jodie can hear one line knocking out of rhythm.
+
+{water_knowledge >= 2:
+    She recognizes it as a feed problem, not a tank problem.
+
+    Whatever is wrong is already traveling toward Agro.
+}
+
+{water_dispatch_insight == false && water_knowledge >= 1:
+    * [Trace the knocking feed line before leaving.]
+        ~ water_dispatch_insight = true
+        ~ water_knowledge += 1
+        ~ story_insight += 1
+        ~ elapsed_time += 1
+        ~ choice_log = choice_log + "TRACE AGRO FEED / "
+
+        Jodie follows the vibration through three brackets and one patched elbow.
+
+        The line is not blocked.
+
+        It is hunting for pressure.
+
+        Agro is about to inherit whatever Water cannot smooth out.
+
+        -> water_dispatch_113
+}
+
+* {water_knowledge >= 2 && water_feed_stabilized == false} [Reset the sticking feed valve before entering Agro.]
+    ~ water_feed_stabilized = true
+    ~ agro_arrival_controlled = true
+    ~ elapsed_time += 1
+    ~ solidarity += 1
+    ~ choice_log = choice_log + "STABILIZE AGRO FEED / "
+
+    Jodie waits for the pressure to fall, then turns the valve only as far as the pipe will tolerate.
+
+    The knocking softens.
+
+    Not fixed.
+
+    Stable enough to hand the problem to the next system without making it worse.
+
+    -> water_dispatch_113
+
+* {used_water_maintenance_bypass || water_knowledge >= 2} [Use the feed-service ladder into Agro.]
+    ~ agro_arrival_controlled = true
+    ~ elapsed_time += 1
+    ~ choice_log = choice_log + "AGRO SERVICE ENTRY / "
+    ~ route_log = route_log + " → Agro Feed Ladder"
+
+    A maintenance ladder follows the outgoing water line through a hatch marked for service crews.
+
+    Jodie takes it.
+
+    -> agro
+
+* [Take the normal hatch into Agro.]
+    ~ choice_log = choice_log + "AGRO NORMAL HATCH / "
+
+    Jodie shoulders through the ordinary transfer hatch.
+
+    -> agro
 
 
 === agro ===
@@ -1187,29 +1323,53 @@ Then she is through.
     }
 }
 
-Jodie comes out too fast.
+{water_feed_stabilized:
+    The transfer line beside the hatch is still trembling, but the ugly knocking has stopped.
 
-Her boot skids on damp metal.
+    Whatever Jodie did in Water has arrived here before she has.
+}
 
-For one terrible second there is nothing beneath her.
+{agro_arrival_controlled:
+    Jodie comes down the feed-service ladder instead of falling through the work floor.
 
-Then—
+    Her boots find a narrow maintenance rail above the trays.
 
-"Wheeeee—"
+    Workers look up because she is somewhere she should not be, not because she has crashed into them.
 
-CRASH.
+    Someone nearby shouts anyway.
+- else:
+    Jodie comes out too fast.
 
-She lands hard among trays, pipes, and startled workers.
+    Her boot skids on damp metal.
 
-Someone nearby shouts.
+    For one terrible second there is nothing beneath her.
+
+    Then—
+
+    "Wheeeee—"
+
+    CRASH.
+
+    She lands hard among trays, pipes, and startled workers.
+
+    Someone nearby shouts.
+}
 
 A young man is already talking over the noise.
 
-"Pipe slip," he says, loudly enough for everyone to hear.
+{agro_arrival_controlled:
+    "Service inspection," he says, loudly enough for everyone to hear.
 
-He looks at Jodie.
+    He looks at Jodie.
 
-"Right?"
+    "Right?"
+- else:
+    "Pipe slip," he says, loudly enough for everyone to hear.
+
+    He looks at Jodie.
+
+    "Right?"
+}
 
 His name is Tyler.
 
@@ -1222,7 +1382,11 @@ His name is Tyler.
 * [Back up his lie.]
     ~ tyler_trust += 1
     ~ solidarity += 1
-    "Pipe slip."
+    {agro_arrival_controlled:
+        "Service inspection."
+    - else:
+        "Pipe slip."
+    }
     Tyler nods like they rehearsed it.
     -> agro_talk
 
@@ -1777,6 +1941,10 @@ Rigging crew favor: {rigging_crew_favor}
 Rigging 121 response: {rigging_121_problem_helped:BRACED|{rigging_121_problem_warned:WARNED|PASSED}}
 Studied rigging transfer: {studied_rigging_transfer}
 Water knowledge: {water_knowledge}
+Water maintenance bypass: {used_water_maintenance_bypass}
+Water dispatch insight: {water_dispatch_insight}
+Water feed stabilized: {water_feed_stabilized}
+Agro arrival controlled: {agro_arrival_controlled}
 Learned Water from Houdini: {learned_water_from_houdini}
 Pending Water lesson: {pending_water_lesson}
 Studied water cycle: {studied_water_cycle}
