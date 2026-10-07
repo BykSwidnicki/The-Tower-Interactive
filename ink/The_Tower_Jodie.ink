@@ -19,6 +19,11 @@ VAR recklessness = 0
 VAR story_insight = 0
 VAR tower_stress = 0
 
+// Domain knowledge grows slowly from repeated, specific experiences.
+VAR rigging_knowledge = 0
+VAR water_knowledge = 0
+VAR elevator_knowledge = 0
+
 // Living Tower consequence system.
 VAR karma_pending = 0
 VAR karma_hits = 0
@@ -166,6 +171,7 @@ A suspended water sail shifts into place above the dark.
 * [Ask what "rope of life" means.]
     ~ curiosity += 1
     ~ story_insight += 1
+    ~ rigging_knowledge += 1
     ~ elapsed_time += 2
     ~ learned_ropes_of_life = true
     {protection_water == false:
@@ -183,6 +189,7 @@ A suspended water sail shifts into place above the dark.
 * [Help them pull before moving on.]
     ~ solidarity += 1
     ~ story_insight += 1
+    ~ rigging_knowledge += 1
     ~ elapsed_time += 3
     ~ learned_ropes_of_life = true
     {protection_water == false:
@@ -198,6 +205,7 @@ A suspended water sail shifts into place above the dark.
 
 * [Test the unfamiliar control line to see what it does.]
     ~ recklessness += 1
+    ~ rigging_knowledge += 1
     ~ recklessness_log = recklessness_log + "TEST RIGGING CONTROL / "
     ~ curiosity += 1
     ~ story_insight += 1
@@ -250,7 +258,13 @@ A suspended water sail shifts into place above the dark.
 
 A sailor points toward a narrow passage cut through the west side of the level.
 
-"Living quarters are through there."
+{rigging_knowledge >= 2:
+    He gives Jodie a second look.
+    "You've been paying attention."
+    He points out a safer handhold before she leaves.
+- else:
+    "Living quarters are through there."
+}
 
 Jodie looks once more at the suspended sails, then heads for the passage.
 
@@ -435,6 +449,7 @@ The passage between them opens for seconds at a time.
 }
 
 * [Wait and count the cycle.]
+    ~ water_knowledge += 1
     ~ recklessness = MAX(0, recklessness - 1)
     ~ recklessness_log = recklessness_log + "WAIT(-1) / "
     ~ choice_log = choice_log + "WAIT / "
@@ -447,6 +462,7 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
+    ~ water_knowledge += 1
     ~ choice_log = choice_log + "TRUST WARNING / "
     ~ solidarity += 1
     ~ elapsed_time += 1
@@ -455,12 +471,21 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * {learned_ropes_of_life} [Read the water cycle by sound.]
+    ~ water_knowledge += 1
     ~ choice_log = choice_log + "READ WATER / "
     ~ curiosity += 1
     ~ elapsed_time += 1
     Jodie closes her eyes.
     The pipes tell her when Tank 4 lets go and Tank 5 takes the load.
     She moves in the quiet between them.
+    -> water_crossing
+
+* {water_knowledge >= 2} [Use what she knows to cross on the pressure handoff.]
+    ~ choice_log = choice_log + "PRESSURE HANDOFF / "
+    ~ story_insight += 1
+    ~ elapsed_time += 1
+    Jodie waits for the instant Tank 4 gives up the load but before Tank 5 fully takes it.
+    She moves through the system's weakest moment.
     -> water_crossing
 
 * [Go now before she can think herself out of it.]
@@ -555,10 +580,19 @@ Jodie throws herself through the narrowing gap.
 
     Her leg almost folds under her.
 
+    ~ water_knowledge += 1
+    ~ story_insight += 1
+
+    That pain teaches her one narrow thing: where the load shifts too late.
+
     She keeps moving because stopping here would be worse.
 - else:
     {injury == 1:
         The edge clips her hip hard enough to leave a bruise.
+
+        ~ water_knowledge += 1
+
+        She knows exactly which beat she mistimed.
 
         She keeps moving.
     - else:
@@ -932,6 +966,7 @@ She steps inside.
 The gate rattles shut.
 
 * [Inspect the emergency brake before descending.]
+    ~ elevator_knowledge += 1
     ~ recklessness = MAX(0, recklessness - 1)
     ~ recklessness_log = recklessness_log + "INSPECT BRAKE(-1) / "
     ~ curiosity += 1
@@ -943,6 +978,13 @@ The gate rattles shut.
     }
     Jodie checks the lever, cable, and catch.
     None of it inspires confidence.
+    -> shaft_descent
+
+* {elevator_knowledge >= 2} [Set the brake catch before descending.]
+    ~ choice_log = choice_log + "SET BRAKE CATCH / "
+    ~ story_insight += 1
+    ~ protection_brake = true
+    Jodie adjusts the catch to engage sooner if the cage drops too hard.
     -> shaft_descent
 
 * [Brace herself and trust the machinery.]
@@ -1004,7 +1046,12 @@ Metal screams somewhere below.
             ~ random_event_log = random_event_log + "SHAFT IMPACT INJURY / "
             The emergency brakes catch late.
 
+            ~ elevator_knowledge += 1
+            ~ story_insight += 1
+
             Jodie slams into the rail.
+
+            Now she knows what a late catch sounds like.
         }
     }
 - else:
@@ -1098,6 +1145,9 @@ Random event log: {random_event_log}
 Injury: {injury}
 Time: {elapsed_time}
 Story insight: {story_insight}
+Rigging knowledge: {rigging_knowledge}
+Water knowledge: {water_knowledge}
+Elevator knowledge: {elevator_knowledge}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
 
