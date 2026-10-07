@@ -31,11 +31,15 @@ VAR pending_water_lesson = 0
 VAR tyler_water_recognized = false
 VAR rigging_direct_water_access = false
 VAR used_rigging_water_descent = false
+VAR asked_rope_meaning = false
+VAR helped_riggers = false
+VAR passed_rigging_untouched = false
 VAR visited_living = false
 VAR water_maintainer_outfit = false
 
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
+VAR logged_rigging_121 = false
 VAR logged_water_storage = false
 VAR logged_elevator_shaft = false
 
@@ -157,7 +161,7 @@ Jodie looks toward the duct.
 === sail_rigging ===
 
 {logged_rigging == false:
-    ~ route_log = route_log + " → Rigging"
+    ~ route_log = route_log + " → Rigging 122"
     ~ logged_rigging = true
 }
 
@@ -188,6 +192,7 @@ A suspended water sail shifts into place above the dark.
 }
 
 * [Ask what "rope of life" means.]
+    ~ asked_rope_meaning = true
     ~ curiosity += 1
     ~ story_insight += 1
     ~ rigging_knowledge += 1
@@ -203,9 +208,10 @@ A suspended water sail shifts into place above the dark.
     "The line between water and no water."
     He points upward.
     "Sails catch it. Tanks hold it. Gravity does the rest."
-    -> rigging_crossing
+    -> rigging_121
 
 * [Help them pull before moving on.]
+    ~ helped_riggers = true
     ~ solidarity += 1
     ~ story_insight += 1
     ~ rigging_knowledge += 1
@@ -225,7 +231,7 @@ A suspended water sail shifts into place above the dark.
     He jerks his chin toward a maintenance ladder disappearing beside the water lines.
 
     "If you're going down, that drops toward Storage. Faster than cutting through the sleepers."
-    -> rigging_crossing
+    -> rigging_121
 
 * [Test the unfamiliar control line to see what it does.]
     ~ recklessness += 1
@@ -257,18 +263,54 @@ A suspended water sail shifts into place above the dark.
     Nothing obvious happens.
 
     That does not mean nothing happened.
-    -> rigging_crossing
+    -> rigging_121
 
 * [Keep moving. She has a job to do.]
+    ~ passed_rigging_untouched = true
     ~ defiance += 1
     Jodie ducks beneath the swinging line and keeps going.
     Someone behind her laughs.
     "Filtration."
     It is not a question.
-    -> rigging_crossing
+    -> rigging_121
 
 
-=== rigging_crossing ===
+=== rigging_121 ===
+
+{logged_rigging_121 == false:
+    ~ route_log = route_log + " → Rigging 121"
+    ~ logged_rigging_121 = true
+}
+
+The lower Rigging level is tighter.
+
+The great hanging sails are mostly above her now. Here the load resolves into guides, tension lines, pulleys, and maintenance runs disappearing toward the water system.
+
+{helped_riggers:
+    Her palms still sting from the pull upstairs.
+
+    A line she helped tension snakes through the lower guides ahead of her. For a moment, she can literally follow the work she touched.
+}
+
+{asked_rope_meaning && helped_riggers == false:
+    "Rope of life" makes more sense down here.
+
+    The grand phrase upstairs becomes a hundred ugly little jobs keeping weight, water, and gravity from disagreeing.
+}
+
+{rigging_consequence_pending:
+    Somewhere in the lower guides, a pulley gives a hard little shudder.
+
+    Jodie recognizes the sound.
+
+    The line she tested upstairs is still talking to the system.
+}
+
+{passed_rigging_untouched:
+    Jodie keeps her hands to herself.
+
+    The lower level lets her pass without learning her name.
+}
 
 {learned_ropes_of_life:
     The phrase stays with her now: rope of life.
@@ -294,7 +336,7 @@ A suspended water sail shifts into place above the dark.
 
         Following the loaded line with her eyes, she spots a maintenance ladder dropping beside the water pipes. It bypasses the west passage entirely.
 
-        -> rigging_crossing
+        -> rigging_121
 }
 
 A sailor points toward a narrow passage cut through the west side of the level.
@@ -1367,6 +1409,7 @@ Route: {route_log}
 Choices: {choice_log}
 Visited Living: {visited_living}
 Rigging direct Water descent used: {used_rigging_water_descent}
+Rigging 122 action: {helped_riggers:HELPED|{asked_rope_meaning:ASKED_ROPE|{rigging_consequence_pending:TESTED_CONTROL|{passed_rigging_untouched:TOUCHED_NOTHING|OTHER}}}}
 Water Maintainer disguise obtained: {water_maintainer_outfit}
 Random events: {random_events}
 Random event log: {random_event_log}
