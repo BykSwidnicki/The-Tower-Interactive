@@ -27,6 +27,7 @@ VAR studied_water_cycle = false
 VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
 VAR learned_water_from_houdini = false
+VAR pending_water_lesson = 0
 
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
@@ -530,7 +531,7 @@ The passage between them opens for seconds at a time.
 }
 
 * [Wait and count the cycle.]
-    ~ water_knowledge += 1
+    ~ pending_water_lesson += 1
     ~ recklessness = MAX(0, recklessness - 1)
     ~ recklessness_log = recklessness_log + "WAIT(-1) / "
     ~ choice_log = choice_log + "WAIT / "
@@ -543,7 +544,7 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * {told_truth_to_houdini} [Trust Houdini's warning and move with the next cycle.]
-    ~ water_knowledge += 1
+    ~ pending_water_lesson += 1
     ~ choice_log = choice_log + "TRUST WARNING / "
     ~ solidarity += 1
     ~ elapsed_time += 1
@@ -552,7 +553,7 @@ The passage between them opens for seconds at a time.
     -> water_crossing
 
 * {learned_ropes_of_life} [Read the water cycle by sound.]
-    ~ water_knowledge += 1
+    ~ pending_water_lesson += 1
     ~ choice_log = choice_log + "READ WATER / "
     ~ curiosity += 1
     ~ elapsed_time += 1
@@ -836,6 +837,11 @@ Tyler studies the grime on her clothes.
 
 
 === agro_exit ===
+
+{pending_water_lesson > 0:
+    ~ water_knowledge += pending_water_lesson
+    ~ pending_water_lesson = 0
+}
 
 {injury >= 2:
     ~ route_block_log = route_block_log + "HONEY:BLOCKED_BY_INJURY / "
@@ -1290,6 +1296,7 @@ Rigging knowledge: {rigging_knowledge}
 Studied rigging transfer: {studied_rigging_transfer}
 Water knowledge: {water_knowledge}
 Learned Water from Houdini: {learned_water_from_houdini}
+Pending Water lesson: {pending_water_lesson}
 Studied water cycle: {studied_water_cycle}
 Elevator knowledge: {elevator_knowledge}
 Studied elevator catch: {studied_elevator_catch}
