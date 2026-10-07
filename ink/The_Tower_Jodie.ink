@@ -41,6 +41,7 @@ VAR rigging_system_insight = false
 
 // TEMP QA FLAG: force redirected Karma test, then switch back to false.
 VAR qa_force_redirected_karma = false
+VAR qa_force_serious_water_injury = true
 
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
@@ -579,22 +580,29 @@ The passage between them opens for seconds at a time.
 
     ~ temp dumb_roll = RANDOM(1, 200)
 
-    {rush_roll <= 10:
-        {dumb_roll == 1:
-            ~ dumb_luck_saves += 1
-            ~ dumb_luck_log = dumb_luck_log + "WATER GAP OPENED AT THE EXACT SECOND / "
-            The pressure drops at exactly the impossible second Jodie needs.
-        - else:
-            ~ injury += 2
-            ~ random_events += 1
-            ~ random_event_log = random_event_log + "SERIOUS WATER INJURY / "
-            ~ elapsed_time += 2
-        }
+    {qa_force_serious_water_injury:
+        ~ injury += 2
+        ~ random_events += 1
+        ~ random_event_log = random_event_log + "QA FORCED SERIOUS WATER INJURY / "
+        ~ elapsed_time += 2
     - else:
-        {rush_roll <= 25:
-            ~ injury += 1
-            ~ random_events += 1
-            ~ random_event_log = random_event_log + "LIGHT WATER INJURY / "
+        {rush_roll <= 10:
+            {dumb_roll == 1:
+                ~ dumb_luck_saves += 1
+                ~ dumb_luck_log = dumb_luck_log + "WATER GAP OPENED AT THE EXACT SECOND / "
+                The pressure drops at exactly the impossible second Jodie needs.
+            - else:
+                ~ injury += 2
+                ~ random_events += 1
+                ~ random_event_log = random_event_log + "SERIOUS WATER INJURY / "
+                ~ elapsed_time += 2
+            }
+        - else:
+            {rush_roll <= 25:
+                ~ injury += 1
+                ~ random_events += 1
+                ~ random_event_log = random_event_log + "LIGHT WATER INJURY / "
+            }
         }
     }
 
@@ -1205,6 +1213,7 @@ But the route changed what she knows, who trusts her, and how she moves through 
 
 --- DEBUG RUN SUMMARY ---
 QA redirected Karma force: {qa_force_redirected_karma}
+QA serious water injury force: {qa_force_serious_water_injury}
 Route: {route_log}
 Choices: {choice_log}
 Random events: {random_events}
