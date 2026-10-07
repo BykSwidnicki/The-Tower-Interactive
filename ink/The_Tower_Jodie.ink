@@ -27,6 +27,11 @@ VAR studied_water_cycle = false
 VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
 
+// Route logging guards prevent internal decision loops from looking like travel.
+VAR logged_rigging = false
+VAR logged_water_storage = false
+VAR logged_elevator_shaft = false
+
 // Living Tower consequence system.
 VAR karma_pending = 0
 VAR karma_hits = 0
@@ -143,7 +148,10 @@ Jodie looks toward the duct.
 
 === sail_rigging ===
 
-~ route_log = route_log + " → Rigging"
+{logged_rigging == false:
+    ~ route_log = route_log + " → Rigging"
+    ~ logged_rigging = true
+}
 
 Jodie drops through the duct and lands on a narrow maintenance platform.
 
@@ -406,7 +414,10 @@ Water Storage.
 
 === water_storage ===
 
-~ route_log = route_log + " → Water Storage"
+{logged_water_storage == false:
+    ~ route_log = route_log + " → Water Storage"
+    ~ logged_water_storage = true
+}
 
 ~ temp pressure_roll = RANDOM(1, 100)
 
@@ -984,7 +995,10 @@ She reaches the elevator shaft from the exposed side.
 
 === elevator_shaft ===
 
-~ route_log = route_log + " → Elevator Shaft"
+{logged_elevator_shaft == false:
+    ~ route_log = route_log + " → Elevator Shaft"
+    ~ logged_elevator_shaft = true
+}
 
 The shaft drops farther than Jodie can see.
 
