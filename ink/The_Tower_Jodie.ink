@@ -34,6 +34,10 @@ VAR used_rigging_water_descent = false
 VAR asked_rope_meaning = false
 VAR helped_riggers = false
 VAR passed_rigging_untouched = false
+VAR rigging_crew_favor = 0
+VAR rigging_121_problem_resolved = false
+VAR rigging_121_problem_helped = false
+VAR rigging_121_problem_warned = false
 VAR visited_living = false
 VAR water_maintainer_outfit = false
 
@@ -322,6 +326,102 @@ The great hanging sails are mostly above her now. Here the load resolves into gu
     Jodie is beginning to suspect the route itself is part of the lesson.
 }
 
+{rigging_121_problem_resolved == false:
+    A loaded guide wheel begins to walk sideways in its bracket.
+
+    Metal complains.
+
+    {rigging_consequence_pending:
+        The shudder is sharper than it should be.
+
+        Jodie knows exactly which upstairs experiment is feeding into it.
+    - else:
+        One of the sailors swears and reaches for a brace.
+
+        Routine here is only another word for danger everyone already knows by name.
+    }
+
+    * {rigging_knowledge >= 1} [Warn the nearest rigger that the lower guide is walking.]
+        ~ rigging_121_problem_resolved = true
+        ~ rigging_121_problem_warned = true
+        ~ rigging_crew_favor += 1
+        ~ story_insight += 1
+        ~ elapsed_time += 1
+        ~ rigging_direct_water_access = true
+        ~ choice_log = choice_log + "RIGGING 121 WARN / "
+
+        "Left guide."
+
+        The sailor looks where she is looking, then moves before the wheel can climb any farther.
+
+        "Good eye."
+
+        {rigging_consequence_pending:
+            {water_instability > 0:
+                ~ water_instability -= 1
+            }
+            {tower_stress > 0:
+                ~ tower_stress -= 1
+            }
+            ~ passive_mitigation_log = passive_mitigation_log + "RIGGING WARNING SOFTENED LOAD(-1 WATER/-1 STRESS) / "
+
+            She has not undone what she touched upstairs.
+
+            She has stopped it from getting worse here.
+        }
+
+        -> rigging_121
+
+    * {helped_riggers || solidarity >= 3} [Take the brace when the sailor shoves it toward her.]
+        ~ rigging_121_problem_resolved = true
+        ~ rigging_121_problem_helped = true
+        ~ rigging_crew_favor += 2
+        ~ solidarity += 1
+        ~ story_insight += 1
+        ~ elapsed_time += 2
+        ~ rigging_direct_water_access = true
+        ~ choice_log = choice_log + "RIGGING 121 BRACE / "
+        {rigging_knowledge < 2:
+            ~ rigging_knowledge += 1
+        }
+
+        Jodie plants the brace against the frame.
+
+        The wheel bucks once.
+
+        The sailor takes the load. Jodie holds the metal steady until the line settles back into its groove.
+
+        "All right, Filtration," he says.
+
+        This time it sounds less like an accusation.
+
+        {rigging_consequence_pending:
+            {water_instability > 0:
+                ~ water_instability -= 1
+            }
+            {tower_stress > 0:
+                ~ tower_stress -= 1
+            }
+            ~ passive_mitigation_log = passive_mitigation_log + "RIGGING BRACE SOFTENED LOAD(-1 WATER/-1 STRESS) / "
+
+            The system still remembers the mistake upstairs.
+
+            It just has less momentum behind it now.
+        }
+
+        -> rigging_121
+
+    * [Stay clear and keep moving.]
+        ~ rigging_121_problem_resolved = true
+        ~ choice_log = choice_log + "RIGGING 121 PASS / "
+
+        Jodie gives the moving line the space it deserves.
+
+        The sailors close around the problem behind her.
+
+        -> rigging_121
+}
+
 {rigging_knowledge >= 1 && studied_rigging_transfer == false:
     * [Watch one load transfer before leaving.]
         ~ studied_rigging_transfer = true
@@ -339,14 +439,27 @@ The great hanging sails are mostly above her now. Here the load resolves into gu
         -> rigging_121
 }
 
-A sailor points toward a narrow passage cut through the west side of the level.
+-> rigging_121_exit
 
-{rigging_knowledge >= 2:
-    He gives Jodie a second look.
-    "You've been paying attention."
-    He points out a safer handhold before she leaves.
+
+=== rigging_121_exit ===
+
+A sailor points toward a narrow passage cut through the west side of Rigging 121.
+
+{rigging_crew_favor >= 2:
+    "You ever come back through here, ask before you grab anything."
+
+    He jerks his chin toward the maintenance run.
+
+    "But we'll remember you."
 - else:
-    "Living quarters are through there."
+    {rigging_knowledge >= 2:
+        He gives Jodie a second look.
+        "You've been paying attention."
+        He points out a safer handhold before she leaves.
+    - else:
+        "Living quarters are through there."
+    }
 }
 
 {rigging_direct_water_access:
@@ -364,7 +477,6 @@ A sailor points toward a narrow passage cut through the west side of the level.
     Jodie looks once more at the suspended sails, then heads for the west passage.
     -> living_quarters
 }
-
 
 === rigging_water_descent ===
 
@@ -396,7 +508,7 @@ She has also passed everyone who might have helped her there.
 === living_quarters ===
 
 ~ visited_living = true
-~ route_log = route_log + " → Living"
+~ route_log = route_log + " → Living 120"
 
 The passage tightens, then opens into a corridor crowded with doors that do not quite match.
 
@@ -1417,6 +1529,8 @@ Injury: {injury}
 Time: {elapsed_time}
 Story insight: {story_insight}
 Rigging knowledge: {rigging_knowledge}
+Rigging crew favor: {rigging_crew_favor}
+Rigging 121 response: {rigging_121_problem_helped:BRACED|{rigging_121_problem_warned:WARNED|PASSED}}
 Studied rigging transfer: {studied_rigging_transfer}
 Water knowledge: {water_knowledge}
 Learned Water from Houdini: {learned_water_from_houdini}
