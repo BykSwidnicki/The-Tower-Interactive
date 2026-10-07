@@ -26,6 +26,9 @@ VAR dumb_luck_saves = 0
 VAR rigging_consequence_pending = false
 VAR rigging_system_insight = false
 
+// TEMP QA FLAG: force redirected Karma test, then switch back to false.
+VAR qa_force_redirected_karma = true
+
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
 VAR protection_houdini = false
@@ -376,32 +379,39 @@ Water Storage.
 ~ temp pressure_roll = RANDOM(1, 100)
 
 // A delayed consequence exists only because an earlier action caused it.
-{rigging_consequence_pending:
-    ~ temp karma_roll = RANDOM(1, 100)
-
-    {karma_roll <= 65:
-        ~ rigging_consequence_pending = false
-        ~ karma_pending -= 1
-        ~ karma_hits += 1
-        ~ tower_stress += 1
-        ~ honey_platform_available = false
-        ~ causal_log = causal_log + "RIGGING INTERFERENCE > WATER PRESSURE STUTTER / "
-        ~ karma_log = karma_log + "WATER PRESSURE STUTTER / "
-    }
-}
-
-{water_instability >= 2:
-    ~ pressure_roll -= 10
-}
-
-{tower_stress >= 3:
-    ~ pressure_roll -= 5
-}
-
-{pressure_roll <= 5:
+// QA mode forces the unrelated failure first and deliberately leaves Karma pending.
+{qa_force_redirected_karma:
     ~ honey_platform_available = false
     ~ random_events += 1
-    ~ random_event_log = random_event_log + "UNCAUSED PRESSURE VARIATION / "
+    ~ random_event_log = random_event_log + "QA FORCED UNCAUSED PRESSURE VARIATION / "
+- else:
+    {rigging_consequence_pending:
+        ~ temp karma_roll = RANDOM(1, 100)
+
+        {karma_roll <= 65:
+            ~ rigging_consequence_pending = false
+            ~ karma_pending -= 1
+            ~ karma_hits += 1
+            ~ tower_stress += 1
+            ~ honey_platform_available = false
+            ~ causal_log = causal_log + "RIGGING INTERFERENCE > WATER PRESSURE STUTTER / "
+            ~ karma_log = karma_log + "WATER PRESSURE STUTTER / "
+        }
+    }
+
+    {water_instability >= 2:
+        ~ pressure_roll -= 10
+    }
+
+    {tower_stress >= 3:
+        ~ pressure_roll -= 5
+    }
+
+    {pressure_roll <= 5:
+        ~ honey_platform_available = false
+        ~ random_events += 1
+        ~ random_event_log = random_event_log + "UNCAUSED PRESSURE VARIATION / "
+    }
 }
 
 A warning light blinks above the next hatch.
@@ -1080,6 +1090,7 @@ She made it to Medical.
 But the route changed what she knows, who trusts her, and how she moves through the tower.
 
 --- DEBUG RUN SUMMARY ---
+QA redirected Karma force: {qa_force_redirected_karma}
 Route: {route_log}
 Choices: {choice_log}
 Random events: {random_events}
