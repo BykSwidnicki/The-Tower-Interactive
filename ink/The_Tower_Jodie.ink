@@ -23,6 +23,7 @@ VAR tower_stress = 0
 VAR rigging_knowledge = 0
 VAR water_knowledge = 0
 VAR elevator_knowledge = 0
+VAR studied_water_cycle = false
 
 // Living Tower consequence system.
 VAR karma_pending = 0
@@ -360,6 +361,7 @@ Houdini steps into the corridor and looks at her work clothes.
     Houdini lowers his voice before she passes.
     "Water storage is cycling. Watch the timing."
     {protection_houdini == false:
+        ~ water_knowledge += 1
         ~ protection_houdini = true
         ~ protection_carried += 1
         ~ protection_log = protection_log + "HOUDINI WARNING / "
@@ -446,6 +448,21 @@ The passage between them opens for seconds at a time.
 
 {learned_ropes_of_life:
     She can hear the system working now: water caught above, held, released, pulled downward by gravity.
+}
+
+{studied_water_cycle == false:
+    * [Study one full cycle before deciding.]
+        ~ studied_water_cycle = true
+        ~ water_knowledge += 1
+        ~ story_insight += 1
+        ~ elapsed_time += 1
+        Jodie stays still for one complete exchange between Tank 4 and Tank 5.
+
+        The handoff is not simultaneous.
+
+        There is a fraction of a second when neither tank fully owns the load.
+
+        -> water_storage
 }
 
 * [Wait and count the cycle.]
@@ -1147,6 +1164,7 @@ Time: {elapsed_time}
 Story insight: {story_insight}
 Rigging knowledge: {rigging_knowledge}
 Water knowledge: {water_knowledge}
+Studied water cycle: {studied_water_cycle}
 Elevator knowledge: {elevator_knowledge}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
