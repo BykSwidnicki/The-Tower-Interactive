@@ -16,9 +16,31 @@ VAR honey_platform_available = true
 VAR elapsed_time = 0
 VAR injury = 0
 VAR recklessness = 0
-VAR mitigation_used = 0
+VAR story_insight = 0
+VAR tower_stress = 0
+
+// Living Tower consequence system.
+VAR karma_pending = 0
+VAR karma_hits = 0
+VAR dumb_luck_saves = 0
+VAR rigging_consequence_pending = false
+VAR rigging_system_insight = false
+
+// Preparation is carried until a relevant hazard actually uses it.
+VAR protection_water = false
+VAR protection_houdini = false
+VAR protection_brake = false
+VAR protection_carried = 0
+VAR mitigation_spent = 0
+
+// Debug telemetry.
 VAR recklessness_log = ""
+VAR protection_log = ""
 VAR mitigation_log = ""
+VAR passive_mitigation_log = ""
+VAR karma_log = ""
+VAR dumb_luck_log = ""
+VAR causal_log = ""
 VAR random_event_log = ""
 VAR route_block_log = ""
 
@@ -140,8 +162,14 @@ A suspended water sail shifts into place above the dark.
 
 * [Ask what "rope of life" means.]
     ~ curiosity += 1
+    ~ story_insight += 1
     ~ elapsed_time += 2
     ~ learned_ropes_of_life = true
+    {protection_water == false:
+        ~ protection_water = true
+        ~ protection_carried += 1
+        ~ protection_log = protection_log + "ROPES KNOWLEDGE / "
+    }
     "Rope of life?"
     One of the sailors looks at her as if the answer should be obvious.
     "The line between water and no water."
@@ -151,52 +179,39 @@ A suspended water sail shifts into place above the dark.
 
 * [Help them pull before moving on.]
     ~ solidarity += 1
+    ~ story_insight += 1
     ~ elapsed_time += 3
     ~ learned_ropes_of_life = true
+    {protection_water == false:
+        ~ protection_water = true
+        ~ protection_carried += 1
+        ~ protection_log = protection_log + "HANDS-ON RIGGING KNOWLEDGE / "
+    }
     Jodie grabs the nearest line.
     It jerks hard enough to burn against her palm.
     "Now you know," the sailor says.
     "Rope of life."
     -> rigging_crossing
 
-* [Touch the unfamiliar control line to clear her path.]
+* [Test the unfamiliar control line to see what it does.]
     ~ recklessness += 1
-    ~ recklessness_log = recklessness_log + "GRAB WRONG LINE / "
+    ~ recklessness_log = recklessness_log + "TEST RIGGING CONTROL / "
     ~ curiosity += 1
+    ~ story_insight += 1
     ~ elapsed_time += 1
     ~ water_instability += 2
-    ~ choice_log = choice_log + "GRAB WRONG LINE / "
-    ~ temp line_roll = RANDOM(1, 100)
+    ~ tower_stress += 2
+    ~ karma_pending += 1
+    ~ rigging_consequence_pending = true
+    ~ rigging_system_insight = true
+    ~ choice_log = choice_log + "TEST RIGGING CONTROL / "
+    ~ causal_log = causal_log + "RIGGING INTERFERENCE > PENDING CONSEQUENCE / "
 
-    {recklessness >= 2:
-        ~ line_roll -= 10
-    }
-
-    {line_roll <= 10:
-        ~ injury += 2
-        ~ random_events += 1
-        ~ random_event_log = random_event_log + "SERIOUS RIGGING INJURY / "
-    - else:
-        {line_roll <= 35:
-            ~ injury += 1
-            ~ random_events += 1
-            ~ random_event_log = random_event_log + "LIGHT RIGGING INJURY / "
-        }
-    }
-
-    Jodie gives the line a quick pull.
+    Jodie gives the line a careful experimental pull.
 
     Somewhere above, a pulley answers with a hard metallic knock.
 
-    {injury >= 2:
-        The line snaps tight and yanks her shoulder hard enough to spin her sideways.
-    - else:
-        {injury == 1:
-            The line bites across her palm before she can let go.
-        - else:
-            The line bucks in her hand, but she gets away with it.
-        }
-    }
+    The resistance tells her something useful: this line is tied into the water load.
 
     One of the sailors looks over.
 
@@ -205,6 +220,8 @@ A suspended water sail shifts into place above the dark.
     Jodie lets go.
 
     Nothing obvious happens.
+
+    That does not mean nothing happened.
     -> rigging_crossing
 
 * [Keep moving. She has a job to do.]
@@ -325,6 +342,12 @@ Houdini steps into the corridor and looks at her work clothes.
 {told_truth_to_houdini:
     Houdini lowers his voice before she passes.
     "Water storage is cycling. Watch the timing."
+    {protection_houdini == false:
+        ~ protection_houdini = true
+        ~ protection_carried += 1
+        ~ protection_log = protection_log + "HOUDINI WARNING / "
+        ~ story_insight += 1
+    }
 }
 
 {learned_ropes_of_life:
@@ -352,14 +375,33 @@ Water Storage.
 
 ~ temp pressure_roll = RANDOM(1, 100)
 
+// A delayed consequence exists only because an earlier action caused it.
+{rigging_consequence_pending:
+    ~ temp karma_roll = RANDOM(1, 100)
+
+    {karma_roll <= 65:
+        ~ rigging_consequence_pending = false
+        ~ karma_pending -= 1
+        ~ karma_hits += 1
+        ~ tower_stress += 1
+        ~ honey_platform_available = false
+        ~ causal_log = causal_log + "RIGGING INTERFERENCE > WATER PRESSURE STUTTER / "
+        ~ karma_log = karma_log + "WATER PRESSURE STUTTER / "
+    }
+}
+
 {water_instability >= 2:
     ~ pressure_roll -= 10
+}
+
+{tower_stress >= 3:
+    ~ pressure_roll -= 5
 }
 
 {pressure_roll <= 5:
     ~ honey_platform_available = false
     ~ random_events += 1
-    ~ random_event_log = random_event_log + "PRESSURE FAILURE / "
+    ~ random_event_log = random_event_log + "UNCAUSED PRESSURE VARIATION / "
 }
 
 A warning light blinks above the next hatch.
@@ -419,41 +461,56 @@ The passage between them opens for seconds at a time.
     ~ temp rush_roll = RANDOM(1, 100)
 
     {water_instability >= 2:
-        ~ rush_roll -= 25
+        ~ rush_roll -= 20
+    }
+
+    {tower_stress >= 2:
+        ~ rush_roll -= 5
     }
 
     {recklessness >= 2:
         ~ rush_roll -= 10
     }
 
-    {recklessness >= 4:
-        ~ rush_roll -= 10
-    }
-
-    // Knowledge and personal development can mitigate a reckless choice.
-    {learned_ropes_of_life:
-        ~ rush_roll += 10
-        ~ mitigation_used += 1
-        ~ mitigation_log = mitigation_log + "ROPES KNOWLEDGE(+10) / "
-    }
-
-    {told_truth_to_houdini:
-        ~ rush_roll += 10
-        ~ mitigation_used += 1
-        ~ mitigation_log = mitigation_log + "HOUDINI WARNING(+10) / "
-    }
-
     {curiosity >= 5:
         ~ rush_roll += 5
-        ~ mitigation_used += 1
-        ~ mitigation_log = mitigation_log + "HIGH CURIOSITY(+5) / "
+        ~ passive_mitigation_log = passive_mitigation_log + "HIGH CURIOSITY(+5) / "
     }
 
+    {rigging_system_insight:
+        ~ rush_roll += 5
+        ~ passive_mitigation_log = passive_mitigation_log + "RIGGING SYSTEM INSIGHT(+5) / "
+    }
+
+    {protection_water:
+        ~ rush_roll += 10
+        ~ protection_water = false
+        ~ protection_carried -= 1
+        ~ mitigation_spent += 1
+        ~ mitigation_log = mitigation_log + "ROPES KNOWLEDGE SPENT(+10) / "
+    }
+
+    {protection_houdini:
+        ~ rush_roll += 10
+        ~ protection_houdini = false
+        ~ protection_carried -= 1
+        ~ mitigation_spent += 1
+        ~ mitigation_log = mitigation_log + "HOUDINI WARNING SPENT(+10) / "
+    }
+
+    ~ temp dumb_roll = RANDOM(1, 200)
+
     {rush_roll <= 10:
-        ~ injury += 2
-        ~ random_events += 1
-        ~ random_event_log = random_event_log + "SERIOUS WATER INJURY / "
-        ~ elapsed_time += 2
+        {dumb_roll == 1:
+            ~ dumb_luck_saves += 1
+            ~ dumb_luck_log = dumb_luck_log + "WATER GAP OPENED AT THE EXACT SECOND / "
+            The pressure drops at exactly the impossible second Jodie needs.
+        - else:
+            ~ injury += 2
+            ~ random_events += 1
+            ~ random_event_log = random_event_log + "SERIOUS WATER INJURY / "
+            ~ elapsed_time += 2
+        }
     - else:
         {rush_roll <= 25:
             ~ injury += 1
@@ -462,13 +519,12 @@ The passage between them opens for seconds at a time.
         }
     }
 
-    {mitigation_used > 0:
+    {mitigation_spent > 0:
         She is still taking a chance, but not blindly.
     }
 
     Jodie grips the rail and runs.
     -> water_crossing
-
 
 === water_crossing ===
 
@@ -508,6 +564,16 @@ Then she is through.
 === agro ===
 
 ~ route_log = route_log + " → Agro"
+
+{rigging_consequence_pending:
+    ~ rigging_consequence_pending = false
+    ~ karma_pending -= 1
+    ~ karma_hits += 1
+    ~ tower_stress += 1
+    ~ honey_platform_available = false
+    ~ causal_log = causal_log + "RIGGING INTERFERENCE > AGRO TRANSFER FAILURE / "
+    ~ karma_log = karma_log + "AGRO TRANSFER FAILURE / "
+}
 
 {elapsed_time >= 7:
     ~ honey_platform_available = false
@@ -859,6 +925,12 @@ The gate rattles shut.
     ~ recklessness = MAX(0, recklessness - 1)
     ~ recklessness_log = recklessness_log + "INSPECT BRAKE(-1) / "
     ~ curiosity += 1
+    ~ story_insight += 1
+    {protection_brake == false:
+        ~ protection_brake = true
+        ~ protection_carried += 1
+        ~ protection_log = protection_log + "BRAKE INSPECTION / "
+    }
     Jodie checks the lever, cable, and catch.
     None of it inspires confidence.
     -> shaft_descent
@@ -887,13 +959,49 @@ Some lit.
 Some dark.
 Most gone before Jodie can make sense of them.
 
+~ temp shaft_roll = RANDOM(1, 100)
+
+{tower_stress >= 3:
+    ~ shaft_roll -= 10
+}
+
+{recklessness >= 3:
+    ~ shaft_roll -= 10
+}
+
 Metal screams somewhere below.
 
-The cage lurches.
+{shaft_roll <= 20:
+    The cage lurches harder than it should.
 
-Emergency brakes catch.
+    {protection_brake:
+        ~ protection_brake = false
+        ~ protection_carried -= 1
+        ~ mitigation_spent += 1
+        ~ mitigation_log = mitigation_log + "BRAKE INSPECTION SPENT / "
+        Jodie is already reaching for the emergency catch.
 
-Jodie is thrown against the rail.
+        The brakes bite before the cage can build full speed.
+    - else:
+        ~ temp shaft_dumb_roll = RANDOM(1, 200)
+        {shaft_dumb_roll == 1:
+            ~ dumb_luck_saves += 1
+            ~ dumb_luck_log = dumb_luck_log + "SHAFT CABLE SNAGGED ON ITS OWN / "
+            A loose cable snags against the frame and steals just enough speed.
+        - else:
+            ~ injury += 1
+            ~ random_events += 1
+            ~ random_event_log = random_event_log + "SHAFT IMPACT INJURY / "
+            The emergency brakes catch late.
+
+            Jodie slams into the rail.
+        }
+    }
+- else:
+    Emergency brakes catch.
+
+    Jodie is thrown against the rail, but the cage stops where it should.
+}
 
 Then silence.
 
@@ -902,7 +1010,6 @@ A final mechanical groan.
 The doors twitch open.
 
 -> medical_intake
-
 
 === medical_intake ===
 
@@ -976,18 +1083,33 @@ But the route changed what she knows, who trusts her, and how she moves through 
 Route: {route_log}
 Choices: {choice_log}
 Random events: {random_events}
+Random event log: {random_event_log}
 Injury: {injury}
 Time: {elapsed_time}
-Story insight: {curiosity}
+Story insight: {story_insight}
+Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
-Water instability: {water_instability}
+
 Recklessness: {recklessness}
 Recklessness sources: {recklessness_log}
-Mitigation used: {mitigation_used}
+Tower stress: {tower_stress}
+
+Protection carried at ending: {protection_carried}
+Protection sources: {protection_log}
+Mitigation spent on actual danger: {mitigation_spent}
 Mitigation sources: {mitigation_log}
-Random event log: {random_event_log}
+Passive mitigation: {passive_mitigation_log}
+
+Karma pending: {karma_pending}
+Karma hits: {karma_hits}
+Karma log: {karma_log}
+Dumb luck saves: {dumb_luck_saves}
+Dumb luck log: {dumb_luck_log}
+
+Causality: {causal_log}
 Route blocks: {route_block_log}
 Gate snapshot: TYLER={tyler_trust >= 2:OPEN|CLOSED} / HONEY={honey_platform_available:OPEN|CLOSED} / OPEN_FLOOR={injury < 2:OPEN|CLOSED}
+Water instability: {water_instability}
 Honey platform available: {honey_platform_available}
 Ending reached: {injury >= 2: INJURED ARRIVAL|SAFE ARRIVAL}
 --- END DEBUG ---
