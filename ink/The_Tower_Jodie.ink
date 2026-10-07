@@ -362,6 +362,7 @@ Houdini steps into the corridor and looks at her work clothes.
 }
 
 * {rigging_knowledge >= 2} [Mention the load transfer she saw in Rigging.]
+    ~ choice_log = choice_log + "HOUDINI: RIGGING TALK / "
     ~ water_knowledge += 1
     ~ story_insight += 1
     "The load does not move all at once. There is a handoff."
@@ -788,6 +789,7 @@ Tyler studies the grime on her clothes.
 "You're a long way from Filtration."
 
 * {water_knowledge >= 2} [Ask Tyler whether the transfer motor is losing load.]
+    ~ choice_log = choice_log + "TYLER: MOTOR DIAGNOSIS / "
     ~ curiosity += 1
     ~ story_insight += 1
     ~ tyler_trust += 1
