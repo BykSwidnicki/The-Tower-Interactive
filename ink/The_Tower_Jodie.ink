@@ -27,7 +27,7 @@ VAR rigging_consequence_pending = false
 VAR rigging_system_insight = false
 
 // TEMP QA FLAG: force redirected Karma test, then switch back to false.
-VAR qa_force_redirected_karma = true
+VAR qa_force_redirected_karma = false
 
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
