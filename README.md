@@ -40,3 +40,8 @@ Filtration 123 → Sail Rigging → Living Quarters → Water Storage → Agro �
 ## What this demonstrates
 
 Interactive narrative design, story architecture, branching discipline, state tracking, environmental storytelling, continuity management, and adaptation of prose into a playable narrative system.
+
+
+## World architecture
+
+- [East/West Floor Bible — Levels 40–131](design/The_Tower_East_West_Floor_Bible_40-131.md) — working architectural authority for Tower geography, floor functions, transportation, AUTHOR LOCKS, RESERVED space, and interactive-route constraints.
