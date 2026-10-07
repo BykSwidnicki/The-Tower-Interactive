@@ -39,11 +39,18 @@ VAR rigging_121_problem_resolved = false
 VAR rigging_121_problem_helped = false
 VAR rigging_121_problem_warned = false
 VAR visited_living = false
+VAR living_clinic_favor = 0
+VAR used_living_service_cut = false
+VAR carrying_clinic_supply = false
+VAR spine_crossed_with_water_crew = false
+VAR spine_crossed_with_clinic_run = false
+VAR spine_crossed_service_gap = false
 VAR water_maintainer_outfit = false
 
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
 VAR logged_rigging_121 = false
+VAR logged_spine_119 = false
 VAR logged_water_storage = false
 VAR logged_elevator_shaft = false
 
@@ -548,6 +555,16 @@ The older man sighs.
 
 Jodie looks from one to the other.
 
+{rigging_crew_favor >= 2:
+    Copperfield studies the fresh rope burn on her palm.
+
+    "Rigging already knows you."
+
+    Houdini looks mildly impressed.
+
+    "That was quick."
+}
+
 {curiosity >= 3:
     She cannot tell whether the names are jokes, titles, or camouflage.
 }
@@ -577,6 +594,7 @@ Houdini steps into the corridor and looks at her work clothes.
         ~ learned_water_from_houdini = true
     }
     ~ story_insight += 1
+
     "The load does not move all at once. There is a handoff."
 
     Houdini's expression changes.
@@ -596,28 +614,44 @@ Houdini steps into the corridor and looks at her work clothes.
     ~ elapsed_time += 1
     ~ told_truth_to_houdini = true
     ~ solidarity += 1
+
     "Brooks sent me. Filtration needs an O-ring."
+
     Houdini studies her for a beat.
+
     "Then you're not wandering."
+
     He points down the corridor.
+
     "You're in a hurry."
+
     -> living_exit
 
 * [Keep the mission vague.]
     ~ curiosity += 1
     ~ elapsed_time += 2
+
     "Maintenance."
+
     Houdini raises an eyebrow.
+
     "That's a large word for a small answer."
+
     Copperfield snorts into his cards.
+
     -> living_exit
 
 * [Tell him it is none of his business.]
     ~ defiance += 1
+
     "It isn't your business."
+
     Houdini smiles without warmth.
+
     "Then I suppose I don't need to know."
+
     He steps aside anyway.
+
     -> living_exit
 
 
@@ -625,7 +659,9 @@ Houdini steps into the corridor and looks at her work clothes.
 
 {told_truth_to_houdini:
     Houdini lowers his voice before she passes.
-    "Water storage is cycling. Watch the timing."
+
+    "Water Storage is cycling. Watch the timing."
+
     {protection_houdini == false:
         {learned_water_from_houdini == false:
             ~ water_knowledge += 1
@@ -640,29 +676,234 @@ Houdini steps into the corridor and looks at her work clothes.
 
 {learned_ropes_of_life:
     Jodie hears water moving somewhere inside the walls.
+
     After Rigging, the sound means more than it did an hour ago.
 }
 
 {told_truth_to_houdini == false:
     Copperfield flips a card across his knuckles.
+
     "If anyone asks, you were never here."
 }
+
+Farther down the corridor, a door stands open beneath a hand-painted white stripe.
+
+Inside are two cots, a birthing chair made from welded pipe, shelves of bandages, and a woman arguing with a leaking water canister.
+
+Nobody calls it a hospital.
+
+It is simply where this part of the Tower brings people who cannot make the trip to Medical.
 
 Houdini looks toward the central spine.
 
 "You're not crossing dressed like Filtration."
 
-A few minutes later, François appears with a mask and a water-maintenance suit.
+* [Wait for François and cross with the Water Maintainers.]
+    ~ elapsed_time += 1
 
-{water_maintainer_outfit == false:
-    ~ water_maintainer_outfit = true
+    A few minutes later, François appears with a mask and a water-maintenance suit.
+
+    {water_maintainer_outfit == false:
+        ~ water_maintainer_outfit = true
+    }
+
+    Jodie pulls the borrowed gear on.
+
+    ~ choice_log = choice_log + "FRANCOIS DISGUISE / "
+    -> spine_119
+
+* {told_truth_to_houdini || solidarity >= 2} [Help carry the infirmary's water and leave with its supply run.]
+    ~ elapsed_time += 2
+    ~ solidarity += 1
+    ~ living_clinic_favor += 1
+    ~ carrying_clinic_supply = true
+    ~ choice_log = choice_log + "CLINIC SUPPLY RUN / "
+
+    Jodie takes the leaking canister before the woman can ask who she is.
+
+    "Not like that," the woman says.
+
+    She turns the cracked seam upward and wraps it with a strip of rubber.
+
+    "Now carry it."
+
+    By the time the little supply group moves toward the Spine, Jodie is carrying something people expect to see moving between sections.
+
+    -> spine_119
+
+* {rigging_crew_favor >= 2} [Take the maintenance cut Copperfield points out.]
+    ~ elapsed_time += 1
+    ~ curiosity += 1
+    ~ used_living_service_cut = true
+    ~ choice_log = choice_log + "LIVING SERVICE CUT / "
+    ~ route_log = route_log + " → Living Service Cut"
+
+    Copperfield palms a card, then taps the wall behind him.
+
+    The panel beside the pipe chase is already loose.
+
+    "Rigging likes you," he says.
+
+    "That buys exactly one bad idea."
+
+    Jodie slips into the service cut.
+
+    -> spine_119
+
+
+=== spine_119 ===
+
+{logged_spine_119 == false:
+    ~ route_log = route_log + " → Spine 119"
+    ~ logged_spine_119 = true
 }
 
-Jodie pulls the borrowed gear on.
+The corridor opens all at once.
 
-The corridor narrows again.
+For the first time since leaving Filtration, Jodie can see the Tower's split clearly.
 
-Ahead, the air turns colder.
+West behind her.
+
+East across the central gap.
+
+Between them: the Spine.
+
+People move through in controlled bursts. Water crews. Carts. Repair teams. A Guardian at a narrow checkpoint watches uniforms, loads, faces.
+
+The crossing is not forbidden.
+
+Belonging to the wrong place is.
+
+{water_maintainer_outfit:
+    The mask hides part of Jodie's face.
+
+    The suit does the rest.
+
+    François joins a Water Maintainer group without looking back to see whether she follows.
+
+    * [Stay in formation and cross with them.]
+        ~ spine_crossed_with_water_crew = true
+        ~ choice_log = choice_log + "SPINE: WATER CREW / "
+
+        Jodie keeps the same pace as everyone around her.
+
+        Nobody asks her name.
+
+        -> spine_119_exit
+
+    * {curiosity >= 3} [Watch the checkpoint pattern before joining the next group.]
+        ~ elapsed_time += 1
+        ~ story_insight += 1
+        ~ choice_log = choice_log + "SPINE: STUDY CHECKPOINT / "
+
+        Jodie waits long enough to see the rule.
+
+        The Guardian checks people.
+
+        The clerk checks loads.
+
+        Everyone watches the wrong authority.
+
+        She joins the next Water crew when both are occupied.
+
+        ~ spine_crossed_with_water_crew = true
+        -> spine_119_exit
+
+- else:
+    {carrying_clinic_supply:
+        The woman from the infirmary takes the front of the little supply group.
+
+        Nobody has given Jodie a uniform.
+
+        They have given her a reason to be here.
+
+        * [Keep carrying the canister and let the errand explain her.]
+            ~ spine_crossed_with_clinic_run = true
+            ~ choice_log = choice_log + "SPINE: CLINIC RUN / "
+
+            The Guardian looks at Jodie.
+
+            Then at the water canister.
+
+            Then at the white-striped medical bundle tucked under the woman's arm.
+
+            "Move."
+
+            Jodie moves.
+
+            -> spine_119_exit
+    - else:
+        {used_living_service_cut:
+            The maintenance cut ends behind a grated access panel overlooking the crossing.
+
+            Jodie can see the checkpoint from the wrong side of its assumptions.
+
+            * [Wait for a service cart to block the sightline.]
+                ~ elapsed_time += 2
+                ~ curiosity += 1
+                ~ spine_crossed_service_gap = true
+                ~ choice_log = choice_log + "SPINE: SERVICE GAP / "
+
+                A cart stacked with filter housings squeals into the crossing.
+
+                For three seconds, the Guardian cannot see the maintenance wall.
+
+                Jodie uses all three.
+
+                -> spine_119_exit
+
+            * [Cross immediately before anyone notices the panel move.]
+                ~ recklessness += 1
+                ~ recklessness_log = recklessness_log + "SPINE DASH / "
+                ~ tower_stress += 1
+                ~ spine_crossed_service_gap = true
+                ~ choice_log = choice_log + "SPINE: DASH / "
+
+                Jodie pushes the grate just wide enough and goes.
+
+                Someone shouts behind her.
+
+                Not her name.
+
+                Good enough.
+
+                -> spine_119_exit
+        }
+    }
+}
+
+
+=== spine_119_exit ===
+
+The East-side corridor closes around her.
+
+The air is colder here.
+
+Storage racks give way to valve housings, condensation, and the deep metal shapes of tanks packed too close together.
+
+{spine_crossed_with_water_crew:
+    François peels away without ceremony.
+
+    The disguise got Jodie across.
+
+    It will not get her through the machinery.
+}
+
+{spine_crossed_with_clinic_run:
+    The infirmary group turns toward a service locker.
+
+    The woman takes the patched canister back.
+
+    "You carried it straight," she says.
+
+    In this part of the Tower, that seems to count as thanks.
+}
+
+{spine_crossed_service_gap:
+    Jodie reaches the mechanical side without a uniform, escort, or permission.
+
+    That works exactly once.
+}
 
 Water Storage.
 
@@ -1520,6 +1761,9 @@ QA serious water injury force: {qa_force_serious_water_injury}
 Route: {route_log}
 Choices: {choice_log}
 Visited Living: {visited_living}
+Living clinic favor: {living_clinic_favor}
+Living service cut used: {used_living_service_cut}
+Spine crossing: {spine_crossed_with_water_crew:WATER_CREW|{spine_crossed_with_clinic_run:CLINIC_RUN|{spine_crossed_service_gap:SERVICE_GAP|NONE}}}
 Rigging direct Water descent used: {used_rigging_water_descent}
 Rigging 122 action: {helped_riggers:HELPED|{asked_rope_meaning:ASKED_ROPE|{rigging_consequence_pending:TESTED_CONTROL|{passed_rigging_untouched:TOUCHED_NOTHING|OTHER}}}}
 Water Maintainer disguise obtained: {water_maintainer_outfit}
