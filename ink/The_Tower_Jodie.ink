@@ -349,7 +349,35 @@ Jodie looks from one to the other.
 
 Houdini steps into the corridor and looks at her work clothes.
 
-"Filtration doesn't wander."
+{rigging_knowledge >= 2:
+    Houdini glances at the rope marks on her hands.
+
+    "Rigging let you touch the load lines?"
+
+    Jodie says nothing.
+
+    "Then you listened."
+- else:
+    "Filtration doesn't wander."
+}
+
+* {rigging_knowledge >= 2} [Mention the load transfer she saw in Rigging.]
+    ~ water_knowledge += 1
+    ~ story_insight += 1
+    "The load does not move all at once. There is a handoff."
+
+    Houdini's expression changes.
+
+    "Good. Then watch for the same thing in Water Storage. Tank 4 gives up before Tank 5 fully takes it."
+
+    {protection_houdini == false:
+        ~ protection_houdini = true
+        ~ protection_carried += 1
+        ~ protection_log = protection_log + "HOUDINI TECHNICAL WARNING / "
+    }
+
+    ~ told_truth_to_houdini = true
+    -> living_exit
 
 * [Tell him the truth. Brooks sent her for an O-ring.]
     ~ elapsed_time += 1
@@ -733,6 +761,18 @@ His name is Tyler.
 
 === agro_talk ===
 
+{water_knowledge >= 2:
+    Tyler watches the way Jodie listens to the transfer motor.
+
+    "You came through Water Storage and you still know what that sound means?"
+
+    Jodie looks toward the machinery.
+
+    "Mostly."
+
+    Tyler's tone changes. Less teasing. More assessment.
+}
+
 Tyler studies the grime on her clothes.
 
 {honey_platform_available:
@@ -746,6 +786,22 @@ Tyler studies the grime on her clothes.
 }
 
 "You're a long way from Filtration."
+
+* {water_knowledge >= 2} [Ask Tyler whether the transfer motor is losing load.]
+    ~ curiosity += 1
+    ~ story_insight += 1
+    ~ tyler_trust += 1
+    "That motor is slipping under load, isn't it?"
+
+    Tyler looks at her properly now.
+
+    "You hear that?"
+
+    "I hear enough."
+
+    "Then don't use the upper transfer if it starts hunting. Lower route is slower, but it won't throw you."
+
+    -> agro_exit
 
 * [Tell Tyler about the O-ring.]
     ~ told_tyler_mission = true
@@ -1229,6 +1285,7 @@ Elevator knowledge: {elevator_knowledge}
 Studied elevator catch: {studied_elevator_catch}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
+Character recognition: HOUDINI_RIGGING={rigging_knowledge >= 2:ON|OFF} / TYLER_WATER={water_knowledge >= 2:ON|OFF}
 
 Recklessness: {recklessness}
 Recklessness sources: {recklessness_log}
