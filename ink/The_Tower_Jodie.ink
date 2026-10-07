@@ -26,6 +26,7 @@ VAR elevator_knowledge = 0
 VAR studied_water_cycle = false
 VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
+VAR learned_water_from_houdini = false
 
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
@@ -363,7 +364,10 @@ Houdini steps into the corridor and looks at her work clothes.
 
 * {rigging_knowledge >= 2} [Mention the load transfer she saw in Rigging.]
     ~ choice_log = choice_log + "HOUDINI: RIGGING TALK / "
-    ~ water_knowledge += 1
+    {learned_water_from_houdini == false:
+        ~ water_knowledge += 1
+        ~ learned_water_from_houdini = true
+    }
     ~ story_insight += 1
     "The load does not move all at once. There is a handoff."
 
@@ -415,7 +419,10 @@ Houdini steps into the corridor and looks at her work clothes.
     Houdini lowers his voice before she passes.
     "Water storage is cycling. Watch the timing."
     {protection_houdini == false:
-        ~ water_knowledge += 1
+        {learned_water_from_houdini == false:
+            ~ water_knowledge += 1
+            ~ learned_water_from_houdini = true
+        }
         ~ protection_houdini = true
         ~ protection_carried += 1
         ~ protection_log = protection_log + "HOUDINI WARNING / "
@@ -1282,6 +1289,7 @@ Story insight: {story_insight}
 Rigging knowledge: {rigging_knowledge}
 Studied rigging transfer: {studied_rigging_transfer}
 Water knowledge: {water_knowledge}
+Learned Water from Houdini: {learned_water_from_houdini}
 Studied water cycle: {studied_water_cycle}
 Elevator knowledge: {elevator_knowledge}
 Studied elevator catch: {studied_elevator_catch}
