@@ -29,6 +29,10 @@ VAR studied_elevator_catch = false
 VAR learned_water_from_houdini = false
 VAR pending_water_lesson = 0
 VAR tyler_water_recognized = false
+VAR rigging_direct_water_access = false
+VAR used_rigging_water_descent = false
+VAR visited_living = false
+VAR water_maintainer_outfit = false
 
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
@@ -207,6 +211,7 @@ A suspended water sail shifts into place above the dark.
     ~ rigging_knowledge += 1
     ~ elapsed_time += 3
     ~ learned_ropes_of_life = true
+    ~ rigging_direct_water_access = true
     {protection_water == false:
         ~ protection_water = true
         ~ protection_carried += 1
@@ -216,6 +221,10 @@ A suspended water sail shifts into place above the dark.
     It jerks hard enough to burn against her palm.
     "Now you know," the sailor says.
     "Rope of life."
+
+    He jerks his chin toward a maintenance ladder disappearing beside the water lines.
+
+    "If you're going down, that drops toward Storage. Faster than cutting through the sleepers."
     -> rigging_crossing
 
 * [Test the unfamiliar control line to see what it does.]
@@ -277,10 +286,13 @@ A suspended water sail shifts into place above the dark.
         ~ rigging_knowledge += 1
         ~ story_insight += 1
         ~ elapsed_time += 1
+        ~ rigging_direct_water_access = true
 
         Jodie watches the sailors hand the load from one line to another.
 
         The trick is not strength. It is knowing which line becomes dangerous when the weight moves.
+
+        Following the loaded line with her eyes, she spots a maintenance ladder dropping beside the water pipes. It bypasses the west passage entirely.
 
         -> rigging_crossing
 }
@@ -295,13 +307,53 @@ A sailor points toward a narrow passage cut through the west side of the level.
     "Living quarters are through there."
 }
 
-Jodie looks once more at the suspended sails, then heads for the passage.
+{rigging_direct_water_access:
+    Jodie has two ways down now.
 
--> living_quarters
+    * [Take the west passage through Living Quarters.]
+        ~ choice_log = choice_log + "LIVING ROUTE / "
+        -> living_quarters
+
+    * [Follow the maintenance descent toward Water Storage.]
+        ~ choice_log = choice_log + "RIGGING WATER DESCENT / "
+        ~ used_rigging_water_descent = true
+        -> rigging_water_descent
+- else:
+    Jodie looks once more at the suspended sails, then heads for the west passage.
+    -> living_quarters
+}
+
+
+=== rigging_water_descent ===
+
+~ route_log = route_log + " → Rigging Service Descent"
+
+The ladder drops beside sweating water pipes.
+
+No bedrooms. No doors. No people asking where she belongs.
+
+Just steel rungs, valve housings, and the sound of water moving behind the walls.
+
+{learned_ropes_of_life:
+    She can follow the system by sound now.
+}
+
+Jodie keeps descending until the air turns colder.
+
+A stenciled maintenance arrow points through a narrow hatch:
+
+WATER STORAGE.
+
+She has saved herself the crossing through Living.
+
+She has also passed everyone who might have helped her there.
+
+-> water_storage
 
 
 === living_quarters ===
 
+~ visited_living = true
 ~ route_log = route_log + " → Living"
 
 The passage tightens, then opens into a corridor crowded with doors that do not quite match.
@@ -442,6 +494,18 @@ Houdini steps into the corridor and looks at her work clothes.
     "If anyone asks, you were never here."
 }
 
+Houdini looks toward the central spine.
+
+"You're not crossing dressed like Filtration."
+
+A few minutes later, François appears with a mask and a water-maintenance suit.
+
+{water_maintainer_outfit == false:
+    ~ water_maintainer_outfit = true
+}
+
+Jodie pulls the borrowed gear on.
+
 The corridor narrows again.
 
 Ahead, the air turns colder.
@@ -497,6 +561,12 @@ Water Storage.
 }
 
 A warning light blinks above the next hatch.
+
+{water_maintainer_outfit:
+    The borrowed Water Maintenance gear gets her past the first glances. It does nothing about the machinery.
+- else:
+    In Filtration clothes, Jodie feels conspicuous before she even reaches the tanks.
+}
 
 Behind it, Tank 4 is draining and Tank 5 is beginning to fill.
 
@@ -747,6 +817,12 @@ He looks at Jodie.
 "Right?"
 
 His name is Tyler.
+
+{water_maintainer_outfit:
+    Tyler's eyes flick over the borrowed Water Maintenance gear. He understands enough not to ask the obvious question first.
+- else:
+    His eyes pause on the Filtration clothes.
+}
 
 * [Back up his lie.]
     ~ tyler_trust += 1
@@ -1289,6 +1365,9 @@ QA redirected Karma force: {qa_force_redirected_karma}
 QA serious water injury force: {qa_force_serious_water_injury}
 Route: {route_log}
 Choices: {choice_log}
+Visited Living: {visited_living}
+Rigging direct Water descent used: {used_rigging_water_descent}
+Water Maintainer disguise obtained: {water_maintainer_outfit}
 Random events: {random_events}
 Random event log: {random_event_log}
 Injury: {injury}
