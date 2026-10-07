@@ -24,6 +24,8 @@ VAR rigging_knowledge = 0
 VAR water_knowledge = 0
 VAR elevator_knowledge = 0
 VAR studied_water_cycle = false
+VAR studied_rigging_transfer = false
+VAR studied_elevator_catch = false
 
 // Living Tower consequence system.
 VAR karma_pending = 0
@@ -255,6 +257,20 @@ A suspended water sail shifts into place above the dark.
 {brooks_trust >= 2:
     Brooks sent her this way for a reason.
     Jodie is beginning to suspect the route itself is part of the lesson.
+}
+
+{rigging_knowledge >= 1 && studied_rigging_transfer == false:
+    * [Watch one load transfer before leaving.]
+        ~ studied_rigging_transfer = true
+        ~ rigging_knowledge += 1
+        ~ story_insight += 1
+        ~ elapsed_time += 1
+
+        Jodie watches the sailors hand the load from one line to another.
+
+        The trick is not strength. It is knowing which line becomes dangerous when the weight moves.
+
+        -> rigging_crossing
 }
 
 A sailor points toward a narrow passage cut through the west side of the level.
@@ -995,14 +1011,7 @@ The gate rattles shut.
     }
     Jodie checks the lever, cable, and catch.
     None of it inspires confidence.
-    -> shaft_descent
-
-* {elevator_knowledge >= 2} [Set the brake catch before descending.]
-    ~ choice_log = choice_log + "SET BRAKE CATCH / "
-    ~ story_insight += 1
-    ~ protection_brake = true
-    Jodie adjusts the catch to engage sooner if the cage drops too hard.
-    -> shaft_descent
+    -> elevator_after_inspection
 
 * [Brace herself and trust the machinery.]
     ~ solidarity += 1
@@ -1015,6 +1024,33 @@ The gate rattles shut.
     ~ defiance += 1
     Jodie slaps the switch.
     "Come on."
+    -> shaft_descent
+
+
+=== elevator_after_inspection ===
+
+{studied_elevator_catch == false:
+    * [Trace how the catch engages before descending.]
+        ~ studied_elevator_catch = true
+        ~ elevator_knowledge += 1
+        ~ story_insight += 1
+        ~ elapsed_time += 1
+
+        Jodie follows the catch from lever to pawl to rail.
+
+        It is crude, but now she knows where the delay comes from.
+
+        -> elevator_after_inspection
+}
+
+* {elevator_knowledge >= 2} [Set the brake catch before descending.]
+    ~ choice_log = choice_log + "SET BRAKE CATCH / "
+    ~ story_insight += 1
+    ~ protection_brake = true
+    Jodie adjusts the catch to engage sooner if the cage drops too hard.
+    -> shaft_descent
+
+* [Leave it as she found it and descend.]
     -> shaft_descent
 
 
@@ -1163,9 +1199,11 @@ Injury: {injury}
 Time: {elapsed_time}
 Story insight: {story_insight}
 Rigging knowledge: {rigging_knowledge}
+Studied rigging transfer: {studied_rigging_transfer}
 Water knowledge: {water_knowledge}
 Studied water cycle: {studied_water_cycle}
 Elevator knowledge: {elevator_knowledge}
+Studied elevator catch: {studied_elevator_catch}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
 
