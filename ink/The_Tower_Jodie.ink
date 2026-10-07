@@ -28,6 +28,7 @@ VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
 VAR learned_water_from_houdini = false
 VAR pending_water_lesson = 0
+VAR tyler_water_recognized = false
 
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
@@ -771,6 +772,7 @@ His name is Tyler.
 === agro_talk ===
 
 {water_knowledge >= 2:
+    ~ tyler_water_recognized = true
     Tyler watches the way Jodie listens to the transfer motor.
 
     "You came through Water Storage and you still know what that sound means?"
@@ -1302,7 +1304,7 @@ Elevator knowledge: {elevator_knowledge}
 Studied elevator catch: {studied_elevator_catch}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
-Character recognition: HOUDINI_RIGGING={rigging_knowledge >= 2:ON|OFF} / TYLER_WATER={water_knowledge >= 2:ON|OFF}
+Character recognition: HOUDINI_RIGGING={rigging_knowledge >= 2:ON|OFF} / TYLER_WATER_RECOGNIZED={tyler_water_recognized:ON|OFF}
 
 Recklessness: {recklessness}
 Recklessness sources: {recklessness_log}
