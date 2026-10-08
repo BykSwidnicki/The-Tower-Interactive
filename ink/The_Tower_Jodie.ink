@@ -209,11 +209,7 @@ Jodie looks toward the duct.
 
 Jodie drops through the duct and lands on a narrow maintenance platform.
 
-Wind moves through the tower here.
-
-Not outside wind. Tower wind.
-
-Air pulled through broken passages, old vents, open shafts.
+Air rushes through old vents and broken passages, making the maintenance platform sway.
 
 Across the chamber, workers in blue-and-white stripes move along hanging lines and patched catwalks.
 
@@ -335,18 +331,18 @@ A suspended water sail shifts into place above the dark.
 
 The lower Rigging level is tighter.
 
-The great hanging sails are mostly above her now. Here the load resolves into guides, tension lines, pulleys, and maintenance runs disappearing toward the water system.
+The sails hang above. Here their weight passes through guides, pulleys, and maintenance runs toward the water system.
 
 {helped_riggers:
     Her palms still sting from the pull upstairs.
 
-    A line she helped tension snakes through the lower guides ahead of her. For a moment, she can literally follow the work she touched.
+    The line she helped tension runs through the guides ahead. She can follow her own work down the level.
 }
 
 {asked_rope_meaning && helped_riggers == false:
     "Rope of life" makes more sense down here.
 
-    The grand phrase upstairs becomes a hundred ugly little jobs keeping weight, water, and gravity from disagreeing.
+    Down here, the phrase means keeping weight and water under control.
 }
 
 {rigging_consequence_pending:
@@ -1282,11 +1278,7 @@ Then she is through.
 
 === water_dispatch_113 ===
 
-The tank galleries narrow into the bottom of the node.
-
-Level 113 is less dramatic than the rooms above it.
-
-That makes it more important.
+At Level 113, the galleries narrow into the feed network.
 
 Feed pipes leave in bundles. Old belt housings disappear through concrete. Hand-painted arrows point toward AGRO, RESERVE, and WEST BALANCE.
 
@@ -1413,7 +1405,7 @@ Jodie can hear one line knocking out of rhythm.
 
     It hurts.
 
-    The drop is short enough to survive and long enough to hurt.
+    Jodie pulls herself upright, bruised and covered in seedlings.
 }
 
 A young man is already talking before anyone can decide what they saw.
@@ -2385,15 +2377,9 @@ The gate rattles shut.
 
 === shaft_descent ===
 
-The cage drops.
+The cage drops. The first few levels are recognizable; then the landings blur.
 
-The first few levels are recognizable as places.
-
-Then they become flashes.
-
-Light.
-
-Dark.
+Light. Dark.
 
 A landing with laundry tied to a rail.
 
