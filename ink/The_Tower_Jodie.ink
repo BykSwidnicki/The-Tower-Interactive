@@ -32,6 +32,12 @@ VAR used_water_maintenance_bypass = false
 VAR water_dispatch_insight = false
 VAR water_feed_stabilized = false
 VAR agro_arrival_controlled = false
+VAR agro_cover_intact = true
+VAR agro_joined_shift = false
+VAR agro_saved_crop_lane = false
+VAR agro_hid_in_workflow = false
+VAR agro_supervisor_attention = 0
+VAR agro_broken_bridge_seen = false
 VAR tyler_water_recognized = false
 VAR rigging_direct_water_access = false
 VAR used_rigging_water_descent = false
@@ -1298,7 +1304,7 @@ Jodie can hear one line knocking out of rhythm.
 
 === agro ===
 
-~ route_log = route_log + " → Agro"
+~ route_log = route_log + " → Agro 112-106"
 
 {rigging_consequence_pending:
     ~ rigging_consequence_pending = false
@@ -1330,43 +1336,43 @@ Jodie can hear one line knocking out of rhythm.
 }
 
 {agro_arrival_controlled:
-    Jodie comes down the feed-service ladder instead of falling through the work floor.
+    Jodie comes down the feed-service ladder onto a narrow maintenance rail near the top of the grow bay.
 
-    Her boots find a narrow maintenance rail above the trays.
-
-    Workers look up because she is somewhere she should not be, not because she has crashed into them.
-
-    Someone nearby shouts anyway.
+    Workers look up because she is somewhere she should not be, not because she has fallen.
 - else:
-    Jodie comes out too fast.
+    The normal hatch opens onto a service catwalk inside the upper grow bay.
 
-    Her boot skids on damp metal.
+    Jodie comes through too fast.
 
-    For one terrible second there is nothing beneath her.
+    Her wet boot skids.
 
-    Then—
+    The catwalk edge disappears beneath her.
+
+    She drops less than a story through hanging irrigation lines, catches one with both arms, swings badly, and tears through a rack of seedling trays below.
 
     "Wheeeee—"
 
     CRASH.
 
-    She lands hard among trays, pipes, and startled workers.
+    Soil, leaves, and one offended watering nozzle come down with her.
 
-    Someone nearby shouts.
+    It hurts.
+
+    It is not a six-floor fall.
 }
 
-A young man is already talking over the noise.
+A young man is already talking before anyone can decide what they saw.
 
 {agro_arrival_controlled:
-    "Service inspection," he says, loudly enough for everyone to hear.
+    "Service inspection," he says, loudly enough for the nearby workers to hear.
 
     He looks at Jodie.
 
     "Right?"
 - else:
-    "Pipe slip," he says, loudly enough for everyone to hear.
+    "Pipe slip," he says.
 
-    He looks at Jodie.
+    He points at the wet catwalk above her as if it has confessed.
 
     "Right?"
 }
@@ -1374,71 +1380,320 @@ A young man is already talking over the noise.
 His name is Tyler.
 
 {water_maintainer_outfit:
-    Tyler's eyes flick over the borrowed Water Maintenance gear. He understands enough not to ask the obvious question first.
+    Tyler's eyes flick over the borrowed Water Maintenance gear.
+
+    He understands enough not to ask the obvious question first.
 - else:
     His eyes pause on the Filtration clothes.
 }
 
-* [Back up his lie.]
+A whistle cuts through the grow bay.
+
+Not an alarm.
+
+Worse.
+
+A supervisor is coming down the aisle, counting damaged trays.
+
+Tyler lowers his voice.
+
+"Pick a story and live in it."
+
+* [Back Tyler's lie and start helping with the mess.]
+    ~ agro_joined_shift = true
     ~ tyler_trust += 1
     ~ solidarity += 1
+    ~ elapsed_time += 1
+    ~ choice_log = choice_log + "AGRO: JOIN SHIFT / "
+
     {agro_arrival_controlled:
         "Service inspection."
     - else:
         "Pipe slip."
     }
-    Tyler nods like they rehearsed it.
-    -> agro_talk
 
-* [Ask why he is covering for her.]
+    Jodie is already lifting a tray before the supervisor reaches them.
+
+    Tyler does not smile.
+
+    That would ruin it.
+
+    -> agro_supervisor
+
+* {water_feed_stabilized} [Say Water sent her down because the Agro feed was hunting.]
+    ~ agro_supervisor_attention += 1
+    ~ tyler_trust += 1
+    ~ story_insight += 1
+    ~ choice_log = choice_log + "AGRO: WATER COVER / "
+
+    "Water feed was hunting. I stabilized it upstairs."
+
+    Tyler's eyebrows rise.
+
+    The useful thing about the truth is that sometimes it sounds like permission.
+
+    -> agro_supervisor
+
+* [Ask Tyler why he is covering for her.]
     ~ curiosity += 1
+    ~ agro_supervisor_attention += 1
+    ~ choice_log = choice_log + "AGRO: QUESTION TYLER / "
+
     "Why are you helping me?"
-    Tyler shrugs.
-    "Because nobody else has asked what happened yet."
-    -> agro_talk
 
-* [Tell him she can handle herself.]
+    "Because we're out of time for philosophy."
+
+    The supervisor is almost there.
+
+    -> agro_supervisor
+
+* [Slip into the workers moving the undamaged trays.]
+    ~ agro_hid_in_workflow = true
+    ~ elapsed_time += 1
+    ~ curiosity += 1
+    ~ choice_log = choice_log + "AGRO: HIDE IN WORKFLOW / "
+
+    Jodie takes the handles of an intact tray cart and moves with it.
+
+    Nobody announces that she belongs.
+
+    For the next thirty seconds, nobody has time to prove that she doesn't.
+
+    -> agro_supervisor
+
+
+=== agro_supervisor ===
+
+The supervisor arrives with a grease pencil tucked behind one ear.
+
+Her eyes move from Tyler, to Jodie, to the broken trays.
+
+"What happened?"
+
+{agro_joined_shift:
+    Tyler answers without looking up.
+
+    "Pipe slip. We have it."
+
+    The supervisor watches Jodie working.
+
+    "Then have it faster."
+
+    She moves on.
+
+    ~ agro_cover_intact = true
+}
+
+{water_feed_stabilized && agro_joined_shift == false && agro_hid_in_workflow == false:
+    Jodie points toward the feed line.
+
+    "Pressure hunt from Water. It's stable now."
+
+    The supervisor puts two fingers against the pipe and feels the softened vibration.
+
+    "You're Water?"
+
+    Jodie does not answer quickly enough.
+
+    Tyler does.
+
+    "Temporary."
+
+    The supervisor gives both of them the kind of look that creates future paperwork.
+
+    "Then be temporary somewhere useful."
+
+    ~ agro_cover_intact = true
+}
+
+{agro_hid_in_workflow:
+    The supervisor looks straight past Jodie.
+
+    A worker shoves another tray cart into her hands.
+
+    "Row six."
+
+    Jodie goes to row six.
+
+    ~ agro_cover_intact = true
+}
+
+{agro_joined_shift == false && water_feed_stabilized == false && agro_hid_in_workflow == false:
+    Tyler opens his mouth.
+
+    Jodie is still standing there in the wrong clothes with no useful object in her hands.
+
+    The supervisor's eyes narrow.
+
+    "Who are you?"
+
+    ~ agro_cover_intact = false
+    ~ agro_supervisor_attention += 2
+
+    Tyler drops a tray on purpose.
+
+    The crash turns every head.
+
+    "Now she's helping me clean that up."
+
+    The supervisor swears at both of them and moves toward the fresh disaster.
+
+    Tyler looks at Jodie.
+
+    "You're welcome."
+
+    ~ tyler_trust += 1
+}
+
+-> agro_work_pressure
+
+
+=== agro_work_pressure ===
+
+Agro is taller than it looked from the hatch.
+
+Levels overlap inside the production volume: grow lights above, hanging lines below them, catwalks crossing open air, trays stepping down through the bay.
+
+They are moving through a system that happens to contain floors, not a stack of identical rooms.
+
+A worker shouts from the next lane.
+
+One of the nutrient lines has kinked where a tray rack shifted.
+
+Young plants are already beginning to sag.
+
+Tyler looks at the line, then at Jodie.
+
+"You can keep moving."
+
+He says it like he means it.
+
+* [Stop and help save the crop lane.]
+    ~ agro_saved_crop_lane = true
+    ~ solidarity += 1
+    ~ tyler_trust += 1
+    ~ elapsed_time += 2
+    ~ story_insight += 1
+    ~ choice_log = choice_log + "AGRO: SAVE CROP / "
+
+    Jodie grabs the rack while Tyler clears the kink.
+
+    Someone farther down the line opens the feed.
+
+    Water snaps through the hose.
+
+    The leaves lift almost immediately.
+
+    Nobody applauds.
+
+    There are too many other things to do.
+
+    -> agro_descend
+
+* [Keep moving. Filtration still needs the part.]
     ~ defiance += 1
-    "I don't need covering."
-    "Great," Tyler says. "Then I was talking to myself."
-    -> agro_talk
+    ~ choice_log = choice_log + "AGRO: PRIORITIZE MISSION / "
+
+    Jodie looks at the sagging plants.
+
+    Then at the route down.
+
+    She keeps moving.
+
+    Tyler does not judge her.
+
+    That almost makes it worse.
+
+    -> agro_descend
+
+* {agro_cover_intact} [Stay inside the shift until the supervisor loses track of her.]
+    ~ agro_hid_in_workflow = true
+    ~ elapsed_time += 2
+    ~ curiosity += 1
+    ~ choice_log = choice_log + "AGRO: WORK THE SHIFT / "
+
+    For a few minutes, Jodie becomes whatever hands are missing.
+
+    Move trays.
+
+    Hold a line.
+
+    Duck under lights.
+
+    Pass a tool.
+
+    Nobody asks where Filtration ends and Agro begins while everybody is busy.
+
+    -> agro_descend
 
 
-=== agro_talk ===
+=== agro_descend ===
+
+The work lanes step downward through the node.
+
+At Level 108, the old skybridge ends in open air.
+
+Half of it is still attached to the East side, doors hanging crooked over the gap.
+
+No choice menu appears.
+
+Nobody uses it.
+
+The workers route around it automatically, down a service gantry scarred by decades of boots.
+
+~ agro_broken_bridge_seen = true
+
+{agro_saved_crop_lane:
+    The worker from row six catches up long enough to press a wrapped nutrient bar into Jodie's hand.
+
+    "For the save."
+
+    Then she is gone again.
+}
 
 {water_knowledge >= 2:
     ~ tyler_water_recognized = true
-    Tyler watches the way Jodie listens to the transfer motor.
 
-    "You came through Water Storage and you still know what that sound means?"
+    Tyler watches Jodie glance at the feed pipe running beside the gantry.
 
-    Jodie looks toward the machinery.
+    "You came through Water and you still know what that sound means?"
 
     "Mostly."
 
-    Tyler's tone changes. Less teasing. More assessment.
+    His tone changes.
+
+    Less teasing.
+
+    More assessment.
 }
 
-Tyler studies the grime on her clothes.
+By Level 106 the grow bays give way to transfer machinery and staging lanes.
+
+Raw material is moving toward Distribution.
 
 {honey_platform_available:
-    Somewhere beyond the racks, a transfer motor hums steadily.
+    The honey transfer platform is loading.
 - else:
-    Somewhere beyond the racks, a transfer motor tries to start and dies.
+    The honey transfer motor tries to start and dies.
 
-    Tyler glances toward the sound.
+    Tyler glances toward it.
 
     "Honey platform's down."
 }
 
+{agro_cover_intact == false:
+    "We should get you out before she remembers your face," Tyler says.
+}
+
 "You're a long way from Filtration."
 
-* {water_knowledge >= 2} [Ask Tyler whether the transfer motor is losing load.]
-    ~ choice_log = choice_log + "TYLER: MOTOR DIAGNOSIS / "
+* {water_knowledge >= 2} [Tell Tyler what she heard in the Water feed.]
+    ~ choice_log = choice_log + "TYLER: WATER READ / "
     ~ curiosity += 1
     ~ story_insight += 1
     ~ tyler_trust += 1
-    "That motor is slipping under load, isn't it?"
+
+    "That transfer motor is slipping under load."
 
     Tyler looks at her properly now.
 
@@ -1446,30 +1701,41 @@ Tyler studies the grime on her clothes.
 
     "I hear enough."
 
-    "Then don't use the upper transfer if it starts hunting. Lower route is slower, but it won't throw you."
+    "Then don't use the upper transfer if it starts hunting."
 
     -> agro_exit
 
 * [Tell Tyler about the O-ring.]
     ~ told_tyler_mission = true
     ~ tyler_trust += 1
+
     "Brooks sent me for a part."
+
     "That explains the suicidal sightseeing."
+
     -> agro_exit
 
 * [Keep Brooks's assignment to herself.]
     ~ curiosity += 1
+
     "I'm passing through."
+
     Tyler looks unconvinced.
+
     "Sure you are."
+
     -> agro_exit
 
-* [Tease him for being so interested.]
+* {tyler_trust >= 1} [Tease him for being so interested.]
     ~ flirted_with_tyler = true
     ~ tyler_trust += 1
+
     "You ask a lot of questions for somebody who just lied for me."
+
     Tyler smiles.
+
     "Occupational hazard."
+
     -> agro_exit
 
 
@@ -1494,9 +1760,11 @@ Tyler studies the grime on her clothes.
 
 {tyler_trust >= 2:
     Tyler points toward a service transfer.
+
     "Distribution is faster this way. Try not to fall through anything else."
 - else:
     Tyler jerks his chin toward the far passage.
+
     "Distribution's that way."
 }
 
@@ -1945,6 +2213,12 @@ Water maintenance bypass: {used_water_maintenance_bypass}
 Water dispatch insight: {water_dispatch_insight}
 Water feed stabilized: {water_feed_stabilized}
 Agro arrival controlled: {agro_arrival_controlled}
+Agro cover intact: {agro_cover_intact}
+Agro joined shift: {agro_joined_shift}
+Agro crop lane saved: {agro_saved_crop_lane}
+Agro hid in workflow: {agro_hid_in_workflow}
+Agro supervisor attention: {agro_supervisor_attention}
+Agro broken bridge seen: {agro_broken_bridge_seen}
 Learned Water from Houdini: {learned_water_from_houdini}
 Pending Water lesson: {pending_water_lesson}
 Studied water cycle: {studied_water_cycle}
