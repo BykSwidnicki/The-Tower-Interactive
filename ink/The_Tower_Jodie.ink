@@ -313,7 +313,7 @@ A suspended water sail shifts into place above the dark.
     That does not mean nothing happened.
     -> rigging_121
 
-* [Keep moving. She has a job to do.]
+* [Keep moving. The job comes first.]
     ~ passed_rigging_untouched = true
     ~ defiance += 1
     Jodie ducks beneath the swinging line and keeps going.
@@ -418,7 +418,7 @@ The great hanging sails are mostly above her now. Here the load resolves into gu
 
         -> rigging_121
 
-    * {helped_riggers || solidarity >= 3} [Take the brace when the sailor shoves it toward her.]
+    * {helped_riggers || solidarity >= 3} [Take the brace.]
         ~ rigging_121_problem_resolved = true
         ~ rigging_121_problem_helped = true
         ~ rigging_crew_favor += 2
@@ -633,7 +633,7 @@ Houdini steps into the corridor and looks at her work clothes.
 
 === living_conversation ===
 
-* {rigging_knowledge >= 2 && discussed_rigging_with_houdini == false} [Mention the load transfer she saw in Rigging.]
+* {rigging_knowledge >= 2 && discussed_rigging_with_houdini == false} [Mention the Rigging load transfer.]
     ~ discussed_rigging_with_houdini = true
     ~ choice_log = choice_log + "HOUDINI: RIGGING TALK / "
     {learned_water_from_houdini == false:
@@ -656,7 +656,7 @@ Houdini steps into the corridor and looks at her work clothes.
 
     -> living_conversation
 
-* [Tell him the truth. Brooks sent her for an O-ring.]
+* [Tell him the truth about Brooks and the O-ring.]
     ~ elapsed_time += 1
     ~ told_truth_to_houdini = true
     ~ solidarity += 1
@@ -866,7 +866,7 @@ Belonging to the wrong place is.
 
         They have given her a reason to be here.
 
-        * [Keep carrying the canister and let the errand explain her.]
+        * [Keep carrying the canister and let the errand speak for itself.]
             ~ spine_crossed_with_clinic_run = true
             ~ choice_log = choice_log + "SPINE: CLINIC RUN / "
 
@@ -1144,7 +1144,7 @@ The passage between them opens for seconds at a time.
 
     -> water_dispatch_113
 
-* [Go now before she can think herself out of it.]
+* [Go now before second thoughts win.]
     ~ recklessness += 1
     ~ recklessness_log = recklessness_log + "GO NOW / "
     ~ choice_log = choice_log + "GO NOW / "
@@ -1404,7 +1404,7 @@ Jodie can hear one line knocking out of rhythm.
 
     It hurts.
 
-    It is not a six-floor fall.
+    The drop is short enough to survive and long enough to hurt.
 }
 
 A young man is already talking before anyone can decide what they saw.
@@ -1468,7 +1468,7 @@ Tyler lowers his voice.
 
     -> agro_supervisor
 
-* {water_feed_stabilized} [Say Water sent her down because the Agro feed was hunting.]
+* {water_feed_stabilized} [Use the stabilized Water feed as her cover.]
     ~ agro_supervisor_attention += 1
     ~ institutional_visibility += 1
     ~ cross_department_competence += 1
@@ -1692,9 +1692,7 @@ At Level 108, the old skybridge ends in open air.
 
 Half of it is still attached to the East side, doors hanging crooked over the gap.
 
-No choice menu appears.
-
-Nobody uses it.
+Nobody even slows down for it.
 
 The workers route around it automatically, down a service gantry scarred by decades of boots.
 
@@ -1894,11 +1892,9 @@ Tyler wipes his face.
 
 Jodie stares at him.
 
-"This better have been worth unlocking."
+"This better actually be faster."
 
-"What?"
-
-"Nothing."
+"It usually is," Tyler says.
 
 They reach Distribution together.
 
@@ -2314,7 +2310,7 @@ The gate rattles shut.
 
     -> elevator_after_inspection
 
-* [Brace herself and trust the workers who kept it alive.]
+* [Brace and trust the workers who kept it alive.]
     ~ elevator_mode_trusted = true
     ~ solidarity += 1
     ~ belonging += 1
@@ -2599,7 +2595,9 @@ Jodie would enter Stage 2 with relatively little institutional scrutiny.
 Stage 2: Medical Years
 In development. Stage 1 outcomes will alter Jodie's starting relationships, resources, access, and reasoning options across her three years in Medical.
 
---- DEBUG RUN SUMMARY ---
+The portfolio slice ends here. Jodie's state does not.
+
+--- DEVELOPER DIAGNOSTICS ---
 QA redirected Karma force: {qa_force_redirected_karma}
 QA serious water injury force: {qa_force_serious_water_injury}
 Route: {route_log}
@@ -2672,6 +2670,6 @@ Gate snapshot: TYLER={tyler_trust >= 2:OPEN|CLOSED} / HONEY={honey_platform_avai
 Water instability: {water_instability}
 Honey platform available: {honey_platform_available}
 Ending reached: {injury >= 2: INJURED ARRIVAL|SAFE ARRIVAL}
---- END DEBUG ---
+--- END DIAGNOSTICS ---
 
 -> END
