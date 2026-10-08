@@ -1,0 +1,89 @@
+name: Tower Ink Three-Route QA
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'ink/The_Tower_Jodie.ink'
+      - '.github/workflows/ink-qa.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save inkjs@2.4.0
+      - name: Compile and test three contrasting routes
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const {Compiler} = require('inkjs/full');
+          const src = fs.readFileSync('ink/The_Tower_Jodie.ink','utf8');
+          const plans = {
+            cooperative: [
+              /ask what happens if/i, /take the assignment/i,
+              /help them pull/i, /take the brace/i, /watch one load transfer/i,
+              /west passage/i, /tell him the truth/i, /help carry the infirmary/i,
+              /keep carrying the canister/i, /study one full cycle/i,
+              /wait and count/i, /trace the knocking/i, /reset the sticking/i,
+              /feed-service ladder/i, /back tyler's lie/i, /help save the crop/i,
+              /tell tyler what she heard/i, /tell tyler about/i,
+              /take the honey platform/i, /take the offered jumpsuit/i,
+              /^48$/, /correct the tally/i, /staff service corridor/i,
+              /inspect the emergency brake/i, /trace how the catch/i, /set the brake catch/i,
+              /look around/i, /ask where to find the part/i
+            ],
+            reckless: [
+              /ask why nobody else/i, /tell brooks this is a terrible/i,
+              /test the unfamiliar control line/i, /stay clear and keep moving/i,
+              /keep the mission vague/i, /tell him it is none/i,
+              /take the west passage/i, /maintenance cut/i, /cross immediately/i,
+              /go now before/i, /take the normal hatch/i,
+              /ask tyler why/i, /keep moving. filtration/i,
+              /keep brooks's assignment/i, /ignore the complaint/i,
+              /^56$/, /use the four-crate mismatch/i, /staff service corridor/i,
+              /hit the control/i, /ask where to find/i
+            ],
+            direct: [
+              /ask where it is/i, /take the assignment/i, /keep moving. the job comes first/i,
+              /stay clear and keep moving/i, /keep the mission vague/i,
+              /wait for françois/i, /stay in formation/i,
+              /wait and count/i, /take the normal hatch/i,
+              /back tyler's lie/i, /keep moving. filtration/i,
+              /keep brooks's assignment/i, /rinse off/i,
+              /^48$/, /leave the argument/i, /cross the open distribution floor/i,
+              /brace and trust/i, /ask where to find/i
+            ]
+          };
+          let ok=true;
+          for(const [name,prefs] of Object.entries(plans)){
+            const story = new Compiler(src).Compile();
+            if(!story){console.error(name, 'COMPILE FAILED');ok=false;continue}
+            let text='', steps=0, choiceCount=0;
+            const decisions=[];
+            while(steps++<180){
+              while(story.canContinue)text+=story.Continue()+'\n';
+              if(!story.currentChoices.length)break;
+              const choices=story.currentChoices;
+              let idx=-1;
+              for(const rule of prefs){idx=choices.findIndex(c=>rule.test(c.text));if(idx>=0)break}
+              if(idx<0)idx=0;
+              decisions.push(choices[idx].text);
+              story.ChooseChoiceIndex(idx);
+              choiceCount++;
+            }
+            const variables=story.variablesState;
+            const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
+            console.log(JSON.stringify(stats));
+            if(!(stats.finished&&stats.medical&&stats.profile&&stats.diagnostics&&steps<180))ok=false;
+            // The restart action constructs a fresh compiled story, matching the page's Start over logic.
+            const restarted=new Compiler(src).Compile();
+            const restartedText=restarted.Continue();
+            const restartGood=restartedText.includes('hiss') && restarted.variablesState.$('injury')===0 && restarted.variablesState.$('karma_hits')===0;
+            console.log('restart',name,restartGood);
+            if(!restartGood)ok=false;
+          }
+          if(!ok)process.exit(1);
+          NODE
