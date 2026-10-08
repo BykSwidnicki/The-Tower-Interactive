@@ -2570,7 +2570,7 @@ But the run has already changed what Jodie knows, who trusts her, and how she mo
 
 --- PORTFOLIO PROFILE ---
 
-Emerging profile: {worker_reputation >= 4:WORKER-TRUSTED|{cross_department_competence >= 5:SYSTEMS-CAPABLE|{belonging >= 4:EMBEDDED|{independence >= 4:SELF-DIRECTED|UNFORMED}}}}{worker_reputation >= 4 && cross_department_competence >= 5: / SYSTEMS-CAPABLE|{worker_reputation >= 4 && belonging >= 4: / EMBEDDED|{cross_department_competence >= 5 && independence >= 4: / SELF-DIRECTED|}}}
+Emerging profile: {worker_reputation >= 4:WORKER-TRUSTED|{cross_department_competence >= 5:SYSTEMS-CAPABLE|{belonging >= 4:EMBEDDED|{independence >= 4:SELF-DIRECTED|UNDECLARED}}}}{worker_reputation >= 4 && cross_department_competence >= 5: / SYSTEMS-CAPABLE|{worker_reputation >= 4 && belonging >= 4: / EMBEDDED|{cross_department_competence >= 5 && independence >= 4: / SELF-DIRECTED|}}}
 
 Institutional profile: {institutional_visibility >= 4:KNOWN|{institutional_visibility >= 2:NOTICED|LOW VISIBILITY}}
 
@@ -2656,7 +2656,7 @@ Tyler trust: {tyler_trust}
 Character recognition: HOUDINI_RIGGING={rigging_knowledge >= 2:ON|OFF} / TYLER_WATER_RECOGNIZED={tyler_water_recognized:ON|OFF}
 
 Long-term tracks: WORKER_REP={worker_reputation} / VISIBILITY={institutional_visibility} / COMPETENCE={cross_department_competence} / BELONGING={belonging} / INDEPENDENCE={independence}
-Emerging identity: {worker_reputation >= 4:WORKER-TRUSTED|{cross_department_competence >= 5:SYSTEMS-CAPABLE|{belonging >= 4:EMBEDDED|{independence >= 4:SELF-DIRECTED|UNFORMED}}}}
+Emerging identity: {worker_reputation >= 4:WORKER-TRUSTED|{cross_department_competence >= 5:SYSTEMS-CAPABLE|{belonging >= 4:EMBEDDED|{independence >= 4:SELF-DIRECTED|UNDECLARED}}}}
 Institutional profile: {institutional_visibility >= 4:KNOWN|{institutional_visibility >= 2:NOTICED|LOW}}
 
 Recklessness: {recklessness}
