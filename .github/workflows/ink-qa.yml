@@ -58,7 +58,7 @@ jobs:
             ]
           };
           plans.prepared_hazard = plans.cooperative.map(p => p.source.includes('wait and count') ? /go now before/i : p);
-let ok=true;
+          let ok=true;
           for(const [name,prefs] of Object.entries(plans)){
             const story = new Compiler(src).Compile();
             if(!story){console.error(name, 'COMPILE FAILED');ok=false;continue}
