@@ -128,3 +128,10 @@ The authored story, world, characters, and narrative decisions remain the creati
 ## Skills demonstrated
 
 Interactive narrative design · story architecture · branching discipline · persistent state · delayed consequence · systems writing · environmental storytelling · dialogue variation · worldbuilding · continuity management · prose-to-playable adaptation · QA-oriented iteration
+
+
+## Copyright
+
+© 2026 Marcin Knapik. *The Tower* and its characters, world, story, and interactive adaptation are original works. All rights reserved.
+
+Portfolio materials are shared for review purposes only. See [COPYRIGHT.md](COPYRIGHT.md) for reuse restrictions and permissions.
