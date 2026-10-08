@@ -19,6 +19,14 @@ VAR recklessness = 0
 VAR story_insight = 0
 VAR tower_stress = 0
 
+// Long-term identity/reputation tracks.
+// Local choices feed patterns that later chapters can react to.
+VAR worker_reputation = 0
+VAR institutional_visibility = 0
+VAR cross_department_competence = 0
+VAR belonging = 0
+VAR independence = 0
+
 // Domain knowledge grows slowly from repeated, specific experiences.
 VAR rigging_knowledge = 0
 VAR water_knowledge = 0
@@ -234,6 +242,8 @@ A suspended water sail shifts into place above the dark.
 * [Help them pull before moving on.]
     ~ helped_riggers = true
     ~ solidarity += 1
+    ~ worker_reputation += 1
+    ~ belonging += 1
     ~ story_insight += 1
     ~ rigging_knowledge += 1
     ~ elapsed_time += 3
@@ -727,6 +737,8 @@ Houdini looks toward the central spine.
     ~ solidarity += 1
     ~ living_clinic_favor += 1
     ~ carrying_clinic_supply = true
+    ~ worker_reputation += 1
+    ~ belonging += 1
     ~ choice_log = choice_log + "CLINIC SUPPLY RUN / "
 
     Jodie takes the leaking canister before the woman can ask who she is.
@@ -1012,6 +1024,7 @@ The passage between them opens for seconds at a time.
         ~ studied_water_cycle = true
         ~ water_knowledge += 1
         ~ story_insight += 1
+        ~ cross_department_competence += 1
         ~ elapsed_time += 1
 
         Jodie stays still for one complete exchange between Tank 4 and Tank 5.
@@ -1080,6 +1093,8 @@ The passage between them opens for seconds at a time.
 
 * {water_knowledge >= 1 || used_living_service_cut || used_rigging_water_descent} [Take the inspection ladder around the purge throat.]
     ~ used_water_maintenance_bypass = true
+    ~ cross_department_competence += 1
+    ~ independence += 1
     ~ choice_log = choice_log + "WATER MAINTENANCE BYPASS / "
     ~ route_log = route_log + " → Water Inspection Ladder"
     ~ elapsed_time += 2
@@ -1251,6 +1266,7 @@ Jodie can hear one line knocking out of rhythm.
         ~ water_dispatch_insight = true
         ~ water_knowledge += 1
         ~ story_insight += 1
+        ~ cross_department_competence += 1
         ~ elapsed_time += 1
         ~ choice_log = choice_log + "TRACE AGRO FEED / "
 
@@ -1270,6 +1286,8 @@ Jodie can hear one line knocking out of rhythm.
     ~ agro_arrival_controlled = true
     ~ elapsed_time += 1
     ~ solidarity += 1
+    ~ worker_reputation += 1
+    ~ cross_department_competence += 1
     ~ choice_log = choice_log + "STABILIZE AGRO FEED / "
 
     Jodie waits for the pressure to fall, then turns the valve only as far as the pipe will tolerate.
@@ -1403,6 +1421,8 @@ Tyler lowers his voice.
     ~ agro_joined_shift = true
     ~ tyler_trust += 1
     ~ solidarity += 1
+    ~ worker_reputation += 1
+    ~ belonging += 1
     ~ elapsed_time += 1
     ~ choice_log = choice_log + "AGRO: JOIN SHIFT / "
 
@@ -1422,6 +1442,8 @@ Tyler lowers his voice.
 
 * {water_feed_stabilized} [Say Water sent her down because the Agro feed was hunting.]
     ~ agro_supervisor_attention += 1
+    ~ institutional_visibility += 1
+    ~ cross_department_competence += 1
     ~ tyler_trust += 1
     ~ story_insight += 1
     ~ choice_log = choice_log + "AGRO: WATER COVER / "
@@ -1449,6 +1471,7 @@ Tyler lowers his voice.
 
 * [Slip into the workers moving the undamaged trays.]
     ~ agro_hid_in_workflow = true
+    ~ independence += 1
     ~ elapsed_time += 1
     ~ curiosity += 1
     ~ choice_log = choice_log + "AGRO: HIDE IN WORKFLOW / "
@@ -1529,6 +1552,7 @@ Her eyes move from Tyler, to Jodie, to the broken trays.
 
     ~ agro_cover_intact = false
     ~ agro_supervisor_attention += 2
+    ~ institutional_visibility += 2
 
     Tyler drops a tray on purpose.
 
@@ -1572,6 +1596,8 @@ He says it like he means it.
     ~ agro_saved_crop_lane = true
     ~ solidarity += 1
     ~ tyler_trust += 1
+    ~ worker_reputation += 1
+    ~ belonging += 1
     ~ elapsed_time += 2
     ~ story_insight += 1
     ~ choice_log = choice_log + "AGRO: SAVE CROP / "
@@ -1592,6 +1618,7 @@ He says it like he means it.
 
 * [Keep moving. Filtration still needs the part.]
     ~ defiance += 1
+    ~ independence += 1
     ~ choice_log = choice_log + "AGRO: PRIORITIZE MISSION / "
 
     Jodie looks at the sagging plants.
@@ -1608,6 +1635,8 @@ He says it like he means it.
 
 * {agro_cover_intact} [Stay inside the shift until the supervisor loses track of her.]
     ~ agro_hid_in_workflow = true
+    ~ worker_reputation += 1
+    ~ belonging += 1
     ~ elapsed_time += 2
     ~ curiosity += 1
     ~ choice_log = choice_log + "AGRO: WORK THE SHIFT / "
@@ -1691,6 +1720,7 @@ Raw material is moving toward Distribution.
     ~ choice_log = choice_log + "TYLER: WATER READ / "
     ~ curiosity += 1
     ~ story_insight += 1
+    ~ cross_department_competence += 1
     ~ tyler_trust += 1
 
     "That transfer motor is slipping under load."
@@ -2227,6 +2257,10 @@ Studied elevator catch: {studied_elevator_catch}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
 Character recognition: HOUDINI_RIGGING={rigging_knowledge >= 2:ON|OFF} / TYLER_WATER_RECOGNIZED={tyler_water_recognized:ON|OFF}
+
+Long-term tracks: WORKER_REP={worker_reputation} / VISIBILITY={institutional_visibility} / COMPETENCE={cross_department_competence} / BELONGING={belonging} / INDEPENDENCE={independence}
+Emerging identity: {worker_reputation >= 4:WORKER-TRUSTED|{cross_department_competence >= 5:SYSTEMS-CAPABLE|{belonging >= 4:EMBEDDED|{independence >= 4:SELF-DIRECTED|UNFORMED}}}}
+Institutional profile: {institutional_visibility >= 4:KNOWN|{institutional_visibility >= 2:NOTICED|LOW}}
 
 Recklessness: {recklessness}
 Recklessness sources: {recklessness_log}
