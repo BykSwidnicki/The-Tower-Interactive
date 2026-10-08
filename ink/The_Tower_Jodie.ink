@@ -2599,6 +2599,15 @@ In development. Stage 1 outcomes will alter Jodie's starting relationships, reso
 
 The portfolio slice ends here. Jodie's state does not.
 
+* [End the portfolio slice.]
+    -> END
+
+* [View developer diagnostics.]
+    -> developer_diagnostics
+
+
+=== developer_diagnostics ===
+
 --- DEVELOPER DIAGNOSTICS ---
 QA redirected Karma force: {qa_force_redirected_karma}
 QA serious water injury force: {qa_force_serious_water_injury}
