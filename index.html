@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101c22">
+  <meta name="theme-color" content="#d8ccb6">
   <meta name="description" content="Play The Tower: Jodie's Route, an interactive narrative portfolio slice by Marcin Knapik.">
   <title>The Tower | Jodie's Route</title>
   <style>
@@ -66,6 +66,39 @@
     body[data-zone="shaft"] #passage {background-image:repeating-linear-gradient(90deg,transparent 0 44px,rgba(171,184,196,.08) 45px 47px,transparent 48px 90px)}
 
 
+
+    /* Archive player: shared editorial language with the portfolio, variable zone ink */
+    :root { color-scheme:light; background:#d8ccb6; color:#1c3236; }
+    body { color:#20363a;background:radial-gradient(ellipse at 65% 18%,var(--zone-glow),transparent 60%),#d8ccb6; }
+    header {max-width:none;padding:30px max(22px,calc((100vw - 800px)/2)) 29px;background:#e6dac4;border-bottom:5px solid #ad6c4b;}
+    .eyebrow {color:#8b5239;font-size:.73rem;letter-spacing:.19em;}
+    h1 {font-size:clamp(2.7rem,8vw,4.5rem);line-height:1.08;letter-spacing:-.025em;color:#20353a;font-weight:400;margin:17px 0 6px;}
+    .subtitle {font-size:clamp(1.1rem,3.4vw,1.5rem);color:#7e5139;margin:0 0 22px;}
+    .meta {font-size:clamp(.88rem,2.9vw,1rem);color:#465d5b;line-height:1.65;max-width:670px;}
+    .tools {margin-top:22px;}
+    button,.source {background:#254249;color:#f5f0e5;border:1px solid #254249;border-radius:2px;min-height:47px;font-size:.9rem;}
+    .sticky-return {background:rgba(232,220,200,.98);border-bottom:2px solid var(--zone-accent);padding:7px max(20px,calc((100vw - 800px)/2));}
+    .sticky-return a {background:#254249;color:#f5f0e5;}
+    #zone-banner {max-width:none;padding:14px max(22px,calc((100vw - 800px)/2));background:#203a40;color:#f2e9d9;border-bottom:4px solid var(--zone-accent);font-size:.75rem;}
+    #zone-banner .zone-icon {color:var(--zone-accent);border-color:var(--zone-accent);}
+    main {max-width:800px;padding:30px 22px 65px;}
+    #status {font:700 .77rem system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#85523b;margin:0 0 18px;}
+    #passage {background:#f8f2e6;border:1px solid #bab9a8;border-left:4px solid var(--zone-accent);box-shadow:7px 9px 0 rgba(72,77,67,.12);padding:clamp(20px,4vw,37px);font-size:clamp(1.07rem,3.4vw,1.26rem);line-height:1.78;letter-spacing:0;color:#203539;min-height:190px;isolation:isolate;}
+    #passage p {margin:0 0 1.1em;}
+    #passage p:last-child {margin-bottom:0;}
+    #passage p:first-child {color:#203539;}
+    #passage:before {opacity:.22;z-index:-1;}
+    #choices {margin-top:26px;gap:12px;}
+    .choice {background:#f2e8d7;color:#20373b;border:1px solid #b7b8a5;border-left:5px solid var(--zone-accent);box-shadow:3px 4px 0 rgba(45,66,62,.10);padding:18px 17px;font:700 clamp(.9rem,2.8vw,1.03rem)/1.5 system-ui,sans-serif;border-radius:2px;}
+    .choice:before {color:#925e42;}
+    .choice:hover,.choice:focus-visible {background:#fff8e9;color:#1a3035;outline-color:#9a603f;}
+    .results-heading {color:#243d41;border-color:#baa58d;}
+    .error {color:#912e26;}
+    footer {max-width:none;background:#183238;padding:25px max(22px,calc((100vw - 800px)/2)) 36px;color:#c0cec6;border-top:4px solid #af6d49;}
+    footer a {color:#eed9b7;}
+    nav[aria-label="Portfolio navigation"] {max-width:800px!important;padding:0 22px 38px!important;}
+    @media(max-width:600px) {header,main,footer {padding-left:22px;padding-right:22px;} #passage {padding:22px 19px;} .choice{min-height:60px;} .sticky-return {padding-left:20px;padding-right:20px;} #zone-banner{padding-left:22px;padding-right:22px;} }
+    @media(prefers-reduced-motion:reduce){body{transition:none}}
   </style>
 </head>
 <body>
