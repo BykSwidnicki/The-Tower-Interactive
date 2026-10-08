@@ -219,7 +219,9 @@ One of them catches a rope with both hands and leans his whole weight into it.
 
 Three others pull.
 
-A suspended water sail shifts into place above the dark.
+The enormous sail unfurls along the Tower's outer wall, its rigging snapping taut.
+
+The first drops of rain strike the fabric. Moments later, water streams toward the collection channels.
 
 {curiosity >= 3:
     Jodie slows down. Nothing here is decorative. Every knot, pulley, and line is doing a job.
