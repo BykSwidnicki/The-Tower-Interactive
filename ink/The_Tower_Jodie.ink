@@ -10,6 +10,11 @@ VAR told_truth_to_houdini = false
 VAR told_tyler_mission = false
 VAR flirted_with_tyler = false
 VAR distribution_jumpsuit = false
+VAR distribution_quota_solved = false
+VAR distribution_quota_corrected = false
+VAR distribution_quota_left_inflated = false
+VAR distribution_quota_exploited = false
+VAR distribution_math_missed = false
 VAR used_distribution_service_route = false
 VAR water_instability = 0
 VAR honey_platform_available = true
@@ -1879,14 +1884,14 @@ They reach Distribution together.
 
 === distribution ===
 
-~ route_log = route_log + " → Distribution"
+~ route_log = route_log + " → Distribution 105-103"
 
 {elapsed_time >= 7:
     The shift has moved on without her.
 }
 
 {honey_platform_available:
-    By the time Jodie reaches Distribution, she is sticky with honey and tower grime.
+    By the time Jodie reaches Distribution, she is sticky with honey and Tower grime.
 - else:
     With the honey platform down, Jodie reaches Distribution by the dry service transfer instead.
 
@@ -1905,28 +1910,224 @@ Jodie looks down at herself.
 
 Beyond the rinse station hang spare Distribution jumpsuits.
 
-A quota board clicks overhead.
+Above them, a quota board clicks like an insect with a grudge.
 
 * [Take the offered jumpsuit.]
     ~ distribution_jumpsuit = true
     ~ solidarity += 1
+    ~ belonging += 1
+
     Jodie changes fast.
+
     The uniform smells faintly of soap and old sugar.
-    -> distribution_exit
+
+    -> distribution_quota
 
 * [Rinse off and keep her Filtration clothes.]
     ~ curiosity += 1
+
     Jodie scrubs the honey from her sleeves and keeps moving.
-    -> distribution_exit
 
-* [Ignore the complaint and head for the exit.]
+    -> distribution_quota
+
+* [Ignore the complaint and head for the floor.]
     ~ defiance += 1
+    ~ independence += 1
+
     "I'm not staying."
+
     "That was obvious," the worker says.
-    -> distribution_exit
+
+    -> distribution_quota
 
 
-=== distribution_exit ===
+=== distribution_quota ===
+
+The board snaps to a new line.
+
+ROW C — SIX CARTS
+EIGHT CRATES EACH
+PROCESSED: 52
+
+A woman at the tally desk stares at it.
+
+"That can't be right."
+
+Four workers nearby stop pretending they are not listening.
+
+If the count stays at fifty-two, their section clears quota and avoids overtime.
+
+If the count is wrong, somebody will eventually discover inventory that does not exist.
+
+{cross_department_competence >= 3:
+    Jodie looks at the cart marks before she looks at the total.
+
+    Six groups of eight.
+
+    One returned cart has four crates still ghosted in the count.
+- else:
+    Jodie counts the loads in her head.
+
+    Six carts.
+
+    Eight crates on each.
+}
+
+What is the real total?
+
+* [48]
+    ~ distribution_quota_solved = true
+    ~ cross_department_competence += 1
+    ~ choice_log = choice_log + "DISTRIBUTION MATH:48 / "
+
+    "Forty-eight."
+
+    The tally woman looks at Jodie.
+
+    Then at the board.
+
+    "So we're four over on paper."
+
+    -> distribution_quota_ethics
+
+* [52]
+    ~ distribution_math_missed = true
+    ~ institutional_visibility += 1
+    ~ choice_log = choice_log + "DISTRIBUTION MATH:52 WRONG / "
+
+    "Fifty-two."
+
+    The tally woman points at the carts.
+
+    "That's what the board says. I'm asking what exists."
+
+    A worker mutters, "Forty-eight."
+
+    Jodie gets the answer a second late.
+
+    -> distribution_quota_ethics
+
+* [56]
+    ~ distribution_math_missed = true
+    ~ institutional_visibility += 1
+    ~ choice_log = choice_log + "DISTRIBUTION MATH:56 WRONG / "
+
+    "Fifty-six."
+
+    The tally woman closes her eyes for one patient second.
+
+    "Six times eight."
+
+    "Right."
+
+    "Forty-eight."
+
+    -> distribution_quota_ethics
+
+
+=== distribution_quota_ethics ===
+
+The board still says fifty-two.
+
+Nobody touches it.
+
+The discrepancy is no longer a math problem.
+
+It is a people problem.
+
+* [Correct the tally before the error moves downstream.]
+    ~ distribution_quota_corrected = true
+    ~ worker_reputation += 1
+    ~ cross_department_competence += 1
+    ~ institutional_visibility += 1
+    ~ choice_log = choice_log + "QUOTA: CORRECT / "
+
+    Jodie taps the correction key.
+
+    52 becomes 48.
+
+    A groan moves through the workers.
+
+    The tally woman does not thank her.
+
+    "Inventory won't eat us tomorrow," she says.
+
+    Someone else answers, "Overtime might eat us tonight."
+
+    -> distribution_floor_pressure
+
+* [Leave the inflated count alone so the section clears quota.]
+    ~ distribution_quota_left_inflated = true
+    ~ worker_reputation += 1
+    ~ belonging += 1
+    ~ choice_log = choice_log + "QUOTA: LEAVE INFLATED / "
+
+    Jodie takes her hand off the board.
+
+    Nobody celebrates.
+
+    One worker simply exhales.
+
+    "Four crates we don't have," the tally woman says.
+
+    "Four crates of sleep," someone answers.
+
+    -> distribution_floor_pressure
+
+* [Use the four-crate mismatch as cover and move while the system thinks the space is occupied.]
+    ~ distribution_quota_exploited = true
+    ~ independence += 1
+    ~ curiosity += 1
+    ~ choice_log = choice_log + "QUOTA: EXPLOIT GAP / "
+
+    Four crates exist on paper and nowhere on the floor.
+
+    Jodie steps into that absence.
+
+    A cart tag goes onto her wrist for less than a minute.
+
+    To the tally system, she is freight already accounted for.
+
+    -> distribution_floor_pressure
+
+* [Leave the argument to Distribution and keep moving.]
+    ~ independence += 1
+    ~ choice_log = choice_log + "QUOTA: WALK AWAY / "
+
+    Jodie lets the board keep clicking.
+
+    Not every problem she understands belongs to her.
+
+    -> distribution_floor_pressure
+
+
+=== distribution_floor_pressure ===
+
+The rest of the department moves around the quota board as if nothing happened.
+
+Crates slide.
+
+Names are shouted.
+
+Numbers change.
+
+People become counts and counts become permission.
+
+{distribution_quota_corrected:
+    The tally desk now knows Jodie's face.
+}
+
+{distribution_quota_left_inflated:
+    A worker nudges an empty cart into her path, shielding her from the supervisor's view.
+
+    A tiny favor.
+
+    No speech attached.
+}
+
+{distribution_quota_exploited:
+    The false cart tag opens a narrow service gate before the system notices that Jodie is not a crate.
+}
 
 {distribution_jumpsuit:
     In Distribution gray, fewer people look twice at her.
@@ -1936,9 +2137,9 @@ A quota board clicks overhead.
     Tyler's directions line up with the service markings ahead.
 }
 
-At the far edge of the floor, Jodie finds two ways toward the last visible route down.
+At the far edge of the floor, Jodie finds the last visible routes toward the shaft.
 
-* {distribution_jumpsuit} [Use the staff service corridor.]
+* {distribution_jumpsuit || distribution_quota_exploited} [Use the staff service corridor.]
     ~ choice_log = choice_log + "SERVICE CORRIDOR / "
     ~ used_distribution_service_route = true
     -> distribution_service_route
@@ -1958,12 +2159,24 @@ At the far edge of the floor, Jodie finds two ways toward the last visible route
 
 ~ route_log = route_log + " → Service Corridor"
 
-The gray jumpsuit does its work.
+{distribution_quota_exploited:
+    The false cart tag gets Jodie through the first gate.
 
-Jodie joins the flow of workers moving behind the quota boards and through a narrow service corridor.
+    It dies at the second.
+
+    Long enough.
+- else:
+    The gray jumpsuit does its work.
+}
+
+Jodie joins the flow behind the quota boards and through a narrow service corridor.
 
 {told_tyler_mission:
-    Tyler's directions make sense here. Left at the split. Down past the locked cage.
+    Tyler's directions make sense here.
+
+    Left at the split.
+
+    Down past the locked cage.
 }
 
 Nobody stops her.
@@ -1997,8 +2210,20 @@ She reaches the elevator shaft from the lower side.
 Jodie crosses the working floor in full view.
 
 Carts cut across her path.
+
 Names are shouted.
+
 Numbers change on the quota board overhead.
+
+{distribution_quota_corrected:
+    The tally woman sees her pass and gives the smallest possible nod.
+}
+
+{distribution_quota_left_inflated:
+    The section has already gone back to work.
+
+    Fifty-two glows above forty-eight real crates.
+}
 
 {defiance >= 4:
     She keeps moving like she belongs wherever she decides to stand.
@@ -2255,6 +2480,9 @@ Agro crop lane saved: {agro_saved_crop_lane}
 Agro hid in workflow: {agro_hid_in_workflow}
 Agro supervisor attention: {agro_supervisor_attention}
 Agro broken bridge seen: {agro_broken_bridge_seen}
+Distribution quota solved: {distribution_quota_solved}
+Distribution math missed: {distribution_math_missed}
+Distribution quota outcome: {distribution_quota_corrected:CORRECTED|{distribution_quota_left_inflated:LEFT_INFLATED|{distribution_quota_exploited:EXPLOITED|WALKED_AWAY}}}
 Learned Water from Houdini: {learned_water_from_houdini}
 Pending Water lesson: {pending_water_lesson}
 Studied water cycle: {studied_water_cycle}
