@@ -18,7 +18,7 @@ To play:
 
 The end of the slice includes a compact **Portfolio Profile** showing how the run changed Jodie's emerging identity and how those choices are designed to carry into later stages.
 
-A developer diagnostics block follows the portfolio ending. It is included for testing and demonstrates the state being tracked under the hood.
+At the end, the player can stop cleanly or optionally open a **Developer Diagnostics** view showing the state tracked under the hood.
 
 ## Current route
 
@@ -100,7 +100,7 @@ Only the **Filtration → Medical** portion is part of the current portfolio pre
 
 - [`ink/The_Tower_Jodie.ink`](ink/The_Tower_Jodie.ink) — active playable portfolio source
 - [`design/The_Tower_East_West_Floor_Bible_40-131.md`](design/The_Tower_East_West_Floor_Bible_40-131.md) — architectural authority for mapped Tower geography and route constraints
-- [`backups/The_Tower_Jodie_PORTFOLIO_FREEZE_2026-10-08.ink`](backups/The_Tower_Jodie_PORTFOLIO_FREEZE_2026-10-08.ink) — frozen checkpoint from the final QA cycle
+- [`backups/The_Tower_Jodie_PORTFOLIO_FREEZE_2026-10-08.ink`](backups/The_Tower_Jodie_PORTFOLIO_FREEZE_2026-10-08.ink) — frozen checkpoint from the final QA cycle; retained as a recovery copy while preflight polish continues
 - `design/` — supporting interactive-narrative and world-architecture material
 - `backups/` — protected portfolio checkpoints
 
@@ -114,7 +114,7 @@ The current portfolio candidate has passed three end-to-end play styles:
 
 All three reached Medical coherently while producing meaningfully different state profiles.
 
-The active Ink source is now in polish/freeze territory. New mechanics are being held back unless a genuine bug appears.
+The active Ink source is in final preflight. New mechanics are being held back unless a genuine bug appears.
 
 ## Tools and workflow
 
