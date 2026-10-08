@@ -1066,8 +1066,10 @@ The passage between them opens for seconds at a time.
 
 * [Wait and count the twelve-second cycle.]
     ~ pending_water_lesson += 1
-    ~ recklessness = MAX(0, recklessness - 1)
-    ~ recklessness_log = recklessness_log + "WAIT(-1) / "
+    {recklessness > 0:
+        ~ recklessness -= 1
+        ~ recklessness_log = recklessness_log + "WAIT(-1) / "
+    }
     ~ choice_log = choice_log + "WAIT / "
     ~ curiosity += 1
     ~ elapsed_time += 3
