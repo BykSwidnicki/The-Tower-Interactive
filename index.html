@@ -62,6 +62,7 @@
     const choices = document.getElementById('choices');
     const restart = document.getElementById('restart');
     let inkSource = null, story = null;
+    let profileSnapshot = null, profileMarkup = null;
     function showError(error) {
       status.textContent = 'Unable to start the story.';
       passage.replaceChildren();
@@ -70,9 +71,10 @@
       p.textContent = String(error && error.message ? error.message : error);
       passage.append(p);
     }
-    function render() {
+    function render(restoredProfile = false) {
       passage.replaceChildren();
       choices.replaceChildren();
+      if (restoredProfile && profileMarkup !== null) passage.innerHTML = profileMarkup;
       try {
         while(story.canContinue) {
           const line = story.Continue();
@@ -89,6 +91,10 @@
             button.className = 'choice';
             button.textContent = choice.text;
             button.addEventListener('click', () => {
+              if (/view developer diagnostics/i.test(choice.text) && story.currentChoices.some(c => /end the portfolio slice/i.test(c.text))) {
+                profileSnapshot = story.state.ToJson();
+                profileMarkup = passage.innerHTML;
+              }
               story.ChooseChoiceIndex(index);
               render();
               window.scrollTo({top:0,behavior:'instant'});
@@ -96,43 +102,28 @@
             choices.append(button);
           });
         } else {
-          // The story has finished; separate ending results from debug output.
-          const paragraphs = [...passage.querySelectorAll('p')];
-          const profileAt = paragraphs.findIndex(p => p.textContent.includes('PORTFOLIO PROFILE'));
-          const diagnosticsAt = paragraphs.findIndex(p => p.textContent.includes('DEVELOPER DIAGNOSTICS'));
-          if (profileAt < 0 || diagnosticsAt <= profileAt) {
-            status.textContent = 'Story complete';
-            return;
-          }
-          const storyEnding = paragraphs.slice(0, profileAt);
-          const profile = paragraphs.slice(profileAt, diagnosticsAt);
-          const diagnostics = paragraphs.slice(diagnosticsAt);
-          const sectionTitle = document.createElement('h2');
-          sectionTitle.className = 'results-heading';
-          passage.prepend(sectionTitle);
-          const showView = (view) => {
-            storyEnding.forEach(p => p.hidden = true);
-            profile.forEach(p => p.hidden = view !== 'profile');
-            diagnostics.forEach(p => p.hidden = view !== 'diagnostics');
-            sectionTitle.textContent = view === 'profile' ? 'Jodie’s Portfolio Profile' : 'Developer Diagnostics';
-            status.textContent = view === 'profile' ? 'Stage 1 complete · Character outcome' : 'Stage 1 complete · Technical breakdown';
-            choices.replaceChildren();
-            const switcher = document.createElement('button');
-            switcher.className = 'choice';
-            switcher.textContent = view === 'profile' ? 'View developer diagnostics' : 'Return to Portfolio Profile';
-            switcher.addEventListener('click', () => {
-              showView(view === 'profile' ? 'diagnostics' : 'profile');
+          if (profileSnapshot !== null && passage.textContent.includes('DEVELOPER DIAGNOSTICS')) {
+            status.textContent = 'Stage 1 complete · Developer diagnostics';
+            const back = document.createElement('button');
+            back.className = 'choice';
+            back.textContent = 'Return to Portfolio Profile';
+            back.addEventListener('click', () => {
+              story.state.LoadJson(profileSnapshot);
+              render(true);
               passage.scrollIntoView({block:'start',behavior:'instant'});
             });
-            choices.append(switcher);
-          };
-          showView('profile');
+            choices.append(back);
+          } else {
+            status.textContent = 'End of this portfolio slice';
+          }
         }
       } catch (error) {showError(error);}
     }
     function start() {
       if (!inkSource) return;
       try {
+        profileSnapshot = null;
+        profileMarkup = null;
         story = new Compiler(inkSource).Compile();
         if(!story) throw new Error('Ink compilation did not produce a story. Verify the source in Inky.');
         render();
