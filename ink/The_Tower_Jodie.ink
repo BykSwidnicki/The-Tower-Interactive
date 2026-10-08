@@ -1108,7 +1108,7 @@ The passage between them opens for seconds at a time.
 
     -> water_crossing
 
-* {water_knowledge >= 2} [Use what she knows to cross on the pressure handoff.]
+* {water_knowledge >= 2} [Use your knowledge to cross on the pressure handoff.]
     ~ choice_log = choice_log + "PRESSURE HANDOFF / "
     ~ story_insight += 1
     ~ elapsed_time += 1
