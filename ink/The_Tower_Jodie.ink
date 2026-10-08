@@ -2595,10 +2595,14 @@ Tyler knows he can count on you. That relationship may matter again.
 You reached Medical without building much trust with Tyler. You still have the chance to know him later.
 }
 
-{told_truth_to_houdini:
+{visited_living:
+    {told_truth_to_houdini:
 You told Houdini why you were traveling, and he had a chance to help you directly.
-- else:
+    - else:
 You kept at least part of your mission to yourself in Living Quarters. Caution shaped that conversation.
+    }
+- else:
+You bypassed Living Quarters. That meant less time among its residents, and fewer opportunities to build trust there.
 }
 
 {cross_department_competence >= 5:
