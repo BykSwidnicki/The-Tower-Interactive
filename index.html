@@ -19,7 +19,9 @@
     .tools { display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; }
     button, .source { background:#19313a; color:#f4f5ef; border:1px solid #678382; border-radius:4px; padding:12px 15px; cursor:pointer; font:600 .9rem system-ui,sans-serif; text-decoration:none; }
     button:hover,button:focus-visible,.source:hover { background:#2b4b54; outline-color:#abc8bc; }
-    .sticky-return { position:sticky; top:0; z-index:20; background:rgba(16,28,34,.96); border-bottom:1px solid #3b5559; padding:9px 22px; display:flex; justify-content:flex-start; backdrop-filter:blur(8px); }\n    .sticky-return a { display:inline-block; padding:10px 14px; min-height:44px; }\n    main { padding-top:28px; padding-bottom:50px; }
+    .sticky-return { position:sticky; top:0; z-index:20; background:rgba(16,28,34,.96); border-bottom:1px solid #3b5559; padding:9px 22px; display:flex; justify-content:flex-start; backdrop-filter:blur(8px); }
+    .sticky-return a { display:inline-block; padding:10px 14px; min-height:44px; }
+    main { padding-top:28px; padding-bottom:50px; }
     #status { color:#c4d1cb; font: .9rem system-ui,sans-serif; }
     #passage { line-height:1.68; font-size:clamp(1.03rem,2.8vw,1.13rem); letter-spacing:.005em; }
     #passage p { margin:0 0 .95em; white-space:pre-wrap; }
@@ -36,6 +38,24 @@
     #passage p:first-child { color:#f3f2e9; }
     .choice:focus-visible { outline:3px solid #d7e5d4; outline-offset:3px; }
     .tools button,.tools .source { min-height:44px; }
+
+    body { --zone-accent:#82a8b1; --zone-glow:rgba(65,108,125,.22); --zone-stripe:repeating-linear-gradient(0deg,transparent 0 22px,rgba(152,190,194,.05) 23px,transparent 24px); background:radial-gradient(ellipse at 65% -5%,var(--zone-glow),transparent 65%),#101c22; transition:background-color .2s; }
+    body[data-zone="rigging"] { --zone-accent:#c9b58e; --zone-glow:rgba(172,142,94,.2); --zone-stripe:repeating-linear-gradient(125deg,transparent 0 18px,rgba(201,181,142,.08) 19px,transparent 20px); }
+    body[data-zone="living"] { --zone-accent:#d7a77e; --zone-glow:rgba(172,105,74,.24); --zone-stripe:repeating-linear-gradient(90deg,transparent 0 34px,rgba(205,148,112,.05) 35px,transparent 36px); }
+    body[data-zone="spine"] { --zone-accent:#bac2ba; --zone-glow:rgba(137,153,150,.12); --zone-stripe:repeating-linear-gradient(90deg,transparent 0 21px,rgba(187,202,194,.09) 22px,transparent 23px); }
+    body[data-zone="water"] { --zone-accent:#80c4c5; --zone-glow:rgba(39,132,143,.26); --zone-stripe:repeating-radial-gradient(circle at 75% 20%,transparent 0 18px,rgba(89,175,180,.08) 19px,transparent 20px); }
+    body[data-zone="agro"] { --zone-accent:#a6c595; --zone-glow:rgba(76,112,61,.25); --zone-stripe:repeating-linear-gradient(155deg,transparent 0 28px,rgba(155,196,120,.07) 29px,transparent 30px); }
+    body[data-zone="distribution"] { --zone-accent:#e1b977; --zone-glow:rgba(173,125,46,.23); --zone-stripe:repeating-linear-gradient(90deg,transparent 0 12px,rgba(222,186,112,.07) 13px,transparent 14px); }
+    body[data-zone="shaft"] { --zone-accent:#aab2bd; --zone-glow:rgba(79,90,116,.25); --zone-stripe:repeating-linear-gradient(90deg,transparent 0 39px,rgba(171,184,196,.12) 40px,transparent 42px); }
+    body[data-zone="medical"] { --zone-accent:#b8d6ba; --zone-glow:rgba(95,154,113,.18); --zone-stripe:repeating-linear-gradient(0deg,transparent 0 36px,rgba(184,214,186,.05) 37px,transparent 38px); }
+    #zone-banner { margin:0 auto;max-width:780px;padding:13px 24px;border-bottom:1px solid #435c60;display:flex;gap:12px;align-items:center;font:700 11px system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--zone-accent); }
+    #zone-banner:before { content:"";display:block;flex:none;width:30px;height:30px;border:1px solid var(--zone-accent);background:var(--zone-stripe);opacity:.85; }
+    #passage { position:relative; }
+    #passage:before { content:"";position:absolute;top:0;right:0;width:100%;height:100%;background:var(--zone-stripe);opacity:.42;pointer-events:none;mask-image:linear-gradient(to right,transparent 25%,black 100%); }
+    #passage p { position:relative; }
+    .choice { border-left-color:var(--zone-accent); }
+    .sticky-return { border-bottom-color:var(--zone-accent); }
+
   </style>
 </head>
 <body>
@@ -50,6 +70,7 @@
     </div>
   </header>
   <nav class="sticky-return" aria-label="Always available navigation"><a class="source" href="./portfolio/">← Back to portfolio</a></nav>
+  <div id="zone-banner" aria-live="off">Filtration · 123</div>
   <main>
     <div id="status" role="status" aria-live="polite">Loading the story…</div>
     <div id="passage" aria-live="polite"></div>
@@ -62,8 +83,31 @@
     const passage = document.getElementById('passage');
     const choices = document.getElementById('choices');
     const restart = document.getElementById('restart');
+    const zoneBanner = document.getElementById('zone-banner');
     let inkSource = null, story = null;
     let profileSnapshot = null, profileMarkup = null;
+
+    const departments = [
+      {re:/medical/i, zone:'medical',name:'Medical Intake'},
+      {re:/elevator shaft/i, zone:'shaft',name:'Elevator Shaft'},
+      {re:/distribution|service corridor|honey platform|open floor/i,zone:'distribution',name:'Distribution'},
+      {re:/agro/i,zone:'agro',name:'Agro'},
+      {re:/water/i,zone:'water',name:'Water Storage'},
+      {re:/spine/i,zone:'spine',name:'Center Spine'},
+      {re:/living/i,zone:'living',name:'Living Quarters'},
+      {re:/rigging/i,zone:'rigging',name:'Sail Rigging'},
+      {re:/filtration/i,zone:'filtration',name:'Filtration · 123'}
+    ];
+    function updateDepartment() {
+      // The route ledger records the actual departments visited in this run.
+      // The last entry determines the atmosphere; no authored choices change.
+      let route = '';
+      try { route = String(story.variablesState.$('route_log') || ''); } catch (_) {}
+      const last = route.split(' → ').pop().trim();
+      const current = departments.find(item => item.re.test(last)) || departments[8];
+      document.body.dataset.zone = current.zone;
+      zoneBanner.textContent = current.name;
+    }
     function showError(error) {
       status.textContent = 'Unable to start the story.';
       passage.replaceChildren();
@@ -112,6 +156,7 @@
             passage.append(p);
           }
         }
+        updateDepartment();
         if(story.currentChoices.length) {
           status.textContent = 'Choose what Jodie does next';
           story.currentChoices.forEach((choice,index) => {
