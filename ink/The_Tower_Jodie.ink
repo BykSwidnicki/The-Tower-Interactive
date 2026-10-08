@@ -373,6 +373,8 @@ The great hanging sails are mostly above her now. Here the load resolves into gu
         ~ rigging_121_problem_warned = true
         ~ rigging_crew_favor += 1
         ~ story_insight += 1
+        ~ worker_reputation += 1
+        ~ cross_department_competence += 1
         ~ elapsed_time += 1
         ~ rigging_direct_water_access = true
         ~ choice_log = choice_log + "RIGGING 121 WARN / "
@@ -405,6 +407,8 @@ The great hanging sails are mostly above her now. Here the load resolves into gu
         ~ rigging_crew_favor += 2
         ~ solidarity += 1
         ~ story_insight += 1
+        ~ worker_reputation += 1
+        ~ belonging += 1
         ~ elapsed_time += 2
         ~ rigging_direct_water_access = true
         ~ choice_log = choice_log + "RIGGING 121 BRACE / "
@@ -757,6 +761,7 @@ Houdini looks toward the central spine.
     ~ elapsed_time += 1
     ~ curiosity += 1
     ~ used_living_service_cut = true
+    ~ independence += 1
     ~ choice_log = choice_log + "LIVING SERVICE CUT / "
     ~ route_log = route_log + " → Living Service Cut"
 
@@ -864,6 +869,7 @@ Belonging to the wrong place is.
                 ~ elapsed_time += 2
                 ~ curiosity += 1
                 ~ spine_crossed_service_gap = true
+                ~ independence += 1
                 ~ choice_log = choice_log + "SPINE: SERVICE GAP / "
 
                 A cart stacked with filter housings squeals into the crossing.
