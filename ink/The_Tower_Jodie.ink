@@ -255,6 +255,8 @@ A suspended water sail shifts into place above the dark.
     "The line between water and no water."
     He points upward.
     "Sails catch it. Tanks hold it. Gravity does the rest."
+
+    The sailor goes back to work. Jodie can ask another question, lend a hand, or continue down.
     -> rigging_122_choices
 
 * [Help them pull before moving on.]
@@ -374,7 +376,7 @@ The great hanging sails are mostly above her now. Here the load resolves into gu
 {rigging_121_problem_resolved == false:
     A loaded guide wheel begins to walk sideways in its bracket.
 
-    Metal complains.
+    The mounting bracket groans under the strain.
 
     {rigging_consequence_pending:
         The shudder is sharper than it should be.
@@ -658,6 +660,7 @@ Houdini steps into the corridor and looks at her work clothes.
         ~ protection_log = protection_log + "HOUDINI TECHNICAL WARNING / "
     }
 
+    Houdini returns to the pipes. Jodie can keep talking or decide how much of her errand to reveal.
     -> living_conversation
 
 * [Tell him the truth about Brooks and the O-ring.]
@@ -2551,12 +2554,14 @@ For the first time since leaving Filtration, Jodie stops moving.
     Jodie puts one hand against the wall.
     One breath.
     Then another.
+    Her breathing settles. The worker waits for her to speak.
     -> medical_arrival_choices
 
 * {curiosity >= 5 && medical_looked_around == false} [Look around before revealing why she is here.]
     ~ medical_looked_around = true
     ~ curiosity += 1
     Jodie studies the room first.
+    The ward carries on around her. She still needs to ask for the part.
     -> medical_arrival_choices
 
 
@@ -2570,7 +2575,51 @@ A worker points deeper into the ward.
 
 The O-ring is still ahead.
 
-But the run has already changed what Jodie knows, who trusts her, and how she moves through the Tower.
+The journey has changed what Jodie knows, who trusts her, and how she moves through the Tower.
+
+--- YOUR JOURNEY ---
+
+{injury >= 2:
+You arrived hurt. Getting through was not the same as getting through unscathed.
+- else:
+    {injury == 1:
+You made it with a bruise and a reminder that even a successful crossing can cost something.
+    - else:
+You arrived without injury. That does not mean every risk was harmless.
+    }
+}
+
+{tyler_trust >= 2:
+Tyler knows he can count on you. That relationship may matter again.
+- else:
+You reached Medical without building much trust with Tyler. You still have the chance to know him later.
+}
+
+{told_truth_to_houdini:
+You told Houdini why you were traveling, and he had a chance to help you directly.
+- else:
+You kept at least part of your mission to yourself in Living Quarters. Caution shaped that conversation.
+}
+
+{cross_department_competence >= 5:
+You gathered enough practical knowledge to connect problems across departments.
+- else:
+You saw pieces of systems you do not fully understand yet. Those gaps can become questions worth following.
+}
+
+{worker_reputation >= 4:
+Workers along the route have reasons to remember you favorably.
+- else:
+You passed through many workplaces without becoming widely known among the crews.
+}
+
+{institutional_visibility >= 2:
+Your presence attracted some institutional attention.
+- else:
+You passed with little formal attention. Staying unobtrusive has advantages, but it also means fewer people know your purpose.
+}
+
+This is not a grade. Reaching Medical completes this part of the journey; the portrait below describes the Jodie your decisions are beginning to shape.
 
 --- PORTFOLIO PROFILE ---
 
@@ -2599,7 +2648,7 @@ Jodie would enter Stage 2 with relatively little institutional scrutiny.
 }
 
 Stage 2: Medical Years
-In development. Stage 1 outcomes will alter Jodie's starting relationships, resources, access, and reasoning options across her three years in Medical.
+In development. Relationships, knowledge, and unresolved consequences from this run are intended to shape Jodie's time in Medical.
 
 The portfolio slice ends here. Jodie's state does not.
 
