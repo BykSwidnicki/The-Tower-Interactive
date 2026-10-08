@@ -27,6 +27,7 @@
     .choice { text-align:left; width:100%; padding:14px 16px; background:#192c33; border-left:3px solid #adc2b0; line-height:1.45; }
     .choice:before { content:'›'; color:#cbdcb8; margin-right:10px; }
     [hidden] { display:none !important; }
+    .results-heading { font:600 1.3rem system-ui,sans-serif; color:#d9e6d9; margin:0 0 20px; padding:0 0 12px; border-bottom:1px solid #4e6869; }
     .error { color:#ffbea9; white-space:pre-wrap; }
     footer { border-top:1px solid #3b5559; padding-top:18px; padding-bottom:32px; color:#93aaa8; font:.77rem system-ui,sans-serif; line-height:1.7; }
     footer a {color:#bddbd2}
@@ -95,34 +96,37 @@
             choices.append(button);
           });
         } else {
-          status.textContent = 'End of this portfolio slice';
-          // At the ending, keep the author-facing portfolio profile and the
-          // developer telemetry in separate, reversible views. No Ink state changes.
+          // The story has finished; separate ending results from debug output.
           const paragraphs = [...passage.querySelectorAll('p')];
-          const marker = paragraphs.findIndex(p => p.textContent.includes('--- DEVELOPER DIAGNOSTICS ---'));
-          if (marker >= 0) {
-            const diagnostics = document.createElement('section');
-            diagnostics.id = 'diagnostics-view';
-            diagnostics.hidden = true;
-            paragraphs.slice(marker).forEach(p => diagnostics.append(p));
-            passage.append(diagnostics);
-            const toggle = document.createElement('button');
-            toggle.className = 'choice';
-            toggle.textContent = 'View developer diagnostics';
-            toggle.setAttribute('aria-expanded', 'false');
-            toggle.setAttribute('aria-controls', 'diagnostics-view');
-            let showing = false;
-            toggle.addEventListener('click', () => {
-              showing = !showing;
-              diagnostics.hidden = !showing;
-              paragraphs.slice(0, marker).forEach(p => p.hidden = showing);
-              toggle.textContent = showing ? 'Return to Portfolio Profile' : 'View developer diagnostics';
-              toggle.setAttribute('aria-expanded', String(showing));
-              status.textContent = showing ? 'Developer diagnostics' : 'Portfolio Profile';
-              window.scrollTo({top:0,behavior:'instant'});
-            });
-            choices.append(toggle);
+          const profileAt = paragraphs.findIndex(p => p.textContent.includes('PORTFOLIO PROFILE'));
+          const diagnosticsAt = paragraphs.findIndex(p => p.textContent.includes('DEVELOPER DIAGNOSTICS'));
+          if (profileAt < 0 || diagnosticsAt <= profileAt) {
+            status.textContent = 'Story complete';
+            return;
           }
+          const storyEnding = paragraphs.slice(0, profileAt);
+          const profile = paragraphs.slice(profileAt, diagnosticsAt);
+          const diagnostics = paragraphs.slice(diagnosticsAt);
+          const sectionTitle = document.createElement('h2');
+          sectionTitle.className = 'results-heading';
+          passage.prepend(sectionTitle);
+          const showView = (view) => {
+            storyEnding.forEach(p => p.hidden = true);
+            profile.forEach(p => p.hidden = view !== 'profile');
+            diagnostics.forEach(p => p.hidden = view !== 'diagnostics');
+            sectionTitle.textContent = view === 'profile' ? 'Jodie’s Portfolio Profile' : 'Developer Diagnostics';
+            status.textContent = view === 'profile' ? 'Stage 1 complete · Character outcome' : 'Stage 1 complete · Technical breakdown';
+            choices.replaceChildren();
+            const switcher = document.createElement('button');
+            switcher.className = 'choice';
+            switcher.textContent = view === 'profile' ? 'View developer diagnostics' : 'Return to Portfolio Profile';
+            switcher.addEventListener('click', () => {
+              showView(view === 'profile' ? 'diagnostics' : 'profile');
+              passage.scrollIntoView({block:'start',behavior:'instant'});
+            });
+            choices.append(switcher);
+          };
+          showView('profile');
         }
       } catch (error) {showError(error);}
     }
