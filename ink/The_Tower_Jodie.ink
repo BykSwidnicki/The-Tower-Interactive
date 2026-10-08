@@ -40,6 +40,10 @@ VAR studied_water_cycle = false
 VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
 VAR learned_water_from_houdini = false
+VAR discussed_rigging_with_houdini = false
+VAR discussed_water_with_tyler = false
+VAR medical_caught_breath = false
+VAR medical_looked_around = false
 VAR pending_water_lesson = 0
 VAR used_water_maintenance_bypass = false
 VAR water_dispatch_insight = false
@@ -225,7 +229,12 @@ A suspended water sail shifts into place above the dark.
     Nobody is working alone. Every movement depends on somebody else holding.
 }
 
-* [Ask what "rope of life" means.]
+-> rigging_122_choices
+
+
+=== rigging_122_choices ===
+
+* {asked_rope_meaning == false} [Ask what "rope of life" means.]
     ~ asked_rope_meaning = true
     ~ curiosity += 1
     ~ story_insight += 1
@@ -242,7 +251,7 @@ A suspended water sail shifts into place above the dark.
     "The line between water and no water."
     He points upward.
     "Sails catch it. Tanks hold it. Gravity does the rest."
-    -> rigging_121
+    -> rigging_122_choices
 
 * [Help them pull before moving on.]
     ~ helped_riggers = true
@@ -616,7 +625,13 @@ Houdini steps into the corridor and looks at her work clothes.
     "Filtration doesn't wander."
 }
 
-* {rigging_knowledge >= 2} [Mention the load transfer she saw in Rigging.]
+-> living_conversation
+
+
+=== living_conversation ===
+
+* {rigging_knowledge >= 2 && discussed_rigging_with_houdini == false} [Mention the load transfer she saw in Rigging.]
+    ~ discussed_rigging_with_houdini = true
     ~ choice_log = choice_log + "HOUDINI: RIGGING TALK / "
     {learned_water_from_houdini == false:
         ~ water_knowledge += 1
@@ -636,8 +651,7 @@ Houdini steps into the corridor and looks at her work clothes.
         ~ protection_log = protection_log + "HOUDINI TECHNICAL WARNING / "
     }
 
-    ~ told_truth_to_houdini = true
-    -> living_exit
+    -> living_conversation
 
 * [Tell him the truth. Brooks sent her for an O-ring.]
     ~ elapsed_time += 1
@@ -1727,7 +1741,13 @@ Raw material is moving toward Distribution.
 
 "You're a long way from Filtration."
 
-* {water_knowledge >= 2} [Tell Tyler what she heard in the Water feed.]
+-> agro_conversation
+
+
+=== agro_conversation ===
+
+* {water_knowledge >= 2 && discussed_water_with_tyler == false} [Tell Tyler what she heard in the Water feed.]
+    ~ discussed_water_with_tyler = true
     ~ choice_log = choice_log + "TYLER: WATER READ / "
     ~ curiosity += 1
     ~ story_insight += 1
@@ -1744,7 +1764,7 @@ Raw material is moving toward Distribution.
 
     "Then don't use the upper transfer if it starts hunting."
 
-    -> agro_exit
+    -> agro_conversation
 
 * [Tell Tyler about the O-ring.]
     ~ told_tyler_mission = true
@@ -2426,20 +2446,27 @@ For the first time since leaving Filtration, Jodie stops moving.
     }
 }
 
+-> medical_arrival_choices
+
+
+=== medical_arrival_choices ===
+
 * [Ask where to find the part.]
     "I need an O-ring for Filtration."
     -> medical_end
 
-* [Catch her breath before speaking.]
+* {medical_caught_breath == false} [Catch her breath before speaking.]
+    ~ medical_caught_breath = true
     Jodie puts one hand against the wall.
     One breath.
     Then another.
-    -> medical_end
+    -> medical_arrival_choices
 
-* {curiosity >= 5} [Look around before revealing why she is here.]
+* {curiosity >= 5 && medical_looked_around == false} [Look around before revealing why she is here.]
+    ~ medical_looked_around = true
     ~ curiosity += 1
     Jodie studies the room first.
-    -> medical_end
+    -> medical_arrival_choices
 
 
 === medical_end ===
@@ -2483,6 +2510,8 @@ Agro broken bridge seen: {agro_broken_bridge_seen}
 Distribution quota solved: {distribution_quota_solved}
 Distribution math missed: {distribution_math_missed}
 Distribution quota outcome: {distribution_quota_corrected:CORRECTED|{distribution_quota_left_inflated:LEFT_INFLATED|{distribution_quota_exploited:EXPLOITED|WALKED_AWAY}}}
+Conversation persistence: HOUDINI_TECH={discussed_rigging_with_houdini} / TYLER_WATER={discussed_water_with_tyler}
+Medical arrival observations: BREATH={medical_caught_breath} / LOOKED={medical_looked_around}
 Learned Water from Houdini: {learned_water_from_houdini}
 Pending Water lesson: {pending_water_lesson}
 Studied water cycle: {studied_water_cycle}
