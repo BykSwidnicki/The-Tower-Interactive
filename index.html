@@ -71,6 +71,33 @@
       p.textContent = String(error && error.message ? error.message : error);
       passage.append(p);
     }
+    function addAction(label, callback) {
+      const button = document.createElement('button');
+      button.className = 'choice';
+      button.textContent = label;
+      button.addEventListener('click', callback);
+      choices.append(button);
+    }
+    function restoreProfile() {
+      if (profileSnapshot === null) return;
+      story.state.LoadJson(profileSnapshot);
+      render(true);
+      passage.scrollIntoView({block:'start',behavior:'instant'});
+    }
+    function showCompletion() {
+      passage.replaceChildren();
+      choices.replaceChildren();
+      status.textContent = 'Stage 1 complete';
+      const title = document.createElement('h2');
+      title.className = 'results-heading';
+      title.textContent = 'The route ends here. The story continues.';
+      const note = document.createElement('p');
+      note.textContent = 'Jodie has reached Medical Intake. Her choices, relationships, and knowledge will shape the next stage.';
+      passage.append(title, note);
+      addAction('Return to Portfolio Profile', restoreProfile);
+      addAction('Play another route', start);
+      passage.scrollIntoView({block:'start',behavior:'instant'});
+    }
     function render(restoredProfile = false) {
       passage.replaceChildren();
       choices.replaceChildren();
@@ -91,9 +118,14 @@
             button.className = 'choice';
             button.textContent = choice.text;
             button.addEventListener('click', () => {
-              if (/view developer diagnostics/i.test(choice.text) && story.currentChoices.some(c => /end the portfolio slice/i.test(c.text))) {
+              const atProfile = story.currentChoices.some(c => /end the portfolio slice/i.test(c.text));
+              if (atProfile && profileSnapshot === null) {
                 profileSnapshot = story.state.ToJson();
                 profileMarkup = passage.innerHTML;
+              }
+              if (atProfile && /end the portfolio slice/i.test(choice.text)) {
+                showCompletion();
+                return;
               }
               story.ChooseChoiceIndex(index);
               render();
@@ -108,9 +140,7 @@
             back.className = 'choice';
             back.textContent = 'Return to Portfolio Profile';
             back.addEventListener('click', () => {
-              story.state.LoadJson(profileSnapshot);
-              render(true);
-              passage.scrollIntoView({block:'start',behavior:'instant'});
+              restoreProfile();
             });
             choices.append(back);
           } else {
