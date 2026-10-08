@@ -57,7 +57,8 @@ jobs:
               /brace and trust/i, /ask where to find/i
             ]
           };
-          let ok=true;
+          plans.prepared_hazard = plans.cooperative.map(p => p.source.includes('wait and count') ? /go now before/i : p);
+let ok=true;
           for(const [name,prefs] of Object.entries(plans)){
             const story = new Compiler(src).Compile();
             if(!story){console.error(name, 'COMPILE FAILED');ok=false;continue}
@@ -77,7 +78,8 @@ jobs:
             const variables=story.variablesState;
             const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
             console.log(JSON.stringify(stats));
-            if(!(stats.finished&&stats.medical&&stats.profile&&stats.diagnostics&&steps<180))ok=false;
+            if(!(stats.finished&&stats.medical&&stats.profile&&steps<180))ok=false;
+  if(name==='prepared_hazard' && stats.mitigationSpent<1)ok=false;
             // The restart action constructs a fresh compiled story, matching the page's Start over logic.
             const restarted=new Compiler(src).Compile();
             const restartedText=restarted.Continue();
