@@ -331,9 +331,9 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
     ~ logged_rigging_121 = true
 }
 
-The lower Rigging level is tighter.
+Below the sail deck, Rigging narrows to a walkway between guide wheels and tension cables.
 
-The sails hang above. Here their weight passes through guides, pulleys, and maintenance runs toward the water system.
+The sail lines run through pulleys and anchors here, beside the channels carrying collected rainwater toward Storage.
 
 {helped_riggers:
     Her palms still sting from the pull upstairs.
@@ -352,7 +352,7 @@ The sails hang above. Here their weight passes through guides, pulleys, and main
 
     Jodie recognizes the sound.
 
-    The line she tested upstairs is still talking to the system.
+    The line she tested upstairs is still transmitting tension to the lower pulleys.
 }
 
 {passed_rigging_untouched:
@@ -1029,7 +1029,7 @@ Condensation turns every handrail cold.
 }
 
 {used_living_service_cut || used_rigging_water_descent:
-    The maintenance logic is beginning to repeat itself: ladders beside risers, access panels where the formal corridor pretends there is only wall.
+    Jodie spots another ladder beside a riser and an access hatch hidden from the main corridor.
 }
 
 A warning light blinks above the Tank 4 gallery.
@@ -1041,7 +1041,7 @@ The passage between them opens for seconds at a time.
 {honey_platform_available == false:
     The cycle stutters.
 
-    Somewhere deeper in the system, pressure drops out of sequence.
+    Pressure drops before the next tank is ready to receive it.
 }
 
 {told_truth_to_houdini:
