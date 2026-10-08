@@ -80,6 +80,7 @@ VAR water_maintainer_outfit = false
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
 VAR logged_rigging_121 = false
+VAR logged_living = false
 VAR logged_spine_119 = false
 VAR logged_water_storage = false
 VAR logged_elevator_shaft = false
@@ -556,7 +557,10 @@ She has also passed everyone who might have helped her there.
 === living_quarters ===
 
 ~ visited_living = true
-~ route_log = route_log + " → Living 120"
+{logged_living == false:
+    ~ route_log = route_log + " → Living 120"
+    ~ logged_living = true
+}
 
 The passage tightens, then opens into a corridor crowded with doors that do not quite match.
 
