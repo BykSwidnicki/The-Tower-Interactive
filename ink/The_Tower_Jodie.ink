@@ -1658,7 +1658,7 @@ He says it like he means it.
 
     -> agro_descend
 
-* {agro_cover_intact} [Stay inside the shift until the supervisor loses track of her.]
+* {agro_cover_intact} [Stay inside the shift until the supervisor loses track.]
     ~ agro_hid_in_workflow = true
     ~ worker_reputation += 1
     ~ belonging += 1
