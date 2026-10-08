@@ -8,12 +8,13 @@ This portfolio slice follows **Jodie from Filtration 123 to Medical Intake** ins
 
 ## Play the portfolio slice
 
-**Source file:** [ink/The_Tower_Jodie.ink](ink/The_Tower_Jodie.ink)
+**View source:** [ink/The_Tower_Jodie.ink](ink/The_Tower_Jodie.ink)  
+**Direct download:** [The_Tower_Jodie.ink](https://raw.githubusercontent.com/BykSwidnicki/The-Tower-Interactive/main/ink/The_Tower_Jodie.ink)
 
 To play:
 
-1. Open **Inky Web**: https://dtsykunov.github.io/inky-web/
-2. Import `ink/The_Tower_Jodie.ink`.
+1. Open [**Inky Web**](https://dtsykunov.github.io/inky-web/).
+2. Download and import `The_Tower_Jodie.ink`.
 3. Start from the beginning and play through to **Medical Intake**.
 
 The end of the slice includes a compact **Portfolio Profile** showing how the run changed Jodie's emerging identity and how those choices are designed to carry into later stages.
