@@ -39,6 +39,9 @@ VAR elevator_knowledge = 0
 VAR studied_water_cycle = false
 VAR studied_rigging_transfer = false
 VAR studied_elevator_catch = false
+VAR elevator_mode_inspected = false
+VAR elevator_mode_trusted = false
+VAR elevator_mode_forced = false
 VAR learned_water_from_houdini = false
 VAR discussed_rigging_with_houdini = false
 VAR discussed_water_with_tyler = false
@@ -2267,6 +2270,16 @@ She reaches the elevator shaft from the exposed side.
 
 The shaft drops farther than Jodie can see.
 
+No crowd.
+
+No supervisor.
+
+No Tyler.
+
+No sailor holding the other end of a rope.
+
+For the first time in a while, nobody else gets a vote.
+
 The regular car is dead.
 
 The service cage is not.
@@ -2278,31 +2291,55 @@ She steps inside.
 The gate rattles shut.
 
 * [Inspect the emergency brake before descending.]
+    ~ elevator_mode_inspected = true
     ~ elevator_knowledge += 1
-    ~ recklessness = MAX(0, recklessness - 1)
-    ~ recklessness_log = recklessness_log + "INSPECT BRAKE(-1) / "
+    {recklessness > 0:
+        ~ recklessness -= 1
+        ~ recklessness_log = recklessness_log + "INSPECT BRAKE(-1) / "
+    }
     ~ curiosity += 1
     ~ story_insight += 1
+    ~ cross_department_competence += 1
     {protection_brake == false:
         ~ protection_brake = true
         ~ protection_carried += 1
         ~ protection_log = protection_log + "BRAKE INSPECTION / "
     }
+
     Jodie checks the lever, cable, and catch.
+
     None of it inspires confidence.
+
+    But uncertainty with a shape is better than uncertainty without one.
+
     -> elevator_after_inspection
 
-* [Brace herself and trust the machinery.]
+* [Brace herself and trust the workers who kept it alive.]
+    ~ elevator_mode_trusted = true
     ~ solidarity += 1
-    Jodie wraps one hand around the rail and thinks about every worker keeping systems like this alive.
+    ~ belonging += 1
+
+    Jodie wraps one hand around the rail.
+
+    Somebody maintained this cage.
+
+    Somebody expected another person to need it.
+
+    That will have to be enough.
+
     -> shaft_descent
 
 * [Hit the control and get it over with.]
+    ~ elevator_mode_forced = true
     ~ recklessness += 1
     ~ recklessness_log = recklessness_log + "HIT ELEVATOR CONTROL / "
     ~ defiance += 1
+    ~ independence += 1
+
     Jodie slaps the switch.
+
     "Come on."
+
     -> shaft_descent
 
 
@@ -2313,6 +2350,7 @@ The gate rattles shut.
         ~ studied_elevator_catch = true
         ~ elevator_knowledge += 1
         ~ story_insight += 1
+        ~ cross_department_competence += 1
         ~ elapsed_time += 1
 
         Jodie follows the catch from lever to pawl to rail.
@@ -2326,10 +2364,17 @@ The gate rattles shut.
     ~ choice_log = choice_log + "SET BRAKE CATCH / "
     ~ story_insight += 1
     ~ protection_brake = true
+
     Jodie adjusts the catch to engage sooner if the cage drops too hard.
+
+    Then she puts both hands inside the cage.
+
+    Decision made.
+
     -> shaft_descent
 
 * [Leave it as she found it and descend.]
+    ~ choice_log = choice_log + "LEAVE BRAKE / "
     -> shaft_descent
 
 
@@ -2337,11 +2382,47 @@ The gate rattles shut.
 
 The cage drops.
 
-Levels smear past.
+The first few levels are recognizable as places.
 
-Some lit.
-Some dark.
-Most gone before Jodie can make sense of them.
+Then they become flashes.
+
+Light.
+
+Dark.
+
+A landing with laundry tied to a rail.
+
+A sealed door painted over so many times the number is gone.
+
+A child-sized shoe sitting by itself on concrete.
+
+Then nothing long enough for Jodie to realize how far she has committed.
+
+{elevator_mode_inspected:
+    She listens to the cage instead of the distance.
+
+    Cable.
+
+    Wheel.
+
+    Catch.
+
+    Three sounds she now knows well enough to fear separately.
+}
+
+{elevator_mode_trusted:
+    She keeps one hand on the rail and thinks about all the invisible maintenance between here and the bottom.
+
+    Trust feels different when nobody is present to receive it.
+}
+
+{elevator_mode_forced:
+    The cage is already moving too fast for second thoughts to be useful.
+
+    Jodie stares down through the grate.
+
+    "Fine."
+}
 
 ~ temp shaft_roll = RANDOM(1, 100)
 
@@ -2363,19 +2444,24 @@ Metal screams somewhere below.
         ~ protection_carried -= 1
         ~ mitigation_spent += 1
         ~ mitigation_log = mitigation_log + "BRAKE INSPECTION SPENT / "
+
         Jodie is already reaching for the emergency catch.
 
         The brakes bite before the cage can build full speed.
+
+        Knowledge becomes action before fear gets a turn.
     - else:
         ~ temp shaft_dumb_roll = RANDOM(1, 200)
         {shaft_dumb_roll == 1:
             ~ dumb_luck_saves += 1
             ~ dumb_luck_log = dumb_luck_log + "SHAFT CABLE SNAGGED ON ITS OWN / "
+
             A loose cable snags against the frame and steals just enough speed.
         - else:
             ~ injury += 1
             ~ random_events += 1
             ~ random_event_log = random_event_log + "SHAFT IMPACT INJURY / "
+
             The emergency brakes catch late.
 
             ~ elevator_knowledge += 1
@@ -2398,7 +2484,10 @@ A final mechanical groan.
 
 The doors twitch open.
 
+Bright light cuts across the cage floor.
+
 -> medical_intake
+
 
 === medical_intake ===
 
@@ -2473,7 +2562,42 @@ For the first time since leaving Filtration, Jodie stops moving.
 
 She made it to Medical.
 
-But the route changed what she knows, who trusts her, and how she moves through the tower.
+A worker points deeper into the ward.
+
+"Filtration parts are through there."
+
+The O-ring is still ahead.
+
+But the run has already changed what Jodie knows, who trusts her, and how she moves through the Tower.
+
+--- PORTFOLIO PROFILE ---
+
+Emerging profile: {worker_reputation >= 4:WORKER-TRUSTED|{cross_department_competence >= 5:SYSTEMS-CAPABLE|{belonging >= 4:EMBEDDED|{independence >= 4:SELF-DIRECTED|UNFORMED}}}}{worker_reputation >= 4 && cross_department_competence >= 5: / SYSTEMS-CAPABLE|{worker_reputation >= 4 && belonging >= 4: / EMBEDDED|{cross_department_competence >= 5 && independence >= 4: / SELF-DIRECTED|}}}
+
+Institutional profile: {institutional_visibility >= 4:KNOWN|{institutional_visibility >= 2:NOTICED|LOW VISIBILITY}}
+
+How this would affect Stage 2:
+
+{worker_reputation >= 4:
+Workers are more likely to trust Jodie with favors, warnings, and informal access.
+}
+{cross_department_competence >= 5:
+Technical knowledge would open additional diagnosis, repair, and planning options.
+}
+{belonging >= 4:
+Jodie would begin with stronger social ties and more people willing to include her.
+}
+{independence >= 4:
+Jodie would begin with more self-directed routes and fewer assumptions that she will follow procedure.
+}
+{institutional_visibility >= 2:
+Medical and other formal systems would begin Stage 2 with more awareness of who she is.
+- else:
+Jodie would enter Stage 2 with relatively little institutional scrutiny.
+}
+
+Stage 2: Medical Years
+In development. Stage 1 outcomes will alter Jodie's starting relationships, resources, access, and reasoning options across her three years in Medical.
 
 --- DEBUG RUN SUMMARY ---
 QA redirected Karma force: {qa_force_redirected_karma}
@@ -2516,6 +2640,7 @@ Learned Water from Houdini: {learned_water_from_houdini}
 Pending Water lesson: {pending_water_lesson}
 Studied water cycle: {studied_water_cycle}
 Elevator knowledge: {elevator_knowledge}
+Elevator approach: {elevator_mode_inspected:INSPECTED|{elevator_mode_trusted:TRUSTED|{elevator_mode_forced:FORCED|NONE}}}
 Studied elevator catch: {studied_elevator_catch}
 Curiosity: {curiosity}
 Tyler trust: {tyler_trust}
