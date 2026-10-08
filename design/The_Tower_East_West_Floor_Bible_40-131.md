@@ -94,7 +94,7 @@ The following placements are authoritative for the current Tower bible:
 - **119:** Central Spine / worker crossing and upper-sector service transition.
 - **Stair circulation:** Each tower has its own central staircase/core. These are independent vertical routes within the West and East towers; they are supplemented by the shared central elevator banks, service shafts, ladders, ducts, and controlled cross-Tower passages.
 - **118–113:** Water Storage Node A, a multi-level tank/warehouse complex with Water Maintainer quarters and local gravity-feed infrastructure.
-- **112–106:** Agro Node A, a multi-level production complex; Level 108 contains the broken Agro A skybridge condition.
+- **112–106:** Agro Node A, a multi-level production complex. Jodie's canon-style crash is a local drop within an upper grow bay, not a fall through the full node. Level 108 contains the broken Agro A skybridge condition.
 - **105–103:** Distribution Hub A, including local wash, sorting, transfer, and Medical Substation A at Level 104.
 - **100, 70, 50:** Sector infirmaries serving populations that cannot routinely travel to the main Medical band.
 - **93–88 / 71–66:** Water Storage Nodes B and C; distributed redundancy rather than one central reservoir.
@@ -161,7 +161,7 @@ The table below is the authoritative working architectural map. A blank-looking 
 | 115 | Service / maintenance | Central material-transfer route | **Water Storage Node A** warehouse and pressure-control deck | Service lifts; pipe risers | AUTHOR LOCK | Lower tank/warehouse interface. |
 | 114 | Service / storage | Central logistics spine | **Water Storage Node A** distribution and purge deck | Pressure gates; transfer lines | AUTHOR LOCK | Directly feeds the local Agro node. |
 | 113 | Service / storage | Older central passage begins | **Water Storage Node A** dispatch / local gravity-feed deck | Abandoned belt access; service corridors | AUTHOR LOCK | Jodie exits the local water route toward Agro. |
-| 112 | Service access / worker staging | Central process spine | **Agro Node A** upper grow bay | Water lines; grow-light trusses | AUTHOR LOCK | Agro begins immediately below the upper water node. |
+| 112 | Service access / worker staging | Central process spine | **Agro Node A** upper grow bay | Water lines; grow-light trusses | AUTHOR LOCK | Agro begins immediately below the upper water node. Jodie's uncontrolled entry drops locally within this upper grow-bay volume, not multiple floors. |
 | 111 | Tall Agro volume | Spine ventilation gallery | **Agro Node A** grow bay / hanging lines | Vertical grow rigs; ladders | AUTHOR LOCK | Part of a multi-level agricultural room. |
 | 110 | Tall Agro volume | Controlled service crossing | **Agro Node A** nutrient and lighting service | Water/nutrient risers; service stairs | AUTHOR LOCK | Multiple floors can share one open grow volume. |
 | 109 | Agro worker/service support | Central utility passage | **Agro Node A** production decks | Trays, drains, grow-light access | AUTHOR LOCK | Food production needs inspection and quarantine routes. |
@@ -324,7 +324,7 @@ These names should not appear as a clean tourist map. A child may know **The Han
 
 **Canon basis:** Jodie enters Agro from Water Storage; the space is approximately twenty feet high; Tyler is an Agro worker; fertilizer exposure causes Medical cases; a raw-material platform descends to Distribution.
 
-**Architecture:** Agro is not one department on one floor. It has at least three multi-level production nodes: an upper node around Levels 112–106, a middle node around 87–82, and a lower node around 65–60. Each node contains tall grow bays, wet floors, drains, nutrient lines, grow-light trusses, raw-material platforms, quarantine/cleanup routes, and maintenance decks. Water and Agro nodes are paired locally but not perfectly one-to-one; the Tower can route water around a failed agricultural node.
+**Architecture:** Agro is not one department on one floor. It has at least three multi-level production nodes: an upper node around Levels 112–106, a middle node around 87–82, and a lower node around 65–60. Each node contains tall grow bays, wet floors, drains, nutrient lines, grow-light trusses, raw-material platforms, quarantine/cleanup routes, and maintenance decks. Individual grow bays may be double-height or locally open across part of a level, but ordinary worker movement is broken up by decks, catwalks, rails, trays, nets, and service gantries. Jodie's crash occurs as a short fall within an upper grow-bay volume, not as a multi-story plunge through the entire node. Water and Agro nodes are paired locally but not perfectly one-to-one; the Tower can route water around a failed agricultural node.
 
 ### Zone G — Distribution: exact band unresolved
 
