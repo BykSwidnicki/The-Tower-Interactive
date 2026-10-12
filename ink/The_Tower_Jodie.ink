@@ -1399,7 +1399,7 @@ The gauge is still hissing. The crew has changed shift. Brooks sees the Guardian
 
 The things she learned remain learned. The people she helped have not forgotten. But the Tower has moved on without her.
 
-~ route_log = route_log + " → Filtration 123 (attempt " + guardian_returns + ")"
+~ route_log = route_log + " → Filtration 123 (Guardian return) "
 
 * [Start again using what you already know.]
     ~ elapsed_time += 1
