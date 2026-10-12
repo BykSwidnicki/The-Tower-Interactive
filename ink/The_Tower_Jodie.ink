@@ -444,9 +444,7 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
             She has stopped it from getting worse here.
         }
 
-        The immediate problem is handled. The route ahead is open again.
-
-        -> rigging_121_hub
+        -> rigging_121_after_problem
 
     * {helped_riggers || solidarity >= 3} [Take the brace.]
         ~ rigging_121_problem_resolved = true
@@ -487,9 +485,7 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
             It just has less momentum behind it now.
         }
 
-        The immediate problem is handled. The route ahead is open again.
-
-        -> rigging_121_hub
+        -> rigging_121_after_problem
 
     * [Stay clear and keep moving.]
         ~ rigging_121_problem_resolved = true
@@ -499,10 +495,13 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
 
         The sailors close around the problem behind her.
 
-        The route ahead is open again.
-
-        -> rigging_121_hub
+        -> rigging_121_after_problem
 }
+
+-> rigging_121_after_problem
+
+
+=== rigging_121_after_problem ===
 
 {rigging_knowledge >= 1 && studied_rigging_transfer == false:
     * [Watch one load transfer before leaving.]
@@ -518,9 +517,7 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
 
         Following the loaded line with her eyes, she spots a maintenance ladder dropping beside the water pipes. It bypasses the west passage entirely.
 
-        She is back where she was, but now she understands the choice better.
-
-        -> rigging_121_hub
+        -> rigging_121_after_problem
 }
 
 -> rigging_121_exit
@@ -535,15 +532,9 @@ A sailor points toward a narrow passage cut through the west side of Rigging 121
 
     He jerks his chin toward the maintenance run.
 
-    "But we'll remember you."
+    "We'll remember you."
 - else:
-    {rigging_knowledge >= 2:
-        He gives Jodie a second look.
-        "You've been paying attention."
-        He points out a safer handhold before she leaves.
-    - else:
-        "Living quarters are through there."
-    }
+    "Living quarters are through there."
 }
 
 {rigging_direct_water_access:
@@ -637,16 +628,6 @@ The older man sighs.
 
 Jodie looks from one to the other.
 
-{rigging_crew_favor >= 2:
-    Copperfield studies the fresh rope burn on her palm.
-
-    "Rigging already knows you."
-
-    Houdini looks mildly impressed.
-
-    "That was quick."
-}
-
 {curiosity >= 3:
     She cannot tell whether the names are jokes, titles, or camouflage.
 }
@@ -657,16 +638,18 @@ Jodie looks from one to the other.
 
 Houdini steps into the corridor and looks at her work clothes.
 
-{rigging_knowledge >= 2:
-    Houdini glances at the rope marks on her hands.
+{rigging_crew_favor >= 2:
+    His eyes settle on the fresh rope burn across her palm.
 
-    "Rigging let you touch the load lines?"
-
-    Jodie says nothing.
-
-    "Then you listened."
+    "Rigging already knows you. That was quick."
 - else:
-    "Filtration doesn't wander."
+    {rigging_knowledge >= 2:
+        He glances at the rope marks on her hands.
+
+        "You listened upstairs."
+    - else:
+        "Filtration doesn't wander."
+    }
 }
 
 -> living_conversation
