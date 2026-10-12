@@ -2726,7 +2726,11 @@ She made it to Medical.
     A Guardian's report sits on the intake desk. Her journey ended early; treatment comes first.
 }
 {guardian_returns > 0:
-    She has already been returned to Filtration {guardian_returns} time{guardian_returns == 1:|s}. What she learned survived the detour.
+    {guardian_returns == 1:
+        The Guardians have already sent Jodie back to Filtration once. What she learned survived the detour.
+    - else:
+        The Guardians have already sent Jodie back to Filtration twice. What she learned survived both detours.
+    }
 }
 
 A worker points deeper into the ward.
