@@ -20,6 +20,12 @@ VAR water_instability = 0
 VAR honey_platform_available = true
 VAR elapsed_time = 0
 VAR injury = 0
+// Persistent intervention state; a return does not reset knowledge or relationships.
+VAR guardian_returns = 0
+VAR guardian_reports = 0
+VAR evacuated_to_medical = false
+VAR injury_before_water = 0
+VAR guardian_rescue_log = ""
 VAR recklessness = 0
 VAR story_insight = 0
 VAR tower_stress = 0
@@ -210,6 +216,10 @@ Jodie looks toward the duct.
 
 === sail_rigging ===
 
+{guardian_returns > 0:
+    -> rigging_second_attempt
+}
+
 {logged_rigging == false:
     ~ route_log = route_log + " → Rigging 122"
     ~ logged_rigging = true
@@ -242,6 +252,26 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
 }
 
 -> rigging_122_choices
+
+
+=== rigging_second_attempt ===
+
+— SAIL RIGGING · RETURN VISIT —
+
+The unloading has finished. The workers have shifted their lines, and the old opening is no longer clear.
+
+{helped_riggers:
+    A sailor recognizes Jodie. "Back already? The service ladder is still open."
+- else:
+    A sailor points at a service ladder. "The main catwalk is closed for the next load. Use that."
+}
+
+The way forward remains, but the earlier jobs and conversations have passed.
+
+~ route_log = route_log + " → Rigging return (changed shift)"
+~ choice_log = choice_log + "SECOND ATTEMPT SERVICE LADDER / "
+~ elapsed_time += 1
+-> rigging_121
 
 
 === rigging_122_choices ===
@@ -998,6 +1028,7 @@ Water Storage.
 
 — WATER STORAGE · LEVELS 118–113 —
 
+~ injury_before_water = injury
 ~ temp pressure_roll = RANDOM(1, 100)
 
 // A delayed consequence exists only because an earlier action caused it.
@@ -1314,7 +1345,67 @@ Jodie throws herself through the narrowing gap.
 
 Then she is through.
 
+// Only newly acquired injuries can trigger this intervention, not old bruises.
+{injury > injury_before_water:
+    -> guardian_water_intervention
+}
+
 -> water_dispatch_113
+
+
+=== guardian_water_intervention ===
+
+A Guardian has arrived with the Water Maintenance response crew. The fresh incident is impossible to hide.
+
+~ guardian_reports += 1
+~ institutional_visibility += 1
+
+{injury >= 2:
+    ~ evacuated_to_medical = true
+    ~ guardian_rescue_log = guardian_rescue_log + "WATER:SERIOUS > MEDICAL / "
+    ~ route_log = route_log + " → Guardian medical evacuation"
+    ~ choice_log = choice_log + "GUARDIAN MEDICAL EVACUATION / "
+    ~ elapsed_time += 2
+    "She cannot keep walking," the maintainer says.
+    The Guardian calls for the staffed medical transfer route. A stretcher arrives; the service lift takes her down.
+    Jodie reaches Medical without passing through Agro or Distribution herself.
+    -> medical_intake
+- else:
+    {guardian_returns < 2:
+        ~ guardian_returns += 1
+        ~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > FILTRATION / "
+        ~ route_log = route_log + " → Guardian return to Filtration"
+        ~ choice_log = choice_log + "GUARDIAN RETURN / "
+        ~ elapsed_time += 3
+        "A bruise, and assigned to Filtration on 123?" the Guardian asks.
+        Jodie explains the O-ring. The Guardian writes down Brooks's name.
+        "Then he can authorize the trip properly. You're going back."
+        -> filtration_return
+    - else:
+        ~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > DOCUMENTED CONTINUATION / "
+        "Another return won't repair that gauge," the Guardian says. "I'll log the injury. Use the staffed descent."
+        -> water_dispatch_113
+    }
+}
+
+
+=== filtration_return ===
+
+— FILTRATION · RETURNED BY THE GUARDIANS —
+
+The gauge is still hissing. The crew has changed shift. Brooks sees the Guardian report before he sees Jodie's bruise.
+
+"You're back. The part isn't," he says.
+
+The things she learned remain learned. The people she helped have not forgotten. But the Tower has moved on without her.
+
+~ route_log = route_log + " → Filtration 123 (attempt " + guardian_returns + ")"
+
+* [Start again using what you already know.]
+    ~ elapsed_time += 1
+    ~ choice_log = choice_log + "RESTART AFTER GUARDIAN RETURN / "
+    Brooks gives her a short nod. "Different shift. Watch the routes."
+    -> sail_rigging
 
 
 === water_dispatch_113 ===
@@ -2552,13 +2643,17 @@ Bright light cuts across the cage floor.
 
 — MEDICAL INTAKE · LEVEL 45 —
 
-Guardian Medical.
+Medical Intake, West Tower.
 
 Bright enough to hurt.
 
 Clean enough to feel suspicious.
 
 For the first time since leaving Filtration, Jodie stops moving.
+
+{evacuated_to_medical:
+    The service stretcher wheels her past the desk. A worker begins assessing her injuries before asking about the O-ring.
+}
 
 {curiosity >= 5:
     She immediately starts cataloguing exits, equipment, people.
@@ -2622,6 +2717,13 @@ For the first time since leaving Filtration, Jodie stops moving.
 === medical_end ===
 
 She made it to Medical.
+
+{evacuated_to_medical:
+    A Guardian's report sits on the intake desk. Her journey ended early; treatment comes first.
+}
+{guardian_returns > 0:
+    She has already been returned to Filtration {guardian_returns} time{guardian_returns == 1:|s}. What she learned survived the detour.
+}
 
 A worker points deeper into the ward.
 
@@ -2727,6 +2829,10 @@ The portfolio slice ends here. Jodie's state does not.
 QA redirected Karma force: {qa_force_redirected_karma}
 QA serious water injury force: {qa_force_serious_water_injury}
 Route: {route_log}
+Guardian returns: {guardian_returns}
+Guardian incident reports: {guardian_reports}
+Emergency evacuation: {evacuated_to_medical}
+Intervention log: {guardian_rescue_log}
 Choices: {choice_log}
 Visited Living: {visited_living}
 Living clinic favor: {living_clinic_favor}
