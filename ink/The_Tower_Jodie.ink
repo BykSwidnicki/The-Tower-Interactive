@@ -105,6 +105,7 @@ VAR rigging_system_insight = false
 // TEMP QA FLAG: force redirected Karma test, then switch back to false.
 VAR qa_force_redirected_karma = false
 VAR qa_force_serious_water_injury = false
+VAR qa_force_light_water_injury = false
 
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
@@ -1263,6 +1264,9 @@ The passage between them opens for seconds at a time.
     }
 
     ~ temp dumb_roll = RANDOM(1, 200)
+    {qa_force_light_water_injury:
+        ~ rush_roll = 20
+    }
 
     {qa_force_serious_water_injury:
         ~ injury += 2
@@ -2828,6 +2832,7 @@ The portfolio slice ends here. Jodie's state does not.
 --- DEVELOPER DIAGNOSTICS ---
 QA redirected Karma force: {qa_force_redirected_karma}
 QA serious water injury force: {qa_force_serious_water_injury}
+QA light water injury force: {qa_force_light_water_injury}
 Route: {route_log}
 Guardian returns: {guardian_returns}
 Guardian incident reports: {guardian_reports}
