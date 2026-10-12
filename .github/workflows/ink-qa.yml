@@ -55,6 +55,20 @@ jobs:
               /keep brooks's assignment/i, /rinse off/i,
               /^48$/, /leave the argument/i, /cross the open distribution floor/i,
               /brace and trust/i, /ask where to find/i
+            ],
+            guardian_return: [
+              /ask why nobody else/i, /keep moving. the job comes first/i,
+              /stay clear and keep moving/i, /continue through the west passage/i,
+              /take the west passage/i, /keep the mission vague/i,
+              /wait for françois/i, /stay in formation/i,
+              /go now before/i, /start again using what you already know/i,
+              /continue through the west passage/i
+            ],
+            serious_evacuation: [
+              /ask why nobody else/i, /keep moving. the job comes first/i,
+              /stay clear and keep moving/i, /continue through the west passage/i,
+              /take the west passage/i, /keep the mission vague/i,
+              /wait for françois/i, /stay in formation/i, /go now before/i
             ]
           };
           plans.prepared_hazard = plans.cooperative.map(p => p.source.includes('wait and count') ? /go now before/i : p);
@@ -62,6 +76,8 @@ jobs:
           for(const [name,prefs] of Object.entries(plans)){
             const story = new Compiler(src).Compile();
             if(!story){console.error(name, 'COMPILE FAILED');ok=false;continue}
+            if(name==='guardian_return') story.variablesState.$('qa_force_light_water_injury', true);
+            if(name==='serious_evacuation') story.variablesState.$('qa_force_serious_water_injury', true);
             let text='', steps=0, choiceCount=0;
             const decisions=[];
             while(steps++<180){
@@ -69,20 +85,26 @@ jobs:
               if(!story.currentChoices.length)break;
               const choices=story.currentChoices;
               let idx=-1;
-              for(const rule of prefs){idx=choices.findIndex(c=>rule.test(c.text));if(idx>=0)break}
+              if(name==='guardian_return' && story.variablesState.$('guardian_returns')===1){
+                idx=choices.findIndex(c=>/study one full cycle|wait and count/i.test(c.text));
+              }
+              if(idx<0)for(const rule of prefs){idx=choices.findIndex(c=>rule.test(c.text));if(idx>=0)break}
               if(idx<0)idx=0;
               decisions.push(choices[idx].text);
               story.ChooseChoiceIndex(idx);
               choiceCount++;
             }
             const variables=story.variablesState;
-            const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
+            const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),guardianReturns:variables.$('guardian_returns'),evacuated:variables.$('evacuated_to_medical'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
             console.log(JSON.stringify(stats));
             if(!(stats.finished&&stats.medical&&stats.profile&&steps<180))ok=false;
             if(name==='prepared_hazard' && stats.mitigationSpent<1)ok=false;
+            if(name==='guardian_return' && stats.guardianReturns!==1)ok=false;
+            if(name==='serious_evacuation' && !stats.evacuated)ok=false;
             // The restart action constructs a fresh compiled story, matching the page's Start over logic.
             const restarted=new Compiler(src).Compile();
-            const restartedText=restarted.Continue();
+            let restartedText='';
+            while(restarted.canContinue)restartedText+=restarted.Continue();
             const restartGood=restartedText.includes('hiss') && restarted.variablesState.$('injury')===0 && restarted.variablesState.$('karma_hits')===0;
             console.log('restart',name,restartGood);
             if(!restartGood)ok=false;

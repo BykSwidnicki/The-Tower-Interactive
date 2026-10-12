@@ -102,10 +102,10 @@ VAR dumb_luck_saves = 0
 VAR rigging_consequence_pending = false
 VAR rigging_system_insight = false
 
-// TEMP QA FLAG: force redirected Karma test, then switch back to false.
+// Test flags are disabled in normal play and enabled only by automated route tests.
 VAR qa_force_redirected_karma = false
 VAR qa_force_serious_water_injury = false
-VAR qa_force_light_water_injury = true
+VAR qa_force_light_water_injury = false
 
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
@@ -219,7 +219,12 @@ Jodie looks toward the duct.
 
 {guardian_returns > 0:
     -> rigging_second_attempt
+- else:
+    -> rigging_first_attempt
 }
+
+
+=== rigging_first_attempt ===
 
 {logged_rigging == false:
     ~ route_log = route_log + " → Rigging 122"
@@ -272,7 +277,7 @@ The way forward remains, but the earlier jobs and conversations have passed.
 ~ route_log = route_log + " → Rigging return (changed shift)"
 ~ choice_log = choice_log + "SECOND ATTEMPT SERVICE LADDER / "
 ~ elapsed_time += 1
--> rigging_121
+-> rigging_121_return
 
 
 === rigging_122_choices ===
@@ -427,11 +432,83 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
 -> rigging_121_hub
 
 
+=== rigging_121_return ===
+
+— SAIL RIGGING · LEVEL 121 · RETURN VISIT —
+
+The lower walkway is still narrow between guide wheels and tension cables, but the changed shift has cleared the way ahead.
+
+{rigging_consequence_pending:
+    The lower guides answer with the same hard shudder Jodie heard after testing the control line.
+
+    She knows which upstairs experiment is still feeding tension into the pulleys.
+}
+
+{passed_rigging_untouched:
+    She keeps clear of the lines that kept their distance from her before.
+}
+
+{learned_ropes_of_life:
+    Rope of life: not poetry. Infrastructure.
+}
+
+{brooks_trust >= 2:
+    Brooks sent her this way for a reason. The route itself is part of the lesson.
+}
+
+-> rigging_121_return_choices
+
+
+=== rigging_121_return_choices ===
+
++ {rigging_knowledge >= 1} [Warn the nearest rigger about the lower guide.]
+    ~ rigging_121_problem_resolved = true
+    ~ rigging_121_problem_warned = true
+    ~ rigging_crew_favor += 1
+    ~ story_insight += 1
+    ~ worker_reputation += 1
+    ~ cross_department_competence += 1
+    ~ rigging_direct_water_access = true
+    ~ choice_log = choice_log + "RIGGING RETURN WARN / "
+
+    "Left guide," Jodie says.
+
+    The sailor checks the bracket, then signals to take the load before it can climb farther.
+
+    -> rigging_121_return_exit
+
++ [Stay clear and keep moving.]
+    ~ rigging_121_problem_resolved = true
+    ~ choice_log = choice_log + "RIGGING RETURN PASS / "
+
+    Jodie gives the moving line the space it deserves.
+
+    -> rigging_121_return_exit
+
+
+=== rigging_121_return_exit ===
+
+The changed shift has left the same two ways down.
+
++ [Continue through the west passage.] -> living_quarters
+
++ {rigging_direct_water_access || rigging_knowledge >= 1} [Follow the maintenance descent toward Water Storage.]
+    ~ used_rigging_water_descent = true
+    ~ route_log = route_log + " → Rigging return maintenance descent"
+    ~ choice_log = choice_log + "RIGGING RETURN DIRECT WATER / "
+    -> water_storage
+
+
 === rigging_121_hub ===
 
 {rigging_121_problem_resolved:
     -> rigging_121_after_problem
+- else:
+    -> rigging_121_problem
 }
+
+
+=== rigging_121_problem ===
 
 A loaded guide wheel begins to walk sideways in its bracket.
 
@@ -1219,7 +1296,7 @@ The passage between them opens for seconds at a time.
 
     -> water_dispatch_113
 
-* [Go now before second thoughts win.]
++ [Go now before second thoughts win.]
     ~ recklessness += 1
     ~ recklessness_log = recklessness_log + "GO NOW / "
     ~ choice_log = choice_log + "GO NOW / "
@@ -1350,15 +1427,16 @@ Jodie throws herself through the narrowing gap.
 
 Then she is through.
 
-// Only newly acquired injuries can trigger this intervention, not old bruises.
-{injury > injury_before_water:
-    -> guardian_water_intervention
-}
-
--> water_dispatch_113
+// The intervention decides whether the Water incident needs a Guardian response.
+-> guardian_water_intervention
 
 
 === guardian_water_intervention ===
+
+// Only newly acquired injuries can trigger this intervention, not old bruises.
+{injury <= injury_before_water:
+    -> water_dispatch_113
+}
 
 A Guardian has arrived with the Water Maintenance response crew. The fresh incident is impossible to hide.
 
@@ -1406,11 +1484,12 @@ The things she learned remain learned. The people she helped have not forgotten.
 
 ~ route_log = route_log + " → Filtration 123 (Guardian return) "
 
-* [Start again using what you already know.]
-    ~ elapsed_time += 1
-    ~ choice_log = choice_log + "RESTART AFTER GUARDIAN RETURN / "
-    Brooks gives her a short nod. "Different shift. Watch the routes."
-    -> sail_rigging
+~ elapsed_time += 1
+~ choice_log = choice_log + "RESTART AFTER GUARDIAN RETURN / "
+
+Brooks gives her a short nod. "Different shift. Watch the routes."
+
+* [Start again using what you already know.] -> rigging_second_attempt
 
 
 === water_dispatch_113 ===
