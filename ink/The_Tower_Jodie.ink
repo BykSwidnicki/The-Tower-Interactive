@@ -1772,17 +1772,11 @@ The workers route around it automatically, down a service gantry scarred by deca
 {water_knowledge >= 2:
     ~ tyler_water_recognized = true
 
-    Tyler watches Jodie glance at the feed pipe running beside the gantry.
+    Tyler catches Jodie listening to the feed pipe beside the gantry.
 
-    "You came through Water and you still know what that sound means?"
+    He notices that she is listening for something specific.
 
-    "Mostly."
-
-    His tone changes.
-
-    Less teasing.
-
-    More assessment.
+    He waits to see whether she explains.
 }
 
 By Level 106 the grow bays give way to transfer machinery and staging lanes.
@@ -2685,25 +2679,9 @@ You kept at least part of your mission to yourself in Living Quarters. Caution s
 You bypassed Living Quarters. That meant less time among its residents, and fewer opportunities to build trust there.
 }
 
-{cross_department_competence >= 5:
-You gathered enough practical knowledge to connect problems across departments.
-- else:
-You saw pieces of systems you do not fully understand yet. Those gaps can become questions worth following.
-}
+This is not a grade. Reaching Medical completes this part of the journey.
 
-{worker_reputation >= 4:
-Workers along the route have reasons to remember you favorably.
-- else:
-You passed through many workplaces without becoming widely known among the crews.
-}
-
-{institutional_visibility >= 2:
-Your presence attracted some institutional attention.
-- else:
-You passed with little formal attention. Staying unobtrusive has advantages, but it also means fewer people know your purpose.
-}
-
-This is not a grade. Reaching Medical completes this part of the journey; the portrait below describes the Jodie your decisions are beginning to shape.
+The profile below shows the larger pattern your decisions created.
 
 --- PORTFOLIO PROFILE ---
 
