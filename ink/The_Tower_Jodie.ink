@@ -533,19 +533,19 @@ The mounting bracket groans under the strain.
 === rigging_121_after_problem ===
 
 * {rigging_knowledge >= 1 && studied_rigging_transfer == false} [Watch one load transfer before leaving.]
-        ~ studied_rigging_transfer = true
-        ~ rigging_knowledge += 1
-        ~ story_insight += 1
-        ~ elapsed_time += 1
-        ~ rigging_direct_water_access = true
+    ~ studied_rigging_transfer = true
+    ~ rigging_knowledge += 1
+    ~ story_insight += 1
+    ~ elapsed_time += 1
+    ~ rigging_direct_water_access = true
 
-        Jodie watches the sailors hand the load from one line to another.
+    Jodie watches the sailors hand the load from one line to another.
 
-        The trick is not strength. It is knowing which line becomes dangerous when the weight moves.
+    The trick is not strength. It is knowing which line becomes dangerous when the weight moves.
 
-        Following the loaded line with her eyes, she spots a maintenance ladder dropping beside the water pipes. It bypasses the west passage entirely.
+    Following the loaded line with her eyes, she spots a maintenance ladder dropping beside the water pipes. It bypasses the west passage entirely.
 
-        -> rigging_121_after_problem
+    -> rigging_121_after_problem
 
 * [Continue through the west passage.]
     -> rigging_121_exit
