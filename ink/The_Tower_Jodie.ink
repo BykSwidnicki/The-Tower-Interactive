@@ -796,6 +796,11 @@ Houdini looks toward the central spine.
 
 "You're not crossing dressed like Filtration."
 
+-> living_exit_options
+
+
+=== living_exit_options ===
+
 * [Wait for François and cross with the Water Maintainers.]
     ~ elapsed_time += 1
 
