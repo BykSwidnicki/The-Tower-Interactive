@@ -262,7 +262,7 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
 
     {shown_rope_receipt == false:
         ~ shown_rope_receipt = true
-        Learned: Rope of Life
+        [LEARNED — ROPE OF LIFE]
     }
 
     The sailor goes back to work. Jodie can ask another question, lend a hand, or continue down.
@@ -290,7 +290,7 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
 
     {shown_rope_receipt == false:
         ~ shown_rope_receipt = true
-        Learned: Rope of Life
+        [LEARNED — ROPE OF LIFE]
     }
 
     He jerks his chin toward a maintenance ladder disappearing beside the water lines.
@@ -776,7 +776,7 @@ Houdini looks toward the central spine.
 
     Jodie pulls the borrowed gear on.
 
-    Cover: Water Maintainer
+    [COVER ACQUIRED — WATER MAINTAINER]
 
     ~ choice_log = choice_log + "FRANCOIS DISGUISE / "
     -> spine_119
@@ -1278,7 +1278,7 @@ Jodie throws herself through the narrowing gap.
 
     She keeps moving because stopping here would be worse.
 
-    Condition: Hurt
+    [CONDITION — HURT]
 - else:
     {injury == 1:
         The edge clips her hip hard enough to leave a bruise.
@@ -1289,7 +1289,7 @@ Jodie throws herself through the narrowing gap.
 
         She keeps moving.
 
-        Condition: Bruised
+        [CONDITION — BRUISED]
     - else:
         For half a second, the Tower is nothing but water, steel, and noise.
     }
@@ -1493,7 +1493,7 @@ Tyler lowers his voice.
 
     {shown_tyler_receipt == false:
         ~ shown_tyler_receipt = true
-        Connection: Tyler
+        [CONNECTION — TYLER]
     }
 
     -> agro_supervisor
@@ -1514,7 +1514,7 @@ Tyler lowers his voice.
 
     {shown_tyler_receipt == false:
         ~ shown_tyler_receipt = true
-        Connection: Tyler
+        [CONNECTION — TYLER]
     }
 
     -> agro_supervisor
@@ -1943,7 +1943,7 @@ They reach Distribution together.
 {elapsed_time >= 7:
     The shift has moved on without her.
 
-    Time: slipping
+    [TIME — SLIPPING]
 }
 
 {honey_platform_available:
@@ -1977,7 +1977,7 @@ Above them, a quota board clicks like an insect with a grudge.
 
     The uniform smells faintly of soap and old sugar.
 
-    Cover: Distribution
+    [COVER ACQUIRED — DISTRIBUTION]
 
     -> distribution_quota
 
@@ -2347,7 +2347,7 @@ The gate rattles shut.
 
     But uncertainty with a shape is better than uncertainty without one.
 
-    Prepared: Emergency brake
+    [PREPARED — EMERGENCY BRAKE]
 
     -> elevator_after_inspection
 
