@@ -77,6 +77,10 @@ VAR spine_crossed_with_clinic_run = false
 VAR spine_crossed_service_gap = false
 VAR water_maintainer_outfit = false
 
+// Player-facing state receipts. These make consequence legible without exposing debug variables.
+VAR shown_rope_receipt = false
+VAR shown_tyler_receipt = false
+
 // Route logging guards prevent internal decision loops from looking like travel.
 VAR logged_rigging = false
 VAR logged_rigging_121 = false
@@ -186,18 +190,20 @@ Brooks lowers his voice.
 
 Jodie looks toward the duct.
 
-* [Take the assignment.]
+{defiance >= 2:
+    "This is a terrible plan."
+
+    "Yes," Brooks says.
+
+    "Go."
+- else:
     ~ brooks_trust += 1
     "Fine."
-    Brooks nods once.
-    -> sail_rigging
 
-* [Tell Brooks this is a terrible plan.]
-    ~ defiance += 1
-    "This is a terrible plan."
-    "Yes," Brooks says.
-    "Go."
-    -> sail_rigging
+    Brooks nods once.
+}
+
+-> sail_rigging
 
 
 === sail_rigging ===
@@ -254,6 +260,11 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
     He points upward.
     "Sails catch it. Tanks hold it. Gravity does the rest."
 
+    {shown_rope_receipt == false:
+        ~ shown_rope_receipt = true
+        Learned: Rope of Life
+    }
+
     The sailor goes back to work. Jodie can ask another question, lend a hand, or continue down.
     -> rigging_122_choices
 
@@ -276,6 +287,11 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
     It jerks hard enough to burn against her palm.
     "Now you know," the sailor says.
     "Rope of life."
+
+    {shown_rope_receipt == false:
+        ~ shown_rope_receipt = true
+        Learned: Rope of Life
+    }
 
     He jerks his chin toward a maintenance ladder disappearing beside the water lines.
 
@@ -759,6 +775,8 @@ Houdini looks toward the central spine.
     }
 
     Jodie pulls the borrowed gear on.
+
+    Cover: Water Maintainer
 
     ~ choice_log = choice_log + "FRANCOIS DISGUISE / "
     -> spine_119
@@ -1259,6 +1277,8 @@ Jodie throws herself through the narrowing gap.
     That pain teaches her one narrow thing: where the load shifts too late.
 
     She keeps moving because stopping here would be worse.
+
+    Condition: Hurt
 - else:
     {injury == 1:
         The edge clips her hip hard enough to leave a bruise.
@@ -1268,6 +1288,8 @@ Jodie throws herself through the narrowing gap.
         She knows exactly which beat she mistimed.
 
         She keeps moving.
+
+        Condition: Bruised
     - else:
         For half a second, the Tower is nothing but water, steel, and noise.
     }
@@ -1469,6 +1491,11 @@ Tyler lowers his voice.
 
     That would ruin it.
 
+    {shown_tyler_receipt == false:
+        ~ shown_tyler_receipt = true
+        Connection: Tyler
+    }
+
     -> agro_supervisor
 
 * {water_feed_stabilized} [Use the stabilized Water feed as her cover.]
@@ -1484,6 +1511,11 @@ Tyler lowers his voice.
     Tyler's eyebrows rise.
 
     The useful thing about the truth is that sometimes it sounds like permission.
+
+    {shown_tyler_receipt == false:
+        ~ shown_tyler_receipt = true
+        Connection: Tyler
+    }
 
     -> agro_supervisor
 
@@ -1910,6 +1942,8 @@ They reach Distribution together.
 
 {elapsed_time >= 7:
     The shift has moved on without her.
+
+    Time: slipping
 }
 
 {honey_platform_available:
@@ -1942,6 +1976,8 @@ Above them, a quota board clicks like an insect with a grudge.
     Jodie changes fast.
 
     The uniform smells faintly of soap and old sugar.
+
+    Cover: Distribution
 
     -> distribution_quota
 
@@ -2311,6 +2347,8 @@ The gate rattles shut.
 
     But uncertainty with a shape is better than uncertainty without one.
 
+    Prepared: Emergency brake
+
     -> elevator_after_inspection
 
 * [Brace and trust the workers who kept it alive.]
@@ -2564,6 +2602,26 @@ A worker points deeper into the ward.
 The O-ring is still ahead.
 
 The journey has changed what Jodie knows, who trusts her, and how she moves through the Tower.
+
+--- ARRIVAL ---
+
+{injury >= 2:
+ROUGH ARRIVAL
+- else:
+    {worker_reputation >= 4 && cross_department_competence >= 5:
+WORKER-TRUSTED / SYSTEMS-CAPABLE
+    - else:
+        {independence >= 4:
+SELF-DIRECTED ARRIVAL
+        - else:
+            {belonging >= 4:
+EMBEDDED ARRIVAL
+            - else:
+QUIET ARRIVAL
+            }
+        }
+    }
+}
 
 --- YOUR JOURNEY ---
 
