@@ -69,6 +69,12 @@ jobs:
               /stay clear and keep moving/i, /continue through the west passage/i,
               /take the west passage/i, /keep the mission vague/i,
               /wait for françois/i, /stay in formation/i, /go now before/i
+            ],
+            light_injury_continues: [
+              /ask why nobody else/i, /keep moving. the job comes first/i,
+              /stay clear and keep moving/i, /continue through the west passage/i,
+              /take the west passage/i, /keep the mission vague/i,
+              /wait for françois/i, /stay in formation/i, /go now before/i
             ]
           };
           plans.prepared_hazard = plans.cooperative.map(p => p.source.includes('wait and count') ? /go now before/i : p);
@@ -76,8 +82,15 @@ jobs:
           for(const [name,prefs] of Object.entries(plans)){
             const story = new Compiler(src).Compile();
             if(!story){console.error(name, 'COMPILE FAILED');ok=false;continue}
-            if(name==='guardian_return') story.variablesState.$('qa_force_light_water_injury', true);
+            if(name==='guardian_return') {
+              story.variablesState.$('qa_force_light_water_injury', true);
+              story.variablesState.$('qa_force_guardian_response', true);
+            }
             if(name==='serious_evacuation') story.variablesState.$('qa_force_serious_water_injury', true);
+            if(name==='light_injury_continues') {
+              story.variablesState.$('qa_force_light_water_injury', true);
+              story.variablesState.$('qa_force_no_guardian_response', true);
+            }
             let text='', steps=0, choiceCount=0;
             const decisions=[];
             while(steps++<180){
@@ -95,12 +108,13 @@ jobs:
               choiceCount++;
             }
             const variables=story.variablesState;
-            const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),guardianReturns:variables.$('guardian_returns'),evacuated:variables.$('evacuated_to_medical'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
+            const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),guardianReturns:variables.$('guardian_returns'),guardianReports:variables.$('guardian_reports'),evacuated:variables.$('evacuated_to_medical'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
             console.log(JSON.stringify(stats));
             if(!(stats.finished&&stats.medical&&stats.profile&&steps<180))ok=false;
             if(name==='prepared_hazard' && stats.mitigationSpent<1)ok=false;
             if(name==='guardian_return' && stats.guardianReturns!==1)ok=false;
             if(name==='serious_evacuation' && !stats.evacuated)ok=false;
+            if(name==='light_injury_continues' && (stats.injury!==1 || stats.guardianReports!==0 || stats.guardianReturns!==0 || stats.evacuated))ok=false;
             // The restart action constructs a fresh compiled story, matching the page's Start over logic.
             const restarted=new Compiler(src).Compile();
             let restartedText='';

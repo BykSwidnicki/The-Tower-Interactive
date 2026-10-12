@@ -106,6 +106,8 @@ VAR rigging_system_insight = false
 VAR qa_force_redirected_karma = false
 VAR qa_force_serious_water_injury = false
 VAR qa_force_light_water_injury = false
+VAR qa_force_guardian_response = false
+VAR qa_force_no_guardian_response = false
 
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
@@ -1436,40 +1438,86 @@ Then she is through.
 // Only newly acquired injuries can trigger this intervention, not old bruises.
 {injury <= injury_before_water:
     -> water_dispatch_113
+- else:
+    {injury >= 2:
+        -> guardian_serious_water_injury
+    - else:
+        -> guardian_light_injury_check
+    }
 }
+
+
+=== guardian_light_injury_check ===
+
+~ temp guardian_response_roll = RANDOM(1, 100)
+
+{qa_force_guardian_response:
+    -> guardian_light_injury_response
+- else:
+    {qa_force_no_guardian_response:
+        -> guardian_light_injury_unnoticed
+    - else:
+        {guardian_response_roll <= 50:
+            -> guardian_light_injury_response
+        - else:
+            -> guardian_light_injury_unnoticed
+        }
+    }
+}
+
+
+=== guardian_light_injury_unnoticed ===
+
+~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > NO GUARDIAN RESPONSE / "
+
+The Water crew answers an alarm on the far side of the tanks. Nobody sees Jodie limp into the lower gallery.
+
+-> water_dispatch_113
+
+
+=== guardian_light_injury_response ===
 
 A Guardian has arrived with the Water Maintenance response crew. The fresh incident is impossible to hide.
 
 ~ guardian_reports += 1
 ~ institutional_visibility += 1
 
-{injury >= 2:
-    ~ evacuated_to_medical = true
-    ~ guardian_rescue_log = guardian_rescue_log + "WATER:SERIOUS > MEDICAL / "
-    ~ route_log = route_log + " → Guardian medical evacuation"
-    ~ choice_log = choice_log + "GUARDIAN MEDICAL EVACUATION / "
-    ~ elapsed_time += 2
-    "She cannot keep walking," the maintainer says.
-    The Guardian calls for the staffed medical transfer route. A stretcher arrives; the service lift takes her down.
-    Jodie reaches Medical without passing through Agro or Distribution herself.
-    -> medical_intake
+{guardian_returns < 2:
+    ~ guardian_returns += 1
+    ~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > FILTRATION / "
+    ~ route_log = route_log + " → Guardian return to Filtration"
+    ~ choice_log = choice_log + "GUARDIAN RETURN / "
+    ~ elapsed_time += 3
+    "A bruise, and assigned to Filtration on 123?" the Guardian asks.
+    Jodie explains the O-ring. The Guardian writes down Brooks's name.
+    "Then he can authorize the trip properly. You're going back."
+    -> filtration_return
 - else:
-    {guardian_returns < 2:
-        ~ guardian_returns += 1
-        ~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > FILTRATION / "
-        ~ route_log = route_log + " → Guardian return to Filtration"
-        ~ choice_log = choice_log + "GUARDIAN RETURN / "
-        ~ elapsed_time += 3
-        "A bruise, and assigned to Filtration on 123?" the Guardian asks.
-        Jodie explains the O-ring. The Guardian writes down Brooks's name.
-        "Then he can authorize the trip properly. You're going back."
-        -> filtration_return
-    - else:
-        ~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > DOCUMENTED CONTINUATION / "
-        "Another return won't repair that gauge," the Guardian says. "I'll log the injury. Use the staffed descent."
-        -> water_dispatch_113
-    }
+    ~ guardian_rescue_log = guardian_rescue_log + "WATER:MINOR > DOCUMENTED CONTINUATION / "
+    "Another return won't repair that gauge," the Guardian says. "I'll log the injury. Use the staffed descent."
+    -> water_dispatch_113
 }
+
+
+=== guardian_serious_water_injury ===
+
+A Guardian has arrived with the Water Maintenance response crew. The fresh incident is impossible to hide.
+
+~ guardian_reports += 1
+~ institutional_visibility += 1
+~ evacuated_to_medical = true
+~ guardian_rescue_log = guardian_rescue_log + "WATER:SERIOUS > MEDICAL / "
+~ route_log = route_log + " → Guardian medical evacuation"
+~ choice_log = choice_log + "GUARDIAN MEDICAL EVACUATION / "
+~ elapsed_time += 2
+
+"She cannot keep walking," the maintainer says.
+
+The Guardian calls for the staffed medical transfer route. A stretcher arrives; the service lift takes her down.
+
+Jodie reaches Medical without passing through Agro or Distribution herself.
+
+-> medical_intake
 
 
 === filtration_return ===
