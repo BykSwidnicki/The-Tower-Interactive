@@ -387,6 +387,11 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
     Jodie is beginning to suspect the route itself is part of the lesson.
 }
 
+-> rigging_121_hub
+
+
+=== rigging_121_hub ===
+
 {rigging_121_problem_resolved == false:
     A loaded guide wheel begins to walk sideways in its bracket.
 
@@ -433,7 +438,9 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
             She has stopped it from getting worse here.
         }
 
-        -> rigging_121
+        The immediate problem is handled. The route ahead is open again.
+
+        -> rigging_121_hub
 
     * {helped_riggers || solidarity >= 3} [Take the brace.]
         ~ rigging_121_problem_resolved = true
@@ -474,7 +481,9 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
             It just has less momentum behind it now.
         }
 
-        -> rigging_121
+        The immediate problem is handled. The route ahead is open again.
+
+        -> rigging_121_hub
 
     * [Stay clear and keep moving.]
         ~ rigging_121_problem_resolved = true
@@ -484,7 +493,9 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
 
         The sailors close around the problem behind her.
 
-        -> rigging_121
+        The route ahead is open again.
+
+        -> rigging_121_hub
 }
 
 {rigging_knowledge >= 1 && studied_rigging_transfer == false:
@@ -501,7 +512,9 @@ The sail lines run through pulleys and anchors here, beside the channels carryin
 
         Following the loaded line with her eyes, she spots a maintenance ladder dropping beside the water pipes. It bypasses the west passage entirely.
 
-        -> rigging_121
+        She is back where she was, but now she understands the choice better.
+
+        -> rigging_121_hub
 }
 
 -> rigging_121_exit
@@ -1070,6 +1083,11 @@ The passage between them opens for seconds at a time.
     She can hear the system working now: water caught above, held, released, pulled downward by gravity.
 }
 
+-> water_storage_choices
+
+
+=== water_storage_choices ===
+
 {studied_water_cycle == false:
     * [Study one full cycle before deciding.]
         ~ studied_water_cycle = true
@@ -1084,7 +1102,9 @@ The passage between them opens for seconds at a time.
 
         There is a fraction of a second when neither tank fully owns the load.
 
-        -> water_storage
+        The pattern is clear now. The same crossing still waits.
+
+        -> water_storage_choices
 }
 
 * [Wait and count the twelve-second cycle.]
@@ -1314,6 +1334,11 @@ Jodie can hear one line knocking out of rhythm.
     Whatever is wrong is already traveling toward Agro.
 }
 
+-> water_dispatch_choices
+
+
+=== water_dispatch_choices ===
+
 {water_dispatch_insight == false && water_knowledge >= 1:
     * [Trace the knocking feed line before leaving.]
         ~ water_dispatch_insight = true
@@ -1331,7 +1356,9 @@ Jodie can hear one line knocking out of rhythm.
 
         Agro is about to inherit whatever Water cannot smooth out.
 
-        -> water_dispatch_113
+        The feed junction is still in front of her.
+
+        -> water_dispatch_choices
 }
 
 * {water_knowledge >= 2 && water_feed_stabilized == false} [Reset the sticking feed valve before entering Agro.]
@@ -1351,7 +1378,9 @@ Jodie can hear one line knocking out of rhythm.
 
     Stable enough to hand the problem to the next system without making it worse.
 
-    -> water_dispatch_113
+    With the line steadier, she still has to choose how to enter Agro.
+
+    -> water_dispatch_choices
 
 * {used_water_maintenance_bypass || water_knowledge >= 2} [Use the feed-service ladder into Agro.]
     ~ agro_arrival_controlled = true
