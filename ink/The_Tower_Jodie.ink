@@ -131,6 +131,8 @@ VAR used_maintenance_ramp = false
 
 === filtration_123 ===
 
+— FILTRATION · LEVEL 123 —
+
 The hiss is coming from Brooks's gauge.
 
 He wipes the glass.
@@ -212,6 +214,8 @@ Jodie looks toward the duct.
     ~ route_log = route_log + " → Rigging 122"
     ~ logged_rigging = true
 }
+
+— SAIL RIGGING · LEVEL 122 —
 
 Jodie drops through the duct and lands on a narrow maintenance platform.
 
@@ -346,6 +350,8 @@ The first drops of rain strike the fabric. Moments later, water streams toward t
     ~ route_log = route_log + " → Rigging 121"
     ~ logged_rigging_121 = true
 }
+
+— SAIL RIGGING · LEVEL 121 —
 
 Below the sail deck, Rigging narrows to a walkway between guide wheels and tension cables.
 
@@ -590,6 +596,8 @@ She has also passed everyone who might have helped her there.
     ~ route_log = route_log + " → Living 120"
     ~ logged_living = true
 }
+
+— LIVING QUARTERS · LEVEL 120 —
 
 The passage tightens, then opens into a corridor crowded with doors that do not quite match.
 
@@ -843,6 +851,8 @@ Houdini looks toward the central spine.
     ~ logged_spine_119 = true
 }
 
+— CENTRAL SPINE · LEVEL 119 —
+
 The corridor opens all at once.
 
 For the first time since leaving Filtration, Jodie can see the Tower's split clearly.
@@ -1003,6 +1013,8 @@ Water Storage.
     ~ logged_water_storage = true
 }
 
+— WATER STORAGE · LEVELS 118–113 —
+
 ~ temp pressure_roll = RANDOM(1, 100)
 
 // A delayed consequence exists only because an earlier action caused it.
@@ -1081,6 +1093,8 @@ The passage between them opens for seconds at a time.
 
 {learned_ropes_of_life:
     She can hear the system working now: water caught above, held, released, pulled downward by gravity.
+
+    This is the other end of the rope of life.
 }
 
 -> water_storage_choices
@@ -1102,7 +1116,7 @@ The passage between them opens for seconds at a time.
 
         There is a fraction of a second when neither tank fully owns the load.
 
-        The pattern is clear now. The same crossing still waits.
+        The pattern is clear now. The crossing has not changed; Jodie's options have.
 
         -> water_storage_choices
 }
@@ -1394,7 +1408,7 @@ Jodie can hear one line knocking out of rhythm.
 
     -> agro
 
-* [Take the normal hatch into Agro.]
+* [Take the ordinary hatch into Agro.]
     ~ choice_log = choice_log + "AGRO NORMAL HATCH / "
 
     Jodie shoulders through the ordinary transfer hatch.
@@ -1405,6 +1419,8 @@ Jodie can hear one line knocking out of rhythm.
 === agro ===
 
 ~ route_log = route_log + " → Agro 112-106"
+
+— AGRO · LEVELS 112–106 —
 
 {rigging_consequence_pending:
     ~ rigging_consequence_pending = false
@@ -1907,7 +1923,7 @@ Raw material is moving toward Distribution.
     ~ tyler_trust += 1
     -> tyler_injury_route
 
-* [Head for Distribution.]
+* [Leave Agro for Distribution.]
     -> distribution
 
 
@@ -1968,6 +1984,8 @@ They reach Distribution together.
 === distribution ===
 
 ~ route_log = route_log + " → Distribution 105-103"
+
+— DISTRIBUTION · LEVELS 105–103 —
 
 {elapsed_time >= 7:
     The shift has moved on without her.
@@ -2226,12 +2244,12 @@ People become counts and counts become permission.
 
 At the far edge of the floor, Jodie finds the last visible routes toward the shaft.
 
-* {distribution_jumpsuit || distribution_quota_exploited} [Use the staff service corridor.]
+* {distribution_jumpsuit || distribution_quota_exploited} [Slip through the staff service corridor.]
     ~ choice_log = choice_log + "SERVICE CORRIDOR / "
     ~ used_distribution_service_route = true
     -> distribution_service_route
 
-* {injury < 2} [Cross the open Distribution floor.]
+* {injury < 2} [Cross the open floor in plain sight.]
     ~ choice_log = choice_log + "OPEN FLOOR / "
     -> distribution_open_route
 
@@ -2332,6 +2350,8 @@ She reaches the elevator shaft from the exposed side.
     ~ logged_elevator_shaft = true
 }
 
+— ELEVATOR SHAFT —
+
 The shaft drops farther than Jodie can see.
 
 No crowd.
@@ -2395,7 +2415,7 @@ The gate rattles shut.
 
     -> shaft_descent
 
-* [Hit the control and get it over with.]
+* [Hit the control before doubt catches up.]
     ~ elevator_mode_forced = true
     ~ recklessness += 1
     ~ recklessness_log = recklessness_log + "HIT ELEVATOR CONTROL / "
@@ -2553,6 +2573,8 @@ Bright light cuts across the cage floor.
 
 ~ route_log = route_log + " → Medical"
 
+— MEDICAL INTAKE · LEVEL 45 —
+
 Guardian Medical.
 
 Bright enough to hurt.
@@ -2600,7 +2622,7 @@ For the first time since leaving Filtration, Jodie stops moving.
 
 === medical_arrival_choices ===
 
-* [Ask where to find the part.]
+* [Ask for the Filtration part.]
     "I need an O-ring for Filtration."
     -> medical_end
 
