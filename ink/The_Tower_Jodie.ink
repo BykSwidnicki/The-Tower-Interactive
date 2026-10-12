@@ -677,7 +677,7 @@ Houdini steps into the corridor and looks at her work clothes.
     Houdini returns to the pipes. Jodie can keep talking or decide how much of her errand to reveal.
     -> living_conversation
 
-* [Tell him the truth about Brooks and the O-ring.]
+* [Tell Houdini the truth about Brooks and the O-ring.]
     ~ elapsed_time += 1
     ~ told_truth_to_houdini = true
     ~ solidarity += 1
@@ -708,7 +708,7 @@ Houdini steps into the corridor and looks at her work clothes.
 
     -> living_exit
 
-* [Tell him it is none of his business.]
+* [Tell Houdini it is none of his business.]
     ~ defiance += 1
 
     "It isn't your business."
@@ -1498,7 +1498,7 @@ Tyler lowers his voice.
 
     -> agro_supervisor
 
-* {water_feed_stabilized} [Use the stabilized Water feed as her cover.]
+* {water_feed_stabilized} [Use the stabilized Water feed as cover.]
     ~ agro_supervisor_attention += 1
     ~ institutional_visibility += 1
     ~ cross_department_competence += 1
@@ -1519,7 +1519,7 @@ Tyler lowers his voice.
 
     -> agro_supervisor
 
-* [Ask Tyler why he is covering for her.]
+* [Ask Tyler why he is covering for you.]
     ~ curiosity += 1
     ~ agro_supervisor_attention += 1
     ~ choice_log = choice_log + "AGRO: QUESTION TYLER / "
@@ -1782,7 +1782,7 @@ Raw material is moving toward Distribution.
 
 === agro_conversation ===
 
-* {water_knowledge >= 2 && discussed_water_with_tyler == false} [Tell Tyler what she heard in the Water feed.]
+* {water_knowledge >= 2 && discussed_water_with_tyler == false} [Tell Tyler what you heard in the Water feed.]
     ~ discussed_water_with_tyler = true
     ~ choice_log = choice_log + "TYLER: WATER READ / "
     ~ curiosity += 1
@@ -1812,7 +1812,7 @@ Raw material is moving toward Distribution.
 
     -> agro_exit
 
-* [Keep Brooks's assignment to herself.]
+* [Keep Brooks's assignment to yourself.]
     ~ curiosity += 1
 
     "I'm passing through."
@@ -1823,7 +1823,7 @@ Raw material is moving toward Distribution.
 
     -> agro_exit
 
-* {tyler_trust >= 1} [Tease him for being so interested.]
+* {tyler_trust >= 1} [Tease Tyler for being so interested.]
     ~ flirted_with_tyler = true
     ~ tyler_trust += 1
 
@@ -1871,7 +1871,7 @@ Raw material is moving toward Distribution.
     ~ elapsed_time += 1
     -> tyler_honey_platform
 
-* {tyler_trust >= 2 && injury >= 2} [Let Tyler help her through the lower service transfer.]
+* {tyler_trust >= 2 && injury >= 2} [Accept Tyler's help through the lower service transfer.]
     ~ choice_log = choice_log + "TYLER DETOUR / "
     ~ used_injury_route = true
     ~ elapsed_time += 2
@@ -1981,7 +1981,7 @@ Above them, a quota board clicks like an insect with a grudge.
 
     -> distribution_quota
 
-* [Rinse off and keep her Filtration clothes.]
+* [Rinse off and keep the Filtration clothes.]
     ~ curiosity += 1
 
     Jodie scrubs the honey from her sleeves and keeps moving.
@@ -2410,7 +2410,7 @@ The gate rattles shut.
 
     -> shaft_descent
 
-* [Leave it as she found it and descend.]
+* [Leave the brake as you found it and descend.]
     ~ choice_log = choice_log + "LEAVE BRAKE / "
     -> shaft_descent
 
@@ -2575,7 +2575,7 @@ For the first time since leaving Filtration, Jodie stops moving.
     "I need an O-ring for Filtration."
     -> medical_end
 
-* {medical_caught_breath == false} [Catch her breath before speaking.]
+* {medical_caught_breath == false} [Catch your breath before speaking.]
     ~ medical_caught_breath = true
     Jodie puts one hand against the wall.
     One breath.
@@ -2583,7 +2583,7 @@ For the first time since leaving Filtration, Jodie stops moving.
     Her breathing settles. The worker waits for her to speak.
     -> medical_arrival_choices
 
-* {curiosity >= 5 && medical_looked_around == false} [Look around before revealing why she is here.]
+* {curiosity >= 5 && medical_looked_around == false} [Look around before revealing why you are here.]
     ~ medical_looked_around = true
     ~ curiosity += 1
     Jodie studies the room first.
