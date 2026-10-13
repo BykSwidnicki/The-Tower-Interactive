@@ -108,6 +108,8 @@ VAR qa_force_serious_water_injury = false
 VAR qa_force_light_water_injury = false
 VAR qa_force_guardian_response = false
 VAR qa_force_no_guardian_response = false
+VAR qa_force_shaft_injury = false
+VAR qa_force_safe_shaft = false
 
 // Preparation is carried until a relevant hazard actually uses it.
 VAR protection_water = false
@@ -1680,6 +1682,9 @@ Jodie can hear one line knocking out of rhythm.
 
     It hurts.
 
+    ~ injury += 1
+    ~ causal_log = causal_log + "AGRO CATWALK FALL > INJURY / "
+
     Jodie pulls herself upright, bruised and covered in seedlings.
 }
 
@@ -2706,6 +2711,14 @@ Then nothing long enough for Jodie to realize how far she has committed.
 
 ~ temp shaft_roll = RANDOM(1, 100)
 
+{qa_force_shaft_injury:
+    ~ shaft_roll = 1
+}
+
+{qa_force_safe_shaft:
+    ~ shaft_roll = 100
+}
+
 {tower_stress >= 3:
     ~ shaft_roll -= 10
 }
@@ -2817,7 +2830,7 @@ For the first time since leaving Filtration, Jodie stops moving.
     Jodie does not answer.
 - else:
     {injury == 1:
-        A bruise is beginning to darken along her hip.
+        A bruise is beginning to darken along Jodie's side.
     }
 }
 
@@ -2965,6 +2978,8 @@ The portfolio slice ends here. Jodie's state does not.
 QA redirected Karma force: {qa_force_redirected_karma}
 QA serious water injury force: {qa_force_serious_water_injury}
 QA light water injury force: {qa_force_light_water_injury}
+QA shaft injury force: {qa_force_shaft_injury}
+QA safe shaft force: {qa_force_safe_shaft}
 Route: {route_log}
 Guardian returns: {guardian_returns}
 Guardian incident reports: {guardian_reports}
