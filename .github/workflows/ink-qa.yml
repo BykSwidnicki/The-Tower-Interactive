@@ -1,9 +1,11 @@
-name: Tower Ink Three-Route QA
+name: Tower Ink Eight-Route QA
 on:
   workflow_dispatch:
   push:
     paths:
       - 'ink/The_Tower_Jodie.ink'
+      - 'ink/releases/The_Tower_Jodie_Stage1_cf12c38.ink'
+      - 'index.html'
       - '.github/workflows/ink-qa.yml'
 jobs:
   test:
@@ -14,13 +16,18 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-save inkjs@2.4.0
-      - name: Compile and test three contrasting routes
+      - name: Compile and test eight routes in active and frozen sources
         shell: bash
         run: |
-          node <<'NODE'
+          for source_path in \
+            ink/The_Tower_Jodie.ink \
+            ink/releases/The_Tower_Jodie_Stage1_cf12c38.ink
+          do
+          echo "QA source: ${source_path}"
+          SOURCE_PATH="${source_path}" node <<'NODE'
           const fs = require('fs');
           const {Compiler} = require('inkjs/full');
-          const src = fs.readFileSync('ink/The_Tower_Jodie.ink','utf8');
+          const src = fs.readFileSync(process.env.SOURCE_PATH,'utf8');
           const plans = {
             cooperative: [
               /ask what happens if/i, /take the assignment/i,
@@ -118,7 +125,7 @@ jobs:
             }
             const variables=story.variablesState;
             const stats={route:name,steps,choiceCount,finished:!story.canContinue && story.currentChoices.length===0, medical:text.includes('She made it to Medical.'), profile:text.includes('Emerging profile:'), diagnostics:text.includes('--- END DIAGNOSTICS ---'), karmaPending:variables.$('karma_pending'),karmaHits:variables.$('karma_hits'),mitigationSpent:variables.$('mitigation_spent'), injury:variables.$('injury'),guardianReturns:variables.$('guardian_returns'),guardianReports:variables.$('guardian_reports'),evacuated:variables.$('evacuated_to_medical'),workerReputation:variables.$('worker_reputation'),independence:variables.$('independence'),competence:variables.$('cross_department_competence')};
-            console.log(JSON.stringify(stats));
+            console.log(JSON.stringify({source:process.env.SOURCE_PATH,...stats}));
             if(!(stats.finished&&stats.medical&&stats.profile&&steps<180))ok=false;
             if(name==='prepared_hazard' && stats.mitigationSpent<1)ok=false;
             if(name==='guardian_return' && stats.guardianReturns!==1)ok=false;
@@ -136,3 +143,4 @@ jobs:
           }
           if(!ok)process.exit(1);
           NODE
+          done
