@@ -105,6 +105,7 @@ Only the **Filtration → Medical** portion is part of the current portfolio pre
 - [`ink/The_Tower_Jodie.ink`](ink/The_Tower_Jodie.ink) — active playable portfolio source
 - [`design/The_Tower_East_West_Floor_Bible_40-131.md`](design/The_Tower_East_West_Floor_Bible_40-131.md) — architectural authority for mapped Tower geography and route constraints
 - [`backups/The_Tower_Jodie_PORTFOLIO_FREEZE_2026-10-08.ink`](backups/The_Tower_Jodie_PORTFOLIO_FREEZE_2026-10-08.ink) — frozen checkpoint from the final QA cycle; retained as a recovery copy while preflight polish continues
+- [`design/stage-1-slice-development-record.md`](design/stage-1-slice-development-record.md) — how the prose route became the current playable, QA-tested Stage 1 slice
 - `design/` — supporting interactive-narrative and world-architecture material
 - `backups/` — protected portfolio checkpoints
 
