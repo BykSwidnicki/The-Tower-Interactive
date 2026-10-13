@@ -8,6 +8,9 @@ This portfolio slice follows **Jodie from Filtration 123 to Medical Intake** ins
 
 ## Play the portfolio slice
 
+**Play directly in the browser:** https://bykswidnicki.github.io/The-Tower-Interactive/ (no Inky installation required). The employer-facing player uses the frozen QA-tested source at `ink/releases/The_Tower_Jodie_Stage1_cf12c38.ink`; active development in `ink/The_Tower_Jodie.ink` does not change that build.
+
+
 **View source:** [ink/The_Tower_Jodie.ink](ink/The_Tower_Jodie.ink)  
 **Direct download:** [The_Tower_Jodie.ink](https://raw.githubusercontent.com/BykSwidnicki/The-Tower-Interactive/main/ink/The_Tower_Jodie.ink)
 
@@ -107,15 +110,11 @@ Only the **Filtration → Medical** portion is part of the current portfolio pre
 
 ## QA status
 
-The current portfolio candidate has passed three end-to-end play styles:
+**Stage 1 portfolio build: QA-tested at commit [`cf12c38`](https://github.com/BykSwidnicki/The-Tower-Interactive/commit/cf12c388468eb26f781596ebe7d78485a53d8f2f).** The final test report confirmed clean Ink compilation, a passing GitHub QA workflow, and eight completed routes: cooperative, reckless, Guardian return, serious Water evacuation, light injury without Guardian response, Agro fall injury, prepared hazard/mitigation, and elevator-shaft injury. All completed at Medical, with successful fresh restarts.
 
-1. **Cooperative / technically capable**
-2. **Independent / risky**
-3. **Plain / low-information**
+Guardian intervention is conditional: a minor injury may trigger a Guardian return to Filtration; the return retains accumulated state but changes later Rigging conditions. Serious Water injury can result in a medical evacuation that bypasses later route sections. The ordinary route remains playable when Guardians do not respond.
 
-All three reached Medical coherently while producing meaningfully different state profiles.
-
-The active Ink source is in final preflight. New mechanics are being held back unless a genuine bug appears.
+The employer-facing player is deliberately pinned to a fixed source snapshot. New gameplay experiments belong in the active source or development branches and require their own QA before replacing the frozen release.
 
 ## Tools and workflow
 
