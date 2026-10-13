@@ -120,7 +120,7 @@
     <div id="passage" aria-live="polite"></div>
     <div id="choices" aria-label="Story choices"></div>
   </main><nav aria-label="Portfolio navigation" style="max-width:780px;margin:0 auto;padding:0 24px 30px"><a class="source" href="./portfolio/" style="display:inline-block">← Back to portfolio</a></nav>
-  <footer>© 2026 Marcin Knapik. All rights reserved. Presented for portfolio review. This player loads the repository's current Ink source; it does not alter the authored story.</footer>
+  <footer>© 2026 Marcin Knapik. All rights reserved. Presented for portfolio review. This player uses the QA-tested Stage 1 release (cf12c38); later development does not change this presentation.</footer>
   <script type="module">
     import { Compiler } from 'https://cdn.jsdelivr.net/npm/inkjs@2.4.0/dist/ink-full.mjs';
     const status = document.getElementById('status');
@@ -254,7 +254,7 @@
     }
     restart.addEventListener('click',start);
     try {
-      const response = await fetch('./ink/The_Tower_Jodie.ink');
+      const response = await fetch('./ink/releases/The_Tower_Jodie_Stage1_cf12c38.ink');
       if(!response.ok) throw new Error('The Ink source could not be loaded (' + response.status + ').');
       inkSource = await response.text();
       start();
